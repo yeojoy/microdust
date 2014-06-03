@@ -3,15 +3,12 @@ package me.yeojoy.microdustwarning.fragment;
 
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.service.WebParserIntentService;
-import my.lib.MyLog;
+
 import android.app.AlarmManager;
 import android.app.Fragment;
-import android.app.LoaderManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +55,7 @@ public class DustFragment extends Fragment implements OnClickListener {
     private PendingIntent pending;
     @Override
     public void onClick(View v) {
-        MyLog.i(TAG, "onClick()");
+        Log.i(TAG, "onClick()");
         if (v.getId() == R.id.btn_on) {
             alarmManager.setInexactRepeating(AlarmManager.RTC, 
                     System.currentTimeMillis() + 1000, 1000 * 30, pending);

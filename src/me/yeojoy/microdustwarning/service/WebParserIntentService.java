@@ -1,20 +1,18 @@
 package me.yeojoy.microdustwarning.service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import me.yeojoy.microdustwarning.db.SqliteManager;
-import my.lib.MyLog;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
+
 import android.app.IntentService;
 import android.content.Intent;
-import android.text.TextUtils;
+import android.util.Log;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 public class WebParserIntentService extends IntentService {
 
@@ -30,7 +28,7 @@ public class WebParserIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        MyLog.i(TAG, "onHandleIntent()");
+        Log.i(TAG, "onHandleIntent()");
         
         final String url = "http://cleanair.seoul.go.kr/air_city.htm?method=measure";
         Source source = null;
@@ -43,7 +41,7 @@ public class WebParserIntentService extends IntentService {
         }
         
         if (source == null) { 
-            MyLog.i(TAG, "result is null");
+            Log.i(TAG, "result is null");
             return;
         }
         
@@ -68,7 +66,7 @@ public class WebParserIntentService extends IntentService {
             String parsedString = e.getTextExtractor().toString();
             int firstIndex = parsedString.indexOf(" ");
             parsedString = parsedString.substring(firstIndex + 1);
-            MyLog.d(TAG, "String : " + parsedString);
+            Log.d(TAG, "String : " + parsedString);
             
             if (parsedString.startsWith("동작구")) {
                 manager.saveData(mesureTime, parsedString);
