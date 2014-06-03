@@ -3,14 +3,18 @@ package me.yeojoy.microdustwarning.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import me.yeojoy.microdustwarning.db.SqliteManager;
 import my.lib.MyLog;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 import android.app.IntentService;
 import android.content.Intent;
+import android.text.TextUtils;
 
 public class WebParserIntentService extends IntentService {
 
@@ -43,10 +47,34 @@ public class WebParserIntentService extends IntentService {
             return;
         }
         
-        List<Element> table = source.getAllElements(HTMLElementName.TR);
+        SqliteManager manager = SqliteManager.getInstance();
+        if (!manager.isDoneInit())
+            manager.init(getApplicationContext());
+        
+        String mesureTime = null;
+        
+        List<Element> table = source.getAllElements(HTMLElementName.EM);
+        for (Element e : table) {
+            if (e.getTextExtractor().toString().endsWith("시")) {
+                mesureTime = e.getTextExtractor().toString();
+                break;
+            }
+        }
+        
+        table.clear();
+        table = source.getAllElements(HTMLElementName.TR);
         
         for (Element e : table) {
-            MyLog.d(TAG, "String : " + e.getTextExtractor().toString());
+            String parsedString = e.getTextExtractor().toString();
+            int firstIndex = parsedString.indexOf(" ");
+            parsedString = parsedString.substring(firstIndex + 1);
+            MyLog.d(TAG, "String : " + parsedString);
+            
+            if (parsedString.startsWith("동작구")) {
+                manager.saveData(mesureTime, parsedString);
+                
+            }
+                
         }
     }
 

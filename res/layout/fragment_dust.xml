@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mySwitch="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
     <Button
-        android:id="@+id/btn_adder"
+        android:id="@+id/btn_on"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Refresh" />
+        android:layout_margin="10dp"
+        android:layout_toLeftOf="@+id/divider"
+        android:text="@string/btn_switch_on" />
+    
+    <View 
+        android:id="@id/divider"
+        android:layout_width="1dp"
+        android:layout_height="5dp"
+        android:layout_centerHorizontal="true" />
+    
+    <Button
+        android:id="@+id/btn_off"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/divider"
+        android:text="@string/btn_switch_off" />
+    
     
     <ScrollView 
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_weight="1" >
+        android:layout_below="@id/btn_on"
+        android:fillViewport="true" >
         <TextView 
-            android:id="@+id/tv_test1_result"
+            android:id="@+id/tv_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left|top"
             android:lineSpacingExtra="2dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:text="Result"/>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

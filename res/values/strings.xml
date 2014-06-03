@@ -5,4 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="btn_switch_on">ON</string>
+    <string name="btn_switch_off">OFF</string>
 </resources>
