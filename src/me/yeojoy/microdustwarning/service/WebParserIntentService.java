@@ -70,10 +70,18 @@ public class WebParserIntentService extends IntentService {
             
             if (parsedString.startsWith("동작구")) {
                 manager.saveData(mesureTime, parsedString);
-                
+                analyzeMicroDust(parsedString);
             }
                 
         }
+    }
+    
+    /**
+     * 받은 data로 미세먼지 확인 후 Notification으로 알려준다.
+     * @param data
+     */
+    private void analyzeMicroDust(String data) {
+        
     }
 
 }
