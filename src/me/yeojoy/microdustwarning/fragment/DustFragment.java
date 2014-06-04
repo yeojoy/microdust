@@ -2,13 +2,14 @@
 package me.yeojoy.microdustwarning.fragment;
 
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.service.WebParserIntentService;
-
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +26,9 @@ public class DustFragment extends Fragment implements OnClickListener {
     
     private AlarmManager alarmManager;
 
-    public DustFragment() {
-        
-    }
+    private Context mContext;
+    
+    public DustFragment() { }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +51,24 @@ public class DustFragment extends Fragment implements OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
+        mContext = getActivity();
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        
+        SqliteManager manager = SqliteManager.getInstance();
+        if (!manager.isDoneInit())
+            manager.init(mContext);
+        
+        Cursor cursor = manager.getDBData();
+        
+        if (cursor == null) return;
+        
+        // TODO 마지막 데이터를 보여줌.
+        
+        
     }
 
     private PendingIntent pending;
@@ -58,7 +77,7 @@ public class DustFragment extends Fragment implements OnClickListener {
         Log.i(TAG, "onClick()");
         if (v.getId() == R.id.btn_on) {
             alarmManager.setInexactRepeating(AlarmManager.RTC, 
-                    System.currentTimeMillis() + 1000, 1000 * 30, pending);
+                    System.currentTimeMillis() + 1000, 1000 * 60 * 60, pending);
             mTvResult.append("\nAlarmService is on.\n");
         } else if (v.getId() == R.id.btn_off) {
             alarmManager.cancel(pending);

@@ -1,16 +1,17 @@
 package me.yeojoy.microdustwarning.db;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 public class SqliteManager implements DustInfoDBConstants{
     
@@ -102,6 +103,14 @@ public class SqliteManager implements DustInfoDBConstants{
             // 4. close
             db.close();
         }
+    }
+    
+    public Cursor getDBData() {
+        Cursor cursor = null;
+        
+        // TODO select last data
+        
+        return cursor;
     }
     
 }
