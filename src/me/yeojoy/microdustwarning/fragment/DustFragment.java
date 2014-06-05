@@ -1,6 +1,7 @@
 
 package me.yeojoy.microdustwarning.fragment;
 
+import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.service.WebParserIntentService;
@@ -18,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class DustFragment extends Fragment implements OnClickListener {
+public class DustFragment extends Fragment implements OnClickListener, DustConstants {
 
     private static final String TAG = DustFragment.class.getSimpleName();
 
@@ -27,6 +28,8 @@ public class DustFragment extends Fragment implements OnClickListener {
     private AlarmManager alarmManager;
 
     private Context mContext;
+    
+    private PendingIntent pending;
     
     public DustFragment() { }
     
@@ -70,14 +73,13 @@ public class DustFragment extends Fragment implements OnClickListener {
         
         
     }
-
-    private PendingIntent pending;
+    
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick()");
         if (v.getId() == R.id.btn_on) {
             alarmManager.setInexactRepeating(AlarmManager.RTC, 
-                    System.currentTimeMillis() + 1000, 1000 * 60 * 60, pending);
+                    System.currentTimeMillis() + 1000, NOTI_TIME, pending);
             mTvResult.append("\nAlarmService is on.\n");
         } else if (v.getId() == R.id.btn_off) {
             alarmManager.cancel(pending);

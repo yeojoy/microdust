@@ -1,18 +1,18 @@
 package me.yeojoy.microdustwarning.service;
 
-import me.yeojoy.microdustwarning.db.SqliteManager;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
-
-import android.app.IntentService;
-import android.content.Intent;
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+
+import me.yeojoy.microdustwarning.db.SqliteManager;
+import me.yeojoy.microdustwarning.util.DustUtils;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+import android.app.IntentService;
+import android.content.Intent;
+import android.util.Log;
 
 public class WebParserIntentService extends IntentService {
 
@@ -70,18 +70,8 @@ public class WebParserIntentService extends IntentService {
             
             if (parsedString.startsWith("동작구")) {
                 manager.saveData(mesureTime, parsedString);
-                analyzeMicroDust(parsedString);
+                DustUtils.analyzeMicroDust(parsedString);
             }
-                
         }
     }
-    
-    /**
-     * 받은 data로 미세먼지 확인 후 Notification으로 알려준다.
-     * @param data
-     */
-    private void analyzeMicroDust(String data) {
-        
-    }
-
 }

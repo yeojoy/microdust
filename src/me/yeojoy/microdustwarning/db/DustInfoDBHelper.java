@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBConstants{
+public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBConstants {
 
     private static final String TAG = DustInfoDBHelper.class.getSimpleName();
     
@@ -41,13 +41,6 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
         Log.e(TAG, "SQL CREATE -> " + sb.toString());
         db.execSQL(sb.toString());
         
-//        String insert = "INSERT INTO " + TABLE_NAME + " (" + SAVE_TIME + ", " + MEASURE_TIME + ", "
-//                + MEASURE_LOCATION + ", " + MICRO_DUST + ", " + NANO_DUST + ", " + OZON + ", "
-//                + NO2 + ", " + CO + ", " + SO2 + ", " + GRADE + ", " + DEGREE + ", " + MATTER + ") "
-//                + "VALUES (\'a\', \'b\', \'c\', \'d\', \'e\', \'f\', \'g\', \'h\', \'i\', \'j\', \'k\', \'l\')";
-//        db.beginTransaction();
-//        db.execSQL(insert);
-//        db.endTransaction();
     }
 
     @Override
