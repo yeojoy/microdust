@@ -22,13 +22,14 @@ public class DustUtils implements DustConstants {
     public static STATUS[] analyzeMicroDust(String data) {
         String[] array = data.split(" ");
                 
-        STATUS[] status = new STATUS[6];
+        STATUS[] status = new STATUS[7];
         status[0] = getMicroDustDegree("");
-        status[1] = getOzonDegree("");
-        status[2] = getNO2Degree("");
-        status[3] = getCODegree("");
-        status[4] = getSO2Degree("");
-        status[5] = getTotalDegree("");
+        status[1] = getNanoDustDegree("");
+        status[2] = getOzonDegree("");
+        status[3] = getNO2Degree("");
+        status[4] = getCODegree("");
+        status[5] = getSO2Degree("");
+        status[6] = getTotalDegree("");
         
         return status;
     }
@@ -50,6 +51,28 @@ public class DustUtils implements DustConstants {
         else if (microDustValue > MICRO_DUST_NORMAL)
             return STATUS.BAD;
         else if (microDustValue > MICRO_DUST_GOOD)
+            return STATUS.NORMAL;
+        
+        return STATUS.GOOD;
+    }
+    
+    /**
+     * 초미세먼지 수치가 괜찮은지
+     * @param value
+     * @return
+     */
+    private static STATUS getNanoDustDegree(String value) {
+        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        
+        float microDustValue = Float.parseFloat(value);
+        
+        if (microDustValue > NANO_DUST_WORSE)
+            return STATUS.WORST;
+        else if (microDustValue > NANO_DUST_BAD)
+            return STATUS.WORSE;
+        else if (microDustValue > NANO_DUST_NORMAL)
+            return STATUS.BAD;
+        else if (microDustValue > NANO_DUST_GOOD)
             return STATUS.NORMAL;
         
         return STATUS.GOOD;

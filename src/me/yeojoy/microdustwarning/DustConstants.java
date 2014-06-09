@@ -15,6 +15,16 @@ public interface DustConstants {
     /** 121 ~ 200 까지 나쁨, 201이상 매우나쁨 */
     public static final float MICRO_DUST_WORSE = 200f;
     
+    // 초미세먼지 수치
+    /** 0 ~ 20 까지 좋음 */
+    public static final float NANO_DUST_GOOD = 20f;
+    /** 21 ~ 40 까지 보통 */
+    public static final float NANO_DUST_NORMAL = 40f;
+    /** 41 ~ 60 까지 약간나쁨 */
+    public static final float NANO_DUST_BAD = 60f;
+    /** 61 ~ 80 까지 나쁨, 81이상 매우나쁨 */
+    public static final float NANO_DUST_WORSE = 80f;
+    
     // 오존 수치
     /** 0 ~ 0.04 까지 좋음 */
     public static final float O3_GOOD = 0.04f;
