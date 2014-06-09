@@ -21,15 +21,17 @@ public class DustUtils implements DustConstants {
      */
     public static STATUS[] analyzeMicroDust(String data) {
         String[] array = data.split(" ");
-                
+        // TEST DATA
+        // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
+        // 관악구 60 39 0.012 0.051 0.6 0.005 보통 85 NO2
         STATUS[] status = new STATUS[7];
-        status[0] = getMicroDustDegree("");
-        status[1] = getNanoDustDegree("");
-        status[2] = getOzonDegree("");
-        status[3] = getNO2Degree("");
-        status[4] = getCODegree("");
-        status[5] = getSO2Degree("");
-        status[6] = getTotalDegree("");
+        status[0] = getMicroDustDegree(array[1]);
+        status[1] = getNanoDustDegree(array[2]);
+        status[2] = getOzonDegree(array[3]);
+        status[3] = getNO2Degree(array[4]);
+        status[4] = getCODegree(array[5]);
+        status[5] = getSO2Degree(array[6]);
+        status[6] = getTotalDegree(array[8]);
         
         return status;
     }
