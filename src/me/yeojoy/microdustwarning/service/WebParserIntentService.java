@@ -70,7 +70,8 @@ public class WebParserIntentService extends IntentService {
             
             if (parsedString.startsWith("동작구")) {
                 manager.saveData(mesureTime, parsedString);
-                DustUtils.analyzeMicroDust(parsedString);
+                DustUtils.STATUS[] status = DustUtils.analyzeMicroDust(parsedString);
+                DustUtils.sendNotification(getApplicationContext(), status);
             }
         }
     }

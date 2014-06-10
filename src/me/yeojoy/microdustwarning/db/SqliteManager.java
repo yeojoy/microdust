@@ -78,8 +78,6 @@ public class SqliteManager implements DustInfoDBConstants{
             ContentValues values = new ContentValues();
             values.put(SAVE_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
             values.put(MEASURE_TIME, data.get(0));
-//            values.put(MEASURE_TIME, "2014-06-03 16 PM");
-//            values.put(MEASURE_LOCATION, "DONJACK");
             values.put(MEASURE_LOCATION, data.get(1));
             values.put(MICRO_DUST, data.get(2));
             values.put(NANO_DUST, data.get(3));
@@ -91,17 +89,15 @@ public class SqliteManager implements DustInfoDBConstants{
             values.put(DEGREE, data.get(9));
             values.put(MATTER, data.get(10));
             
-            //db.beginTransaction();
             // 3. insert
             db.insert(TABLE_NAME, // table
                     null, //nullColumnHack
                     values); // key/value -> keys = column names/ values = column values
-            //db.endTransaction();
         } catch (SQLiteException e) {
             Log.e(TAG, e.getMessage());
         } finally {
             // 4. close
-            db.close();
+            if (db != null) db.close();
         }
     }
     
@@ -109,7 +105,22 @@ public class SqliteManager implements DustInfoDBConstants{
         Cursor cursor = null;
         
         // TODO select last data
-        
+        SQLiteDatabase db = null;
+        try {
+            db = mDBHelper.getReadableDatabase();
+
+//            cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+            String selectQuery = "SELECT * FROM " + TABLE_NAME;
+
+            db.rawQuery(selectQuery, null);
+        } catch (SQLiteException e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+
         return cursor;
     }
     

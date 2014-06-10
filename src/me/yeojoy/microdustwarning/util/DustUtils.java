@@ -1,13 +1,57 @@
 package me.yeojoy.microdustwarning.util;
 
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.R;
+
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.RemoteViews;
 
 public class DustUtils implements DustConstants {
-    
-    public static void sendNotification(Context context) {
-        
+
+    public static final String TAG = DustUtils.class.getSimpleName();
+
+    public static void sendNotification(Context context, STATUS[] status) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("미세먼지 : ").append(status[0]).append("\n");
+        sb.append("초미세먼지 : ").append(status[1]).append("\n");
+        sb.append("오존 : ").append(status[2]).append("\n");
+        sb.append("이산화질소 : ").append(status[3]).append("\n");
+        sb.append("일산화탄소 : ").append(status[4]).append("\n");
+        sb.append("아황산가스 : ").append(status[5]).append("\n");
+        sb.append("통합지수 : ").append(status[6]);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("환경지수")
+                .setContentText(sb.subSequence(0, 20));
+
+        NotificationCompat.BigPictureStyle style1 = new NotificationCompat.BigPictureStyle();
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+        Bitmap picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.s1);
+        style1.bigLargeIcon(icon).bigPicture(picture);
+        style1.setBigContentTitle("큰화면에서 보여주는 거");
+
+        NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
+        style2.setBigContentTitle(sb.subSequence(0, 10));
+        style2.bigText(sb);
+
+        RemoteViews views2 = new RemoteViews(context.getPackageName(), R.layout.noti);
+        views2.setTextViewText(R.id.tv_noti_msg, sb);
+        Notification noti = mBuilder.build();
+        noti.bigContentView = views2;
+
+        NotificationCompat.InboxStyle style3 = new NotificationCompat.InboxStyle();
+
+
+        NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mng.notify(100, noti);
     }
     
     
@@ -20,6 +64,7 @@ public class DustUtils implements DustConstants {
      * @param data
      */
     public static STATUS[] analyzeMicroDust(String data) {
+        Log.i(TAG, "analyzeMicroDust()");
         String[] array = data.split(" ");
         // TEST DATA
         // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
@@ -32,7 +77,7 @@ public class DustUtils implements DustConstants {
         status[4] = getCODegree(array[5]);
         status[5] = getSO2Degree(array[6]);
         status[6] = getTotalDegree(array[8]);
-        
+
         return status;
     }
     
@@ -42,7 +87,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getMicroDustDegree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float microDustValue = Float.parseFloat(value);
         
@@ -64,7 +110,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getNanoDustDegree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float microDustValue = Float.parseFloat(value);
         
@@ -86,7 +133,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getOzonDegree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float ozonValue = Float.parseFloat(value);
         
@@ -108,7 +156,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getNO2Degree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float no2Value = Float.parseFloat(value);
         
@@ -130,7 +179,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getCODegree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float coValue = Float.parseFloat(value);
         
@@ -152,7 +202,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getSO2Degree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float so2Value = Float.parseFloat(value);
         
@@ -174,7 +225,8 @@ public class DustUtils implements DustConstants {
      * @return
      */
     private static STATUS getTotalDegree(String value) {
-        if (TextUtils.isEmpty(value)) return STATUS.NONE;
+        if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
+            return STATUS.NONE;
         
         float totalValue = Float.parseFloat(value);
         

@@ -70,10 +70,37 @@ public class DustFragment extends Fragment implements OnClickListener, DustConst
         if (cursor == null) return;
         
         // TODO 마지막 데이터를 보여줌.
-        
-        
+        setCursorToView(cursor);
     }
-    
+
+    private void setCursorToView(Cursor cursor) {
+        StringBuilder sb = new StringBuilder();
+        cursor.moveToLast();
+
+//        while (cursor.moveToNext()) {
+
+            // TEST DATA
+            // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
+            // 관악구 60 39 0.012 0.051 0.6 0.005 보통 85 NO2
+            sb.append("저장시각 : ").append(cursor.getString(1)).append("\n");
+            sb.append("측정시각 : ").append(cursor.getString(2)).append("\n");
+            sb.append("지역 : ").append(cursor.getString(3)).append("\n");
+            sb.append("미세먼지 : ").append(cursor.getString(4)).append("\n");
+            sb.append("초미세먼지 : ").append(cursor.getString(5)).append("\n");
+            sb.append("오존 : ").append(cursor.getString(6)).append("\n");
+            sb.append("이산화질소 : ").append(cursor.getString(7)).append("\n");
+            sb.append("일산화탄소 : ").append(cursor.getString(8)).append("\n");
+            sb.append("아황산가스 : ").append(cursor.getString(9)).append("\n");
+            sb.append("등급 : ").append(cursor.getString(10)).append("\n");
+            sb.append("지수 : ").append(cursor.getString(11)).append("\n");
+            sb.append("지수결정물질 : ").append(cursor.getString(12)).append("\n\n\n");
+//        }
+
+        if (sb.length() > 0)
+            mTvResult.append(sb);
+    }
+
+
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick()");
