@@ -47,9 +47,6 @@ public class DustUtils implements DustConstants {
         Notification noti = mBuilder.build();
         noti.bigContentView = views2;
 
-        NotificationCompat.InboxStyle style3 = new NotificationCompat.InboxStyle();
-
-
         NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mng.notify(100, noti);
     }

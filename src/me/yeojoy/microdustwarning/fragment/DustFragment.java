@@ -11,13 +11,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class DustFragment extends Fragment implements OnClickListener, DustConstants {
 
@@ -108,9 +115,41 @@ public class DustFragment extends Fragment implements OnClickListener, DustConst
             alarmManager.setInexactRepeating(AlarmManager.RTC, 
                     System.currentTimeMillis() + 1000, NOTI_TIME, pending);
             mTvResult.append("\nAlarmService is on.\n");
+
+            saveTextView();
         } else if (v.getId() == R.id.btn_off) {
             alarmManager.cancel(pending);
             mTvResult.append("\nAlarmService is off.\n");
         }
+    }
+
+    private void saveTextView() {
+        mTvResult.setDrawingCacheEnabled(true);
+
+        Bitmap scrreenshot = mTvResult.getDrawingCache();
+
+        String filename = "screenshot.png";
+
+        try{
+
+            File f = new File(Environment.getExternalStorageDirectory(),filename);
+
+            f.createNewFile();
+
+            OutputStream outStream = new FileOutputStream(f);
+
+            scrreenshot.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+
+            outStream.close();
+
+
+
+        }catch( IOException e){
+
+            e.printStackTrace();
+
+        }
+
+        mTvResult.setDrawingCacheEnabled(false);
     }
 }
