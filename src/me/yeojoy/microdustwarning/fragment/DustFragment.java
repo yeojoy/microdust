@@ -3,6 +3,7 @@ package me.yeojoy.microdustwarning.fragment;
 
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.adapter.ImageAdapter;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.service.WebParserIntentService;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -28,10 +30,19 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DustFragment extends Fragment implements DustConstants {
 
@@ -42,9 +53,9 @@ public class DustFragment extends Fragment implements DustConstants {
 
     private AlarmManager alarmManager;
 
-    private Context mContext;
-
     private GridView mGdImages;
+    private ImageAdapter mAdapter;
+    private ArrayList<String> mUrlList;
 
     private PendingIntent pending;
     
@@ -81,8 +92,8 @@ public class DustFragment extends Fragment implements DustConstants {
         pending = PendingIntent.getService(getActivity(), 10002, intent, 0);
 
         mGdImages = (GridView) view.findViewById(R.id.gv_map);
-
-        // TODO http://www.kaq.or.kr/main.asp parsing 필요
+        mUrlList = new ArrayList<String>();
+        mAdapter = new ImageAdapter(getActivity(), mUrlList);
 
         return view;
     }
@@ -91,24 +102,55 @@ public class DustFragment extends Fragment implements DustConstants {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
-        mContext = getActivity();
     }
     
     @Override
     public void onStart() {
         super.onStart();
-        
-//        SqliteManager manager = SqliteManager.getInstance();
-//        if (!manager.isDoneInit())
-//            manager.init(mContext);
-//
-//        Cursor cursor = manager.getDBData();
-//
-//        if (cursor == null) return;
-        
         // TODO 마지막 데이터를 보여줌.
-//        setCursorToView(cursor);
+
         setDataToView();
+        getImageUrls();
+    }
+
+    private void getImageUrls() {
+        // TODO http://www.kaq.or.kr/main.asp parsing 필요
+        AsyncTask<Void, Void, ArrayList<String>> task = new AsyncTask<Void, Void, ArrayList<String>>() {
+            @Override
+            protected ArrayList<String> doInBackground(Void... params) {
+                final String url = "http://www.kaq.or.kr/main.asp";
+                Source source = null;
+                try {
+                    source = new Source(new URL(url));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                List<Element> imgList = source.getAllElements(HTMLElementName.IMG);
+                ArrayList<String> urls = new ArrayList<String>();
+                for (Element e : imgList) {
+                    String str = e.getAttributeValue("src").toString();
+                    Log.i(TAG, str);
+                    if (str.startsWith("http://"))
+                        urls.add(str);
+                }
+
+                return urls;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<String> strings) {
+                super.onPostExecute(strings);
+                if (strings != null && strings.size() > 0) {
+                    mUrlList.addAll(strings);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        task.execute();
     }
 
     private void setDataToView() {
@@ -136,61 +178,4 @@ public class DustFragment extends Fragment implements DustConstants {
         mTvResult.append(sb);
     }
 
-    private void setCursorToView(Cursor cursor) {
-        StringBuilder sb = new StringBuilder();
-        cursor.moveToLast();
-
-//        while (cursor.moveToNext()) {
-
-            // TEST DATA
-            // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
-            // 관악구 60 39 0.012 0.051 0.6 0.005 보통 85 NO2
-            sb.append("저장시각 : ").append(cursor.getString(1)).append("\n");
-            sb.append("측정시각 : ").append(cursor.getString(2)).append("\n");
-            sb.append("지역 : ").append(cursor.getString(3)).append("\n");
-            sb.append("미세먼지 : ").append(cursor.getString(4)).append("\n");
-            sb.append("초미세먼지 : ").append(cursor.getString(5)).append("\n");
-            sb.append("오존 : ").append(cursor.getString(6)).append("\n");
-            sb.append("이산화질소 : ").append(cursor.getString(7)).append("\n");
-            sb.append("일산화탄소 : ").append(cursor.getString(8)).append("\n");
-            sb.append("아황산가스 : ").append(cursor.getString(9)).append("\n");
-            sb.append("등급 : ").append(cursor.getString(10)).append("\n");
-            sb.append("지수 : ").append(cursor.getString(11)).append("\n");
-            sb.append("지수결정물질 : ").append(cursor.getString(12)).append("\n\n\n");
-//        }
-
-        if (sb.length() > 0)
-            mTvResult.append(sb);
-    }
-
-
-    private void saveTextView() {
-        mTvResult.setDrawingCacheEnabled(true);
-
-        Bitmap scrreenshot = mTvResult.getDrawingCache();
-
-        String filename = "screenshot.png";
-
-        try{
-
-            File f = new File(Environment.getExternalStorageDirectory(),filename);
-
-            f.createNewFile();
-
-            OutputStream outStream = new FileOutputStream(f);
-
-            scrreenshot.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-
-            outStream.close();
-
-
-
-        }catch( IOException e){
-
-            e.printStackTrace();
-
-        }
-
-        mTvResult.setDrawingCacheEnabled(false);
-    }
 }
