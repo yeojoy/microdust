@@ -1,6 +1,8 @@
 package me.yeojoy.microdustwarning;
 
 import me.yeojoy.microdustwarning.fragment.DustFragment;
+import me.yeojoy.microdustwarning.util.DustSharedPreferences;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -18,6 +20,8 @@ public class DustActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dust);
+        // SharedPreferences init
+        DustSharedPreferences.getInstance().init(this);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

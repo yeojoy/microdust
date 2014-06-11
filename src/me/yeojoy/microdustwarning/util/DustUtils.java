@@ -5,13 +5,12 @@ import me.yeojoy.microdustwarning.R;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 public class DustUtils implements DustConstants {
 
@@ -29,23 +28,31 @@ public class DustUtils implements DustConstants {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         mBuilder.setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("환경지수")
-                .setContentText(sb.subSequence(0, 20));
+                .setContentTitle("미세먼지 알림")
+                .setContentText(sb.subSequence(0, 26) + "...");
 
-        NotificationCompat.BigPictureStyle style1 = new NotificationCompat.BigPictureStyle();
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
-        Bitmap picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.s1);
-        style1.bigLargeIcon(icon).bigPicture(picture);
-        style1.setBigContentTitle("큰화면에서 보여주는 거");
+//        NotificationCompat.BigPictureStyle style1 = new NotificationCompat.BigPictureStyle();
+//        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+//        Bitmap picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.s1);
+//        style1.bigLargeIcon(icon).bigPicture(picture);
+//        style1.setBigContentTitle("큰화면에서 보여주는 거");
 
         NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
-        style2.setBigContentTitle(sb.subSequence(0, 10));
+        style2.setBigContentTitle("미세먼지 알림");
         style2.bigText(sb);
+        mBuilder.setStyle(style2);
 
-        RemoteViews views2 = new RemoteViews(context.getPackageName(), R.layout.noti);
-        views2.setTextViewText(R.id.tv_noti_msg, sb);
+//        RemoteViews views2 = new RemoteViews(context.getPackageName(), R.layout.noti);
+//        views2.setTextViewText(R.id.tv_noti_msg, sb);
+
+        Intent intent = new Intent(context, me.yeojoy.microdustwarning.DustActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pendingIntent);
+
         Notification noti = mBuilder.build();
-        noti.bigContentView = views2;
+//        noti.bigContentView = views2;
 
         NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mng.notify(100, noti);

@@ -6,12 +6,15 @@ import java.net.URL;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.db.SqliteManager;
+import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public class WebParserIntentService extends IntentService {
@@ -29,7 +32,10 @@ public class WebParserIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.i(TAG, "onHandleIntent()");
-        
+
+        if (!DustSharedPreferences.getInstance().hasPrefs())
+            DustSharedPreferences.getInstance().init(getApplicationContext());
+
         final String url = "http://cleanair.seoul.go.kr/air_city.htm?method=measure";
         Source source = null;
         try {
@@ -49,12 +55,12 @@ public class WebParserIntentService extends IntentService {
         if (!manager.isDoneInit())
             manager.init(getApplicationContext());
         
-        String mesureTime = null;
+        String measureTime = null;
         
         List<Element> table = source.getAllElements(HTMLElementName.EM);
         for (Element e : table) {
             if (e.getTextExtractor().toString().endsWith("시")) {
-                mesureTime = e.getTextExtractor().toString();
+                measureTime = e.getTextExtractor().toString();
                 break;
             }
         }
@@ -69,9 +75,13 @@ public class WebParserIntentService extends IntentService {
             Log.d(TAG, "String : " + parsedString);
             
             if (parsedString.startsWith("동작구")) {
-                manager.saveData(mesureTime, parsedString);
+                manager.saveData(measureTime, parsedString);
                 DustUtils.STATUS[] status = DustUtils.analyzeMicroDust(parsedString);
                 DustUtils.sendNotification(getApplicationContext(), status);
+
+                // TODO refactoring!
+                DustSharedPreferences.getInstance().putString("measureTime", measureTime);
+                DustSharedPreferences.getInstance().putString("str", parsedString);
             }
         }
     }

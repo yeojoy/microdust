@@ -3,43 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <Button
-        android:id="@+id/btn_on"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_margin="10dp"
-        android:layout_toLeftOf="@+id/divider"
-        android:text="@string/btn_switch_on" />
-    
-    <View 
-        android:id="@id/divider"
-        android:layout_width="1dp"
-        android:layout_height="5dp"
-        android:layout_centerHorizontal="true" />
-    
-    <Button
-        android:id="@+id/btn_off"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_margin="10dp"
-        android:layout_toRightOf="@+id/divider"
-        android:text="@string/btn_switch_off" />
-    
-    
-    <ScrollView 
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/btn_on"
         android:fillViewport="true" >
-        <TextView 
-            android:id="@+id/tv_result"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|top"
-            android:lineSpacingExtra="2dp"
-            android:textSize="18sp"
-            android:text="Result"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|top"
+                android:lineSpacingExtra="2dp"
+                android:textSize="18sp"
+                android:text="Result"/>
+            <GridView
+                android:id="@+id/gv_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="2"
+                android:verticalSpacing="10dp"
+                android:horizontalSpacing="10dp"/>
+        </LinearLayout>
+
     </ScrollView>
+
+    <ToggleButton
+        android:id="@+id/tb_on_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="켜짐"
+        android:textOff="꺼짐"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"/>
 </RelativeLayout>
