@@ -82,6 +82,8 @@ public class DustFragment extends Fragment implements DustConstants {
 
         mGdImages = (GridView) view.findViewById(R.id.gv_map);
 
+        // TODO http://www.kaq.or.kr/main.asp parsing 필요
+
         return view;
     }
     
