@@ -6,7 +6,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.db.SqliteManager;
+import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 import net.htmlparser.jericho.Element;
@@ -23,8 +25,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class WebParserService extends Service implements LocationListener {
 
@@ -33,6 +37,8 @@ public class WebParserService extends Service implements LocationListener {
     private LocationManager mLocationManager;
 
     private Context mContext;
+
+    private Handler mHandler;
 
     @Override
     public void onCreate() {
@@ -50,8 +56,9 @@ public class WebParserService extends Service implements LocationListener {
         criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
         String bestProvider = mLocationManager.getBestProvider(criteria, true);
 
-        Log.d(TAG, "Best Provider >>> " + bestProvider);
         mLocationManager.requestLocationUpdates(bestProvider, 0, 0, this);
+
+        mHandler = new Handler();
     }
 
     @Override
@@ -75,7 +82,13 @@ public class WebParserService extends Service implements LocationListener {
             e.printStackTrace();
         }
 
-        Log.d(TAG, fromLocation.get(0).toString());
+        final String ADMIN = fromLocation.get(0).getAdminArea();
+        if (!"서울특별시".equals(ADMIN)) {
+            Toast.makeText(mContext, "죄송합니다. 현재 서울에서만 사용하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+            finishService();
+            return;
+        }
+
         final String LOCALITY = fromLocation.get(0).getLocality();
 
         Runnable runnable = new Runnable() {
@@ -93,8 +106,7 @@ public class WebParserService extends Service implements LocationListener {
 
                 if (source == null) {
                     Log.i(TAG, "result is null");
-                    mLocationManager.removeUpdates(WebParserService.this);
-                    stopSelf();
+                    finishService();
                 }
 
                 SqliteManager manager = SqliteManager.getInstance();
@@ -115,28 +127,39 @@ public class WebParserService extends Service implements LocationListener {
                 table = source.getAllElements(HTMLElementName.TR);
 
                 for (Element e : table) {
-                    String parsedString = e.getTextExtractor().toString();
-                    int firstIndex = parsedString.indexOf(" ");
-                    parsedString = parsedString.substring(firstIndex + 1);
-                    Log.d(TAG, "String : " + parsedString);
+                    String rawString = e.getTextExtractor().toString();
+                    int firstIndex = rawString.indexOf(" ");
+                    rawString = rawString.substring(firstIndex + 1);
 
-                    if (parsedString.startsWith(LOCALITY)) {
-                        manager.saveData(measureTime, parsedString);
-                        DustUtils.STATUS[] status = DustUtils.analyzeMicroDust(parsedString);
+                    if (rawString.startsWith(LOCALITY)) {
+                        manager.saveData(measureTime, rawString);
+                        DustUtils.STATUS[] status = DustUtils.analyzeMicroDust(rawString);
                         DustUtils.sendNotification(mContext, status);
 
                         // TODO refactoring!
                         DustSharedPreferences.getInstance().putString("measureTime", measureTime);
-                        DustSharedPreferences.getInstance().putString("str", parsedString);
+                        DustSharedPreferences.getInstance().putString("str", rawString);
+
+                        sendString(measureTime, rawString);
                     }
                 }
-                mLocationManager.removeUpdates(WebParserService.this);
-                stopSelf();
+                finishService();
             }
         };
 
         new Thread(runnable).start();
 
+    }
+
+    private void sendString(final String measureTime, final String rawString) {
+        Log.i(TAG, "sendString()");
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                DustApplication.bus.post(new OttoEventEntity(measureTime, rawString));
+            }
+        });
     }
 
     @Override
@@ -151,18 +174,13 @@ public class WebParserService extends Service implements LocationListener {
         parseString(location);
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
+    @Override public void onProviderEnabled(String provider) {}
+    @Override public void onProviderDisabled(String provider) {}
 
-    }
 
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+    private void finishService() {
+        mLocationManager.removeUpdates(this);
+        stopSelf();
     }
 }

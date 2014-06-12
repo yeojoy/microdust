@@ -1,9 +1,11 @@
 
 package me.yeojoy.microdustwarning.fragment;
 
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
+import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.service.WebParserService;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
@@ -26,6 +28,8 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.squareup.otto.Subscribe;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -56,7 +60,7 @@ public class DustFragment extends Fragment implements DustConstants {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView()");
+        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_dust, container, false);
         mTvResult = (TextView) view.findViewById(R.id.tv_result);
 
@@ -135,10 +139,6 @@ public class DustFragment extends Fragment implements DustConstants {
                 super.onPostExecute(strings);
 
                 if (strings != null && strings.size() > 0) {
-                    for (String s : strings) {
-                        Log.d(TAG, "Image URL : " + s);
-                    }
-
                     mUrlList.clear();
                     mUrlList.addAll(strings);
                     mAdapter.notifyDataSetChanged();
@@ -147,6 +147,31 @@ public class DustFragment extends Fragment implements DustConstants {
         };
 
         task.execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DustApplication.bus.register(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        DustApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void receiveOttoEventEntity(OttoEventEntity entity) {
+
+        Log.i(TAG, "run()");
+
+        if (entity == null || TextUtils.isEmpty(entity.rawString)) {
+            setDataToView();
+            return;
+        }
+        setDataToView(entity.measureTime, entity.rawString);
     }
 
     /**
@@ -159,14 +184,18 @@ public class DustFragment extends Fragment implements DustConstants {
 
         if (TextUtils.isEmpty(string)) return;
 
-        DustUtils.STATUS[] statuses = DustUtils.analyzeMicroDust(string);
+        setDataToView(time, string);
+    }
 
-        String[] data = string.split(" ");
+    private void setDataToView(String measureTime, String rawString) {
+        DustUtils.STATUS[] statuses = DustUtils.analyzeMicroDust(rawString);
+
+        String[] data = rawString.split(" ");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
 
         // 일반 정보
-        if (!TextUtils.isEmpty(time))
-            ssb.append(DustUtils.convertString("측정시각 : " + time, DustUtils.STATUS.NONE));
+        if (!TextUtils.isEmpty(measureTime))
+            ssb.append(DustUtils.convertString("측정시각 : " + measureTime, DustUtils.STATUS.NONE));
         ssb.append(DustUtils.convertString("지역 : " + data[0], DustUtils.STATUS.NONE));
         ssb.append(DustUtils.convertString("미세먼지 : " + data[1], statuses[0]));
         ssb.append(DustUtils.convertString("초미세먼지 : " + data[2], statuses[1]));
