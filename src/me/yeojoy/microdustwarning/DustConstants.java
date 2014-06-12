@@ -4,7 +4,7 @@ public interface DustConstants {
     
     public static final int NOTI_TIME = 1000 * 60 * 2;
 //    public static final int NOTI_TIME = 1000 * 60 * 60;
-    
+
     // 미세먼지 수치
     /** 0 ~ 30 까지 좋음 */
     public static final float MICRO_DUST_GOOD = 30f;

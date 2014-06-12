@@ -8,8 +8,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 public class DustUtils implements DustConstants {
@@ -17,14 +20,23 @@ public class DustUtils implements DustConstants {
     public static final String TAG = DustUtils.class.getSimpleName();
 
     public static void sendNotification(Context context, STATUS[] status) {
+        boolean needToSendNoti = false;
+        for (STATUS s : status) {
+            if (s == STATUS.NONE) continue;
+
+            if (s != STATUS.GOOD && s != STATUS.NORMAL) needToSendNoti = needToSendNoti || true;
+        }
+
+        if (!needToSendNoti) return;
+
         StringBuilder sb = new StringBuilder();
-        sb.append("미세먼지 : ").append(status[0]).append("\n");
-        sb.append("초미세먼지 : ").append(status[1]).append("\n");
-        sb.append("오존 : ").append(status[2]).append("\n");
-        sb.append("이산화질소 : ").append(status[3]).append("\n");
-        sb.append("일산화탄소 : ").append(status[4]).append("\n");
-        sb.append("아황산가스 : ").append(status[5]).append("\n");
-        sb.append("통합지수 : ").append(status[6]);
+        sb.append("미세먼지   : ").append(status[0]).append("\n");
+        sb.append("초미세먼지  : ").append(status[1]).append("\n");
+        sb.append("오존      : ").append(status[2]).append("\n");
+        sb.append("이산화질소  : ").append(status[3]).append("\n");
+        sb.append("일산화탄소  : ").append(status[4]).append("\n");
+        sb.append("아황산가스  : ").append(status[5]).append("\n");
+        sb.append("통합지수   : ").append(status[6]);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         mBuilder.setSmallIcon(R.drawable.ic_launcher)
@@ -50,6 +62,7 @@ public class DustUtils implements DustConstants {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setAutoCancel(true);
 
         Notification noti = mBuilder.build();
 //        noti.bigContentView = views2;
@@ -69,6 +82,7 @@ public class DustUtils implements DustConstants {
      */
     public static STATUS[] analyzeMicroDust(String data) {
         Log.i(TAG, "analyzeMicroDust()");
+        Log.i(TAG, "analyzeMicroDust(), DATA : " + data);
         String[] array = data.split(" ");
         // TEST DATA
         // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
@@ -244,5 +258,51 @@ public class DustUtils implements DustConstants {
             return STATUS.NORMAL;
         
         return STATUS.GOOD;
+    }
+
+    private static int getTextColor(STATUS status) {
+        int color;
+        switch (status) {
+            case GOOD:
+                // 파란색
+                color = Color.parseColor("#0060FF");
+                break;
+            case NORMAL:
+                // 연두색
+                color = Color.parseColor("#49FDAC");
+                break;
+            case BAD:
+                // 노란색
+                color = Color.parseColor("#FFE500");
+                break;
+            case WORSE:
+                // 주황색
+                color = Color.parseColor("#FF8900");
+                break;
+            case WORST:
+                // 빨간색
+                color = Color.parseColor("#FF0000");
+                break;
+            default :
+                // 희무끄리한 색
+                color = Color.parseColor("#BEC7C7");
+                break;
+        }
+        return color;
+    }
+
+    /**
+     * status를 확인해서 해당라인의 색을 바꿔준다.
+     * @param str
+     * @param status
+     * @return
+     */
+    public static SpannableString convertString(String str, STATUS status) {
+        SpannableString spannableString = new SpannableString(str + "\n");
+
+        spannableString.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(status)),
+                0, spannableString.length(), SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return spannableString;
     }
 }

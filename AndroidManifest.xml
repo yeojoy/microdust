@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.yeojoy.microdustwarning"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.1" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
     <application
-        android:allowBackup="false"
+        android:name="me.yeojoy.microdustwarning.DustApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Holo" >
         <activity
             android:name="me.yeojoy.microdustwarning.DustActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboard|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +29,7 @@
             </intent-filter>
         </activity>
         <service 
-            android:name="me.yeojoy.microdustwarning.service.WebParserIntentService" />
+            android:name="me.yeojoy.microdustwarning.service.WebParserService" />
     </application>
 
 </manifest>
