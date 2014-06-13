@@ -17,7 +17,6 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -197,7 +196,7 @@ public class DustFragment extends Fragment implements DustConstants {
         if (BuildConfig.DEBUG) {
             notiTime = NOTI_TIME_TEST;
         }
-        
+
         alarmManager.setInexactRepeating(AlarmManager.RTC,
                 System.currentTimeMillis() + 1000, notiTime, pending);
         setDataToView();
@@ -222,7 +221,10 @@ public class DustFragment extends Fragment implements DustConstants {
         String[] data = rawString.split(" ");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
 
-        ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", DustUtils.STATUS.NONE));
+        if (BuildConfig.DEBUG)
+            ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", null));
+        else
+            ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", DustUtils.STATUS.NONE));
         ssb.append(DustUtils.convertString("지역 : " + data[0] + "\n", DustUtils.STATUS.NONE));
         ssb.append(DustUtils.convertString("미세먼지 : " + data[1] + "\n", statuses[0]));
         ssb.append(DustUtils.convertString("초미세먼지 : " + data[2] + "\n", statuses[1]));
@@ -237,10 +239,5 @@ public class DustFragment extends Fragment implements DustConstants {
         mTvResult.setText(ssb);
 
         getImageUrls();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 }

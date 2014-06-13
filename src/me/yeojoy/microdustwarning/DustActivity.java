@@ -89,9 +89,4 @@ public class DustActivity extends Activity implements DustConstants {
         getMenuInflater().inflate(R.menu.dust, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
 }

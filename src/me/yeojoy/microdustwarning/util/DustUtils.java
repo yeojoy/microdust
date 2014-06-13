@@ -259,6 +259,8 @@ public class DustUtils implements DustConstants {
     }
 
     public static int getTextColor(STATUS status) {
+        if (status == null) return Color.DKGRAY;
+
         int color;
         switch (status) {
             case GOOD:
