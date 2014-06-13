@@ -5,7 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
+
+import me.yeojoy.microdustwarning.util.DustLog;
 
 public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBConstants {
 
@@ -21,7 +22,7 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i(TAG, "onCreate()");
+        DustLog.i(TAG, "onCreate()");
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ").append(TABLE_NAME).append(" (");
         sb.append(BaseColumns._ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ");
@@ -37,15 +38,15 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
         sb.append(GRADE).append(" TEXT, ");             // 등급
         sb.append(DEGREE).append(" TEXT, ");            // 지수
         sb.append(MATTER).append(" TEXT").append(" );"); // 등급결정물질
-        
-        Log.e(TAG, "SQL CREATE -> " + sb.toString());
+
+        DustLog.e(TAG, "SQL CREATE -> " + sb.toString());
         db.execSQL(sb.toString());
-        
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i(TAG, "onUpgrade()");
+        DustLog.i(TAG, "onUpgrade()");
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
         onCreate(db);
     }

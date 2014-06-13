@@ -1,12 +1,14 @@
 
 package me.yeojoy.microdustwarning.fragment;
 
+import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.service.WebParserService;
+import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 
@@ -20,14 +22,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.squareup.otto.Subscribe;
 
@@ -46,7 +45,7 @@ public class DustFragment extends Fragment implements DustConstants {
     private static final String TAG = DustFragment.class.getSimpleName();
 
     private TextView mTvResult;
-    private ToggleButton mTbOnOff;
+//    private ToggleButton mTbOnOff;
 
     private AlarmManager alarmManager;
 
@@ -60,27 +59,10 @@ public class DustFragment extends Fragment implements DustConstants {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
+        DustLog.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_dust, container, false);
         mTvResult = (TextView) view.findViewById(R.id.tv_result);
 
-        mTbOnOff = (ToggleButton) view.findViewById(R.id.tb_on_off);
-        mTbOnOff.setChecked(DustSharedPreferences.getInstance().getBoolean("switch"));
-        mTbOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    alarmManager.setInexactRepeating(AlarmManager.RTC,
-                            System.currentTimeMillis() + 1000, NOTI_TIME, pending);
-                    setDataToView();
-                } else {
-                    alarmManager.cancel(pending);
-                    DustSharedPreferences.getInstance().clear();
-                }
-                DustSharedPreferences.getInstance().putBoolean("switch", isChecked);
-            }
-        });
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(getActivity(), WebParserService.class);
@@ -90,6 +72,12 @@ public class DustFragment extends Fragment implements DustConstants {
         mUrlList = new ArrayList<String>();
         mAdapter = new ImageAdapter(getActivity(), mUrlList);
         mGdImages.setAdapter(mAdapter);
+
+        // Start Activity에서 checkbox 상태를 보고 시작시킨다.
+        if (getArguments() != null && getArguments().getBoolean(KEY_CHECKBOX_AUTO_START, false)) {
+            launchAlarmManager();
+            DustSharedPreferences.getInstance().putBoolean("switch", true);
+        }
 
         return view;
     }
@@ -164,14 +152,55 @@ public class DustFragment extends Fragment implements DustConstants {
 
     @Subscribe
     public void receiveOttoEventEntity(OttoEventEntity entity) {
+        DustLog.i(TAG, "receiveOttoEventEntity()");
+        switch (entity.command) {
+            case GET_DATA:
+                if (entity == null || TextUtils.isEmpty(entity.rawString)) {
+                    setDataToView();
+                    return;
+                }
+                setDataToView(entity.measureTime, entity.rawString);
 
-        Log.i(TAG, "run()");
+                break;
 
-        if (entity == null || TextUtils.isEmpty(entity.rawString)) {
-            setDataToView();
-            return;
+            case REFRESH:
+                Intent intent = new Intent(getActivity(), WebParserService.class);
+                getActivity().startService(intent);
+                break;
+
+            case ON_OFF:
+                if (entity.on_off) {
+                    launchAlarmManager();
+                } else {
+                    cancelAlarmManager();
+                }
+
+                DustSharedPreferences.getInstance().putBoolean("switch", !entity.on_off);
+
+                break;
         }
-        setDataToView(entity.measureTime, entity.rawString);
+    }
+
+    /**
+     * 알람 매니저 종료
+     */
+    private void cancelAlarmManager() {
+        alarmManager.cancel(pending);
+        DustSharedPreferences.getInstance().clear();
+    }
+
+    /**
+     * 알람 매니저 실행
+     */
+    private void launchAlarmManager() {
+        int notiTime = NOTI_TIME_REAL;
+        if (BuildConfig.DEBUG) {
+            notiTime = NOTI_TIME_TEST;
+        }
+        
+        alarmManager.setInexactRepeating(AlarmManager.RTC,
+                System.currentTimeMillis() + 1000, notiTime, pending);
+        setDataToView();
     }
 
     /**
@@ -193,18 +222,16 @@ public class DustFragment extends Fragment implements DustConstants {
         String[] data = rawString.split(" ");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
 
-        // 일반 정보
-        if (!TextUtils.isEmpty(measureTime))
-            ssb.append(DustUtils.convertString("측정시각 : " + measureTime, DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("지역 : " + data[0], DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("미세먼지 : " + data[1], statuses[0]));
-        ssb.append(DustUtils.convertString("초미세먼지 : " + data[2], statuses[1]));
-        ssb.append(DustUtils.convertString("오존 : " + data[3], statuses[2]));
-        ssb.append(DustUtils.convertString("이산화질소 : " + data[4], statuses[3]));
-        ssb.append(DustUtils.convertString("일산화탄소 : " + data[5], statuses[4]));
-        ssb.append(DustUtils.convertString("아황산가스 : " + data[6], statuses[5]));
-        ssb.append(DustUtils.convertString("등급 : " + data[7], DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("지수 : " + data[8], statuses[6]));
+        ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString("지역 : " + data[0] + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString("미세먼지 : " + data[1] + "\n", statuses[0]));
+        ssb.append(DustUtils.convertString("초미세먼지 : " + data[2] + "\n", statuses[1]));
+        ssb.append(DustUtils.convertString("오존 : " + data[3] + "\n", statuses[2]));
+        ssb.append(DustUtils.convertString("이산화질소 : " + data[4] + "\n", statuses[3]));
+        ssb.append(DustUtils.convertString("일산화탄소 : " + data[5] + "\n", statuses[4]));
+        ssb.append(DustUtils.convertString("아황산가스 : " + data[6] + "\n", statuses[5]));
+        ssb.append(DustUtils.convertString("등급 : " + data[7] + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString("지수 : " + data[8] + "\n", statuses[6]));
         ssb.append(DustUtils.convertString("지수결정물질 : " + data[9], DustUtils.STATUS.NONE));
 
         mTvResult.setText(ssb);

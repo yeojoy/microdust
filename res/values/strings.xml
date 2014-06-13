@@ -4,7 +4,31 @@
     <string name="app_name">MicroDustWarning</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
     <string name="btn_switch_on">ON</string>
     <string name="btn_switch_off">OFF</string>
+
+    <string name="btn_start">시작</string>
+
+    <string name="action_swtich_on">자동실행 ON</string>
+    <string name="action_swtich_off">자동실행 OFF</string>
+    <string name="action_refresh">Refresh</string>
+
+    <string name="hello_blank_fragment">
+        서울에서 당신이 서 있는 공간의 공기질을\n
+        1시간 간격으로 알려드립니다.\n
+        파란색은 좋은 상태를 나타내며\n
+        연두색은 보통의 상황을 나타냅니다.\n\n
+        만약\n
+        노란색과 주황색, 빨간색글자로 나타난다면\n
+        외출을 삼가해 주세요. :-)\n\n
+    </string>
+
+    <string name="desc_red">빨간색은 위험</string>
+    <string name="desc_blue">파란색은 좋음\n</string>
+    <string name="desc_ligth_green">연두색은 보통\n</string>
+    <string name="desc_yellow">노란색은 약간 안 좋음\n</string>
+    <string name="desc_orange">주황색은 안 좋음\n</string>
+
+    <string name="start_checkbox_desc">자동으로 실행하시겠습니까?</string>
+
 </resources>

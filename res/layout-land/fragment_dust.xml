@@ -21,13 +21,13 @@
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"/>
 
-    <ToggleButton
-        android:id="@+id/tb_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_result"
-        android:layout_alignRight="@id/tv_result"
-        android:textOn="켜짐"
-        android:textOff="꺼짐"
-        android:layout_margin="10dp"/>
+    <!--<ToggleButton-->
+        <!--android:id="@+id/tb_on_off"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@id/tv_result"-->
+        <!--android:layout_alignRight="@id/tv_result"-->
+        <!--android:textOn="켜짐"-->
+        <!--android:textOff="꺼짐"-->
+        <!--android:layout_margin="10dp"/>-->
 </RelativeLayout>

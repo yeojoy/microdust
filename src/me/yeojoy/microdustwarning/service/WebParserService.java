@@ -9,6 +9,7 @@ import java.util.Locale;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
+import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 import net.htmlparser.jericho.Element;
@@ -43,7 +44,7 @@ public class WebParserService extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate()");
+        DustLog.i(TAG, "onCreate()");
         mContext = this;
 
         if (!DustSharedPreferences.getInstance().hasPrefs())
@@ -63,7 +64,7 @@ public class WebParserService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand()");
+        DustLog.i(TAG, "onStartCommand()");
         return START_STICKY;
     }
 
@@ -73,7 +74,7 @@ public class WebParserService extends Service implements LocationListener {
     }
 
     private void parseString(Location location) {
-        Log.i(TAG, "parseString()");
+        DustLog.i(TAG, "parseString()");
         Geocoder geocoder = new Geocoder(mContext, Locale.KOREA);
         List<Address> fromLocation = null;
         try {
@@ -105,7 +106,7 @@ public class WebParserService extends Service implements LocationListener {
                 }
 
                 if (source == null) {
-                    Log.i(TAG, "result is null");
+                    DustLog.e(TAG, "result is null");
                     finishService();
                 }
 
@@ -141,6 +142,7 @@ public class WebParserService extends Service implements LocationListener {
                         DustSharedPreferences.getInstance().putString("str", rawString);
 
                         sendString(measureTime, rawString);
+                        break;
                     }
                 }
                 finishService();
@@ -152,12 +154,14 @@ public class WebParserService extends Service implements LocationListener {
     }
 
     private void sendString(final String measureTime, final String rawString) {
-        Log.i(TAG, "sendString()");
+        DustLog.i(TAG, "sendString()");
 
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                DustApplication.bus.post(new OttoEventEntity(measureTime, rawString));
+                OttoEventEntity entity = new OttoEventEntity(OttoEventEntity.COMMAND.GET_DATA);
+                entity.setData(measureTime, rawString);
+                DustApplication.bus.post(entity);
             }
         });
     }
@@ -165,12 +169,12 @@ public class WebParserService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy()");
+        DustLog.i(TAG, "onDestroy()");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged()");
+        DustLog.i(TAG, "onLocationChanged()");
         parseString(location);
     }
 

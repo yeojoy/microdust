@@ -21,12 +21,12 @@
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"/>
 
-    <ToggleButton
-        android:id="@+id/tb_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="켜짐"
-        android:textOff="꺼짐"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"/>
+    <!--<ToggleButton-->
+        <!--android:id="@+id/tb_on_off"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textOn="@string/btn_switch_on"-->
+        <!--android:textOff="@string/btn_switch_off"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_margin="10dp"/>-->
 </RelativeLayout>

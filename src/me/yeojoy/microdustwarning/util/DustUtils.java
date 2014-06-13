@@ -13,7 +13,6 @@ import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
 public class DustUtils implements DustConstants {
 
@@ -81,8 +80,7 @@ public class DustUtils implements DustConstants {
      * @param data
      */
     public static STATUS[] analyzeMicroDust(String data) {
-        Log.i(TAG, "analyzeMicroDust()");
-        Log.i(TAG, "analyzeMicroDust(), DATA : " + data);
+        DustLog.i(TAG, "analyzeMicroDust()");
         String[] array = data.split(" ");
         // TEST DATA
         // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
@@ -260,7 +258,7 @@ public class DustUtils implements DustConstants {
         return STATUS.GOOD;
     }
 
-    private static int getTextColor(STATUS status) {
+    public static int getTextColor(STATUS status) {
         int color;
         switch (status) {
             case GOOD:
@@ -298,7 +296,7 @@ public class DustUtils implements DustConstants {
      * @return
      */
     public static SpannableString convertString(String str, STATUS status) {
-        SpannableString spannableString = new SpannableString(str + "\n");
+        SpannableString spannableString = new SpannableString(str);
 
         spannableString.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(status)),
                 0, spannableString.length(), SpannableString.SPAN_INCLUSIVE_INCLUSIVE);

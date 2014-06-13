@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
  */
 public class DustSharedPreferences {
 
-    private static final String TAG = DustSharedPreferences.class.getSimpleName();
     private static final String SHARED_PREFS_NAME = "dust";
 
     private static DustSharedPreferences instance;
@@ -49,6 +48,10 @@ public class DustSharedPreferences {
      */
     public boolean getBoolean(String key) {
         return mPrefs.getBoolean(key, false);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return mPrefs.getBoolean(key, defaultValue);
     }
 
     /**

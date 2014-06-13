@@ -3,16 +3,12 @@ package me.yeojoy.microdustwarning.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -106,9 +102,6 @@ public class ImageAdapter extends BaseAdapter {
         AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(String... params) {
-                Log.i(TAG, "doInBackground()");
-                Log.i(TAG, "param[0] : " + params[0]);
-
                 Bitmap image = null;
                 try {
                     InputStream is = new URL(params[0]).openStream();

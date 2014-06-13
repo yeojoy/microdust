@@ -1,9 +1,16 @@
 package me.yeojoy.microdustwarning;
 
 public interface DustConstants {
-    
-//    public static final int NOTI_TIME = 1000 * 60 * 2;
-    public static final int NOTI_TIME = 1000 * 60 * 60;
+
+    /** 자동으로 NOTI를 알려주는 시간 간격 */
+    public static final int NOTI_TIME_TEST = 1000 * 60 * 2;
+    public static final int NOTI_TIME_REAL = 1000 * 60 * 60;
+
+    /** Bundle key */
+    public static final String KEY_CHECKBOX_AUTO_START = "auto_start";
+
+    /** SharedPreferences key */
+    public static final String KEY_PREFS_FIRST_LAUNCH = "first_launch";
 
     // 미세먼지 수치
     /** 0 ~ 30 까지 좋음 */

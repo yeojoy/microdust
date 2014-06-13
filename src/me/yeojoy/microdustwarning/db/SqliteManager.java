@@ -11,7 +11,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
+
+import me.yeojoy.microdustwarning.util.DustLog;
 
 public class SqliteManager implements DustInfoDBConstants{
     
@@ -30,7 +31,7 @@ public class SqliteManager implements DustInfoDBConstants{
     }
  
     public void init(Context context) {
-        Log.i(TAG, "init()");
+        DustLog.i(TAG, "init()");
         mContext = context;
         
         mDBHelper = new DustInfoDBHelper(mContext);
@@ -43,12 +44,12 @@ public class SqliteManager implements DustInfoDBConstants{
      *  false : NULL
      */
     public boolean isDoneInit() {
-        Log.i(TAG, "isDoneInit()");
+        DustLog.i(TAG, "isDoneInit()");
         return mContext != null && mDBHelper != null;
     }
     
     public void saveData(String time, String rawData) {
-        Log.i(TAG, "saveData()");
+        DustLog.i(TAG, "saveData()");
         ArrayList<String> data = new ArrayList<String>();
         data.add(time);
         data.addAll(Arrays.asList(rawData.split(" ")));
@@ -58,7 +59,7 @@ public class SqliteManager implements DustInfoDBConstants{
     
     
     public void insertData(List<String> data) {
-        Log.i(TAG, "insertData()");
+        DustLog.i(TAG, "insertData()");
         
         if (data == null || data.size() != 11)
             return;
@@ -67,7 +68,7 @@ public class SqliteManager implements DustInfoDBConstants{
         for (String s : data) {
             sb.append(s).append(" ");
         }
-        Log.d(TAG, sb.toString().trim());
+        DustLog.d(TAG, sb.toString().trim());
         
         SQLiteDatabase db = null;
         try {
@@ -94,7 +95,7 @@ public class SqliteManager implements DustInfoDBConstants{
                     null, //nullColumnHack
                     values); // key/value -> keys = column names/ values = column values
         } catch (SQLiteException e) {
-            Log.e(TAG, e.getMessage());
+            DustLog.e(TAG, e.getMessage());
         } finally {
             // 4. close
             if (db != null) db.close();
@@ -114,7 +115,7 @@ public class SqliteManager implements DustInfoDBConstants{
 
             db.rawQuery(selectQuery, null);
         } catch (SQLiteException e) {
-            Log.e(TAG, e.getMessage());
+            DustLog.e(TAG, e.getMessage());
         } finally {
             if (db != null) {
                 db.close();
