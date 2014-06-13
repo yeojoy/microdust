@@ -39,6 +39,7 @@ public class StartFragment extends Fragment implements DustConstants {
 
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.container, dustFragment, null).commit();
+
             }
         });
         return layout;

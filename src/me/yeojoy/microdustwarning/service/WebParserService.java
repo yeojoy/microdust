@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 import me.yeojoy.microdustwarning.DustApplication;
+import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.util.DustLog;
@@ -28,10 +30,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-public class WebParserService extends Service implements LocationListener {
+public class WebParserService extends Service implements LocationListener, DustConstants {
 
     private static final String TAG = WebParserService.class.getSimpleName();
 
@@ -55,8 +58,12 @@ public class WebParserService extends Service implements LocationListener {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-        String bestProvider = mLocationManager.getBestProvider(criteria, true);
+        String bestProvider = mLocationManager.getBestProvider(criteria, false);
 
+        if (TextUtils.isEmpty(bestProvider)) {
+            Toast.makeText(mContext, R.string.str_no_location, Toast.LENGTH_LONG).show();
+            stopSelf();
+        }
         mLocationManager.requestLocationUpdates(bestProvider, 0, 0, this);
 
         mHandler = new Handler();
@@ -85,7 +92,7 @@ public class WebParserService extends Service implements LocationListener {
 
         final String ADMIN = fromLocation.get(0).getAdminArea();
         if (!"서울특별시".equals(ADMIN)) {
-            Toast.makeText(mContext, "죄송합니다. 현재 서울에서만 사용하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.can_only_use_in_seoul, Toast.LENGTH_SHORT).show();
             finishService();
             return;
         }
@@ -138,8 +145,8 @@ public class WebParserService extends Service implements LocationListener {
                         DustUtils.sendNotification(mContext, status);
 
                         // TODO refactoring!
-                        DustSharedPreferences.getInstance().putString("measureTime", measureTime);
-                        DustSharedPreferences.getInstance().putString("str", rawString);
+                        DustSharedPreferences.getInstance().putString(KEY_PREFS_MEASURE_TIME, measureTime);
+                        DustSharedPreferences.getInstance().putString(KEY_PREFS_RAW_STRING, rawString);
 
                         sendString(measureTime, rawString);
                         break;

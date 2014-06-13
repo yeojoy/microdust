@@ -44,7 +44,6 @@ public class DustFragment extends Fragment implements DustConstants {
     private static final String TAG = DustFragment.class.getSimpleName();
 
     private TextView mTvResult;
-//    private ToggleButton mTbOnOff;
 
     private AlarmManager alarmManager;
 
@@ -53,8 +52,6 @@ public class DustFragment extends Fragment implements DustConstants {
     private ArrayList<String> mUrlList;
 
     private PendingIntent pending;
-    
-    public DustFragment() { }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,18 +72,18 @@ public class DustFragment extends Fragment implements DustConstants {
         // Start Activity에서 checkbox 상태를 보고 시작시킨다.
         if (getArguments() != null && getArguments().getBoolean(KEY_CHECKBOX_AUTO_START, false)) {
             launchAlarmManager();
-            DustSharedPreferences.getInstance().putBoolean("switch", true);
+            DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, true);
         }
 
         return view;
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
     }
-    
+
     @Override
     public void onStart() {
         super.onStart();
@@ -96,10 +93,29 @@ public class DustFragment extends Fragment implements DustConstants {
     }
 
     private void getImageUrls() {
-        // TODO http://www.kaq.or.kr/main.asp parsing 필요
+
+        mUrlList.clear();
+        mAdapter.notifyDataSetChanged();
+
+        String url = null;
+        for (String key : KEY_PREFS_IMAGES) {
+            url = DustSharedPreferences.getInstance().getString(key, null);
+            if (TextUtils.isEmpty(url)) break;
+
+            mUrlList.add(url);
+        }
+
+        if (mUrlList.size() == 4) {
+            mAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        mUrlList.clear();
+
         AsyncTask<Void, Void, ArrayList<String>> task = new AsyncTask<Void, Void, ArrayList<String>>() {
             @Override
             protected ArrayList<String> doInBackground(Void... params) {
+                // TODO http://www.kaq.or.kr/main.asp parsing 필요
                 final String url = "http://www.kaq.or.kr/main.asp";
                 Source source = null;
                 try {
@@ -116,6 +132,10 @@ public class DustFragment extends Fragment implements DustConstants {
                     String str = e.getAttributeValue("src").toString();
                     if (str.startsWith("http://"))
                         urls.add(str);
+                }
+
+                for (int i = 0, j = urls.size(); i < j; i++) {
+                    DustSharedPreferences.getInstance().putString(KEY_PREFS_IMAGES[i], urls.get(i));
                 }
 
                 return urls;
@@ -174,7 +194,7 @@ public class DustFragment extends Fragment implements DustConstants {
                     cancelAlarmManager();
                 }
 
-                DustSharedPreferences.getInstance().putBoolean("switch", !entity.on_off);
+                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, !entity.on_off);
 
                 break;
         }
@@ -207,8 +227,8 @@ public class DustFragment extends Fragment implements DustConstants {
      * SpannableStringBuilder를 사용해서 색깔을 달리함.
      */
     private void setDataToView() {
-        String string = DustSharedPreferences.getInstance().getString("str", null);
-        String time = DustSharedPreferences.getInstance().getString("measureTime", null);
+        String string = DustSharedPreferences.getInstance().getString(KEY_PREFS_RAW_STRING, null);
+        String time = DustSharedPreferences.getInstance().getString(KEY_PREFS_MEASURE_TIME, null);
 
         if (TextUtils.isEmpty(string)) return;
 

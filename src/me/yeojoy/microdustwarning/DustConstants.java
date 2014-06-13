@@ -11,6 +11,14 @@ public interface DustConstants {
 
     /** SharedPreferences key */
     public static final String KEY_PREFS_FIRST_LAUNCH = "first_launch";
+    public static final String KEY_PREFS_SWITCH = "switch";
+
+    public static final String KEY_PREFS_RAW_STRING = "raw_string";
+    public static final String KEY_PREFS_MEASURE_TIME = "measure_time";
+
+    public static final String[] KEY_PREFS_IMAGES = {
+        "image01", "image02", "image03", "image04"
+    };
 
     // 미세먼지 수치
     /** 0 ~ 30 까지 좋음 */

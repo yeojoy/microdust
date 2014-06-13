@@ -31,4 +31,7 @@
 
     <string name="start_checkbox_desc">자동으로 실행하시겠습니까?</string>
 
+    <string name="str_no_location">위치 정보를 가져올 수 없습니다. 위치정보를 켜주세요.</string>
+    <string name="can_only_use_in_seoul">\"죄송합니다. 현재 서울에서만 사용하실 수 있습니다.\"</string>
+
 </resources>

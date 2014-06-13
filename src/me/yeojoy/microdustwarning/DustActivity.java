@@ -1,19 +1,18 @@
 package me.yeojoy.microdustwarning;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.fragment.DustFragment;
 import me.yeojoy.microdustwarning.fragment.SettingFragment;
 import me.yeojoy.microdustwarning.fragment.StartFragment;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class DustActivity extends Activity implements DustConstants {
 
@@ -71,7 +70,8 @@ public class DustActivity extends Activity implements DustConstants {
     public boolean onPrepareOptionsMenu(Menu menu) {
         DustLog.i(TAG, "onPrepareOptionsMenu()");
         MenuItem item = menu.findItem(R.id.action_on_off);
-        boolean serviceSwitchStatus = !DustSharedPreferences.getInstance().getBoolean("switch", true);
+        boolean serviceSwitchStatus
+                = !DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, true);
 
         item.setChecked(serviceSwitchStatus);
 

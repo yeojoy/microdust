@@ -51,7 +51,6 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
-        ImageView imageView;
         ViewHolder holder;
         if (convertView == null) { // if it's not recycled, initialize some attributes
             holder = new ViewHolder();
@@ -64,14 +63,8 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-//        imageView.setImageResource(mUrls[position]); // Load image into ImageView
-        if (!TextUtils.isEmpty(mUrls.get(position))) {
-            holder.mIvMapImage.setVisibility(View.VISIBLE);
-            setImage(holder.mIvMapImage, mUrls.get(position));
-        } else
-            holder.mIvMapImage.setVisibility(View.INVISIBLE);
 
-        String desc = null;
+        String desc;
         switch (position) {
             case 0:
                 desc = "오늘 / 미세먼지";
@@ -82,21 +75,31 @@ public class ImageAdapter extends BaseAdapter {
             case 2:
                 desc = "오늘 / 초미세먼지";
                 break;
-            default:
+            case 3:
                 desc = "내일 / 초미세먼지";
+                break;
+            default:
+                desc = "";
+                break;
         }
-        holder.mTvDesc.setText(desc);
+
+//        imageView.setImageResource(mUrls[position]); // Load image into ImageView
+        if (TextUtils.isEmpty(mUrls.get(position))) {
+            holder.mIvMapImage.setImageDrawable(null);
+            holder.mTvDesc.setText("");
+            holder.mIvMapImage.setVisibility(View.GONE);
+            holder.mTvDesc.setVisibility(View.GONE);
+        } else {
+            holder.mIvMapImage.setVisibility(View.VISIBLE);
+            holder.mTvDesc.setVisibility(View.VISIBLE);
+            setImage(holder.mIvMapImage, mUrls.get(position));
+            holder.mTvDesc.setText(desc);
+        }
+
         return convertView;
     }
 
     private void setImage(final ImageView view, String url) {
-        if (view == null || TextUtils.isEmpty(url)) return;
-
-        // TODO url에 이미지 가져오기
-//        06-12 00:03:56.962  21011-21039/me.yeojoy.microdustwarning I/DustFragment﹕ http://www.webairwatch.com/kaq/modelimg/PM10_24H_AVG.09KM.Day1.gif
-//        06-12 00:03:56.962  21011-21039/me.yeojoy.microdustwarning I/DustFragment﹕ http://www.webairwatch.com/kaq/modelimg/PM10_24H_AVG.09KM.Day2.gif
-//        06-12 00:03:56.962  21011-21039/me.yeojoy.microdustwarning I/DustFragment﹕ http://www.webairwatch.com/kaq/modelimg/PM2_5_24H_AVG.09KM.Day1.gif
-//        06-12 00:03:56.962  21011-21039/me.yeojoy.microdustwarning I/DustFragment﹕ http://www.webairwatch.com/kaq/modelimg/PM2_5_24H_AVG.09KM.Day2.gif
         // 사용할 URL
 
         AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {

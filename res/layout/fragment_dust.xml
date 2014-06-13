@@ -8,25 +8,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
         android:gravity="left|top"
-        android:lineSpacingExtra="2dp"
+        android:lineSpacingExtra="1dp"
         android:textSize="16sp"
         android:text="Result"/>
 
     <GridView
         android:id="@+id/gv_map"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="match_parent"
         android:layout_below="@id/tv_result"
         android:numColumns="2"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"/>
+        android:verticalSpacing="5dp"
+        android:horizontalSpacing="5dp"/>
 
-    <!--<ToggleButton-->
-        <!--android:id="@+id/tb_on_off"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textOn="@string/btn_switch_on"-->
-        <!--android:textOff="@string/btn_switch_off"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_margin="10dp"/>-->
 </RelativeLayout>
