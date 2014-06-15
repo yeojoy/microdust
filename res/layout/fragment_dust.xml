@@ -6,11 +6,63 @@
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/view_divider"
         android:layout_margin="3dp"
         android:gravity="left|top"
         android:lineSpacingExtra="1dp"
         android:textSize="16sp"
         android:text="Result"/>
+    <View
+        android:id="@id/view_divider"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_indicator"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_result"
+        android:layout_toRightOf="@id/tv_result"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/ib_blue"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:src="@drawable/selector_blue"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/ib_light_green"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:src="@drawable/selector_light_green"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/ib_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:src="@drawable/selector_yellow"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/ib_orange"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:src="@drawable/selector_orange"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/ib_red"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:src="@drawable/selector_red"
+            android:background="@android:color/transparent"/>r
+
+    </LinearLayout>
 
     <GridView
         android:id="@+id/gv_map"

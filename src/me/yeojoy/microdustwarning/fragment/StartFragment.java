@@ -54,27 +54,27 @@ public class StartFragment extends Fragment implements DustConstants {
     private void setDesc() {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(getActivity().getString(R.string.desc_blue));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(DustUtils.STATUS.GOOD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.GOOD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_ligth_green));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(DustUtils.STATUS.NORMAL)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.NORMAL)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_yellow));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(DustUtils.STATUS.BAD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.BAD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_orange));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(DustUtils.STATUS.WORSE)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.WORSE)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_red));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(DustUtils.STATUS.WORST)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.WORST)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 

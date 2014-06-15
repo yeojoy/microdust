@@ -17,6 +17,7 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -241,20 +242,22 @@ public class DustFragment extends Fragment implements DustConstants {
         String[] data = rawString.split(" ");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
 
+        Resources res = getResources();
+
         if (BuildConfig.DEBUG)
-            ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", null));
+            ssb.append(DustUtils.convertString(res, "측정시각 : " + measureTime + "\n", null));
         else
-            ssb.append(DustUtils.convertString("측정시각 : " + measureTime + "\n", DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("지역 : " + data[0] + "\n", DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("미세먼지 : " + data[1] + "\n", statuses[0]));
-        ssb.append(DustUtils.convertString("초미세먼지 : " + data[2] + "\n", statuses[1]));
-        ssb.append(DustUtils.convertString("오존 : " + data[3] + "\n", statuses[2]));
-        ssb.append(DustUtils.convertString("이산화질소 : " + data[4] + "\n", statuses[3]));
-        ssb.append(DustUtils.convertString("일산화탄소 : " + data[5] + "\n", statuses[4]));
-        ssb.append(DustUtils.convertString("아황산가스 : " + data[6] + "\n", statuses[5]));
-        ssb.append(DustUtils.convertString("등급 : " + data[7] + "\n", DustUtils.STATUS.NONE));
-        ssb.append(DustUtils.convertString("지수 : " + data[8] + "\n", statuses[6]));
-        ssb.append(DustUtils.convertString("지수결정물질 : " + data[9], DustUtils.STATUS.NONE));
+            ssb.append(DustUtils.convertString(res, "측정시각 : " + measureTime + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "지역 : " + data[0] + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "미세먼지 : " + data[1] + "\n", statuses[0]));
+        ssb.append(DustUtils.convertString(res, "초미세먼지 : " + data[2] + "\n", statuses[1]));
+        ssb.append(DustUtils.convertString(res, "오존 : " + data[3] + "\n", statuses[2]));
+        ssb.append(DustUtils.convertString(res, "이산화질소 : " + data[4] + "\n", statuses[3]));
+        ssb.append(DustUtils.convertString(res, "일산화탄소 : " + data[5] + "\n", statuses[4]));
+        ssb.append(DustUtils.convertString(res, "아황산가스 : " + data[6] + "\n", statuses[5]));
+        ssb.append(DustUtils.convertString(res, "등급 : " + data[7] + "\n", DustUtils.STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "지수 : " + data[8] + "\n", statuses[6]));
+        ssb.append(DustUtils.convertString(res, "지수결정물질 : " + data[9], DustUtils.STATUS.NONE));
 
         mTvResult.setText(ssb);
 

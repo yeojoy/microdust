@@ -1,18 +1,19 @@
 package me.yeojoy.microdustwarning.util;
 
-import me.yeojoy.microdustwarning.DustConstants;
-import me.yeojoy.microdustwarning.R;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+
+import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.R;
 
 public class DustUtils implements DustConstants {
 
@@ -63,6 +64,10 @@ public class DustUtils implements DustConstants {
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
 
+        // 진동 설정
+        mBuilder.setVibrate(new long[]{200, 200, 1500, 200, 200, 1500, 2000});
+        // 불빛 설정
+        mBuilder.setLights(Color.CYAN, 3000, 3000);
         Notification noti = mBuilder.build();
 //        noti.bigContentView = views2;
 
@@ -258,37 +263,28 @@ public class DustUtils implements DustConstants {
         return STATUS.GOOD;
     }
 
-    public static int getTextColor(STATUS status) {
+    public static int getTextColor(Resources res, STATUS status) {
         if (status == null) return Color.DKGRAY;
 
-        int color;
         switch (status) {
             case GOOD:
                 // 파란색
-                color = Color.parseColor("#0060FF");
-                break;
+                return res.getColor(R.color.font_blue);
             case NORMAL:
                 // 연두색
-                color = Color.parseColor("#49FDAC");
-                break;
+                return res.getColor(R.color.font_light_green);
             case BAD:
                 // 노란색
-                color = Color.parseColor("#FFE500");
-                break;
+                return res.getColor(R.color.font_yellow);
             case WORSE:
                 // 주황색
-                color = Color.parseColor("#FF8900");
-                break;
+                return res.getColor(R.color.font_orange);
             case WORST:
                 // 빨간색
-                color = Color.parseColor("#FF0000");
-                break;
-            default :
-                // 희무끄리한 색
-                color = Color.parseColor("#BEC7C7");
-                break;
+                return res.getColor(R.color.font_red);
         }
-        return color;
+        // 희무끄리한 색
+        return res.getColor(R.color.font_default);
     }
 
     /**
@@ -297,10 +293,10 @@ public class DustUtils implements DustConstants {
      * @param status
      * @return
      */
-    public static SpannableString convertString(String str, STATUS status) {
+    public static SpannableString convertString(Resources res, String str, STATUS status) {
         SpannableString spannableString = new SpannableString(str);
 
-        spannableString.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(status)),
+        spannableString.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
                 0, spannableString.length(), SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableString;
