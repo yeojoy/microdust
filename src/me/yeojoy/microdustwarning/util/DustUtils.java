@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
@@ -331,5 +333,22 @@ public class DustUtils implements DustConstants {
             default:
                 return "보통";
         }
+    }
+
+    /**
+     * get Application Version
+     * @param context
+     * @return
+     */
+    public static String getAppVersion(Context context) {
+        PackageInfo info = null;
+        try {
+                info = context.getPackageManager()
+                        .getPackageInfo(context.getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        if (info != null) return info.versionName;
+        return null;
     }
 }
