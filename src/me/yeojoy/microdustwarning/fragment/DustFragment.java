@@ -341,7 +341,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         ssb.append(DustUtils.convertString(res, "일산화탄소 : " + data[5] + "\n", statuses[4]));
         ssb.append(DustUtils.convertString(res, "아황산가스 : " + data[6] + "\n", statuses[5]));
         ssb.append(DustUtils.convertString(res, "등급 : " + data[7] + "\n", STATUS.NONE));
-        ssb.append(DustUtils.convertString(res, "지수 : " + data[8] + "\n", statuses[6]));
+        ssb.append(DustUtils.convertString(res, "통합지수 : " + data[8] + "\n", statuses[6]));
         ssb.append(DustUtils.convertString(res, "지수결정물질 : " + data[9], STATUS.NONE));
 
         mTvResult.setText(ssb);

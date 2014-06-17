@@ -72,4 +72,13 @@
     <string name="dlg_status_worst_title">나가지 마세요. 공기가 좋지 않아요!</string>
 
     <string name="dlg_default_positive_button">확인</string>
+
+
+    <!-- Preferences -->
+    <string name="pref_sms_storage_title">카테고리</string>
+    <string name="pref_summary_auto_delete">이미 받은 오래된 메시지 삭제 제한</string>
+    <string name="pref_title_auto_delete">오래된 메시지 삭제</string>
+    <string name="pref_summary_delete_limit">대화당 500메시지</string>
+    <string name="pref_title_sms_delete">문자메시지 제한</string>
+    <string name="pref_title_mms_delete">MMS 제한</string>
 </resources>
