@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.entity.STATUS;
 import me.yeojoy.microdustwarning.util.DustUtils;
 
 
@@ -21,60 +23,66 @@ public class StartFragment extends Fragment implements DustConstants {
 
     private TextView mTvMainDesc;
 
-    private CheckBox mCbAutoStart;
+
+    private boolean mWantToStartService = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_start, container, false);
 
         mTvMainDesc = (TextView) layout.findViewById(R.id.tv_main_desc);
-        mCbAutoStart = (CheckBox) layout.findViewById(R.id.cb_auto_start);
+        ((CheckBox) layout.findViewById(R.id.cb_auto_start)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mWantToStartService = isChecked;
+                    }
+                }
+        );
 
         layout.findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment dustFragment = new DustFragment();
                 Bundle args = new Bundle();
-                args.putBoolean(KEY_CHECKBOX_AUTO_START, mCbAutoStart.isChecked());
+                args.putBoolean(KEY_CHECKBOX_AUTO_START, mWantToStartService);
                 dustFragment.setArguments(args);
 
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.container, dustFragment, null).commit();
 
             }
-        });
-        return layout;
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        });
+
         setDesc();
+        return layout;
     }
 
     private void setDesc() {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(getActivity().getString(R.string.desc_blue));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.GOOD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.GOOD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_ligth_green));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.NORMAL)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.NORMAL)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_yellow));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.BAD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.BAD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_orange));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.WORSE)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.WORSE)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_red));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), DustUtils.STATUS.WORST)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.WORST)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 

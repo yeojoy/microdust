@@ -14,6 +14,7 @@ import android.text.style.ForegroundColorSpan;
 
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.entity.STATUS;
 
 public class DustUtils implements DustConstants {
 
@@ -30,18 +31,30 @@ public class DustUtils implements DustConstants {
         if (!needToSendNoti) return;
 
         StringBuilder sb = new StringBuilder();
-        sb.append("미세먼지   : ").append(status[0]).append("\n");
-        sb.append("초미세먼지  : ").append(status[1]).append("\n");
-        sb.append("오존      : ").append(status[2]).append("\n");
-        sb.append("이산화질소  : ").append(status[3]).append("\n");
-        sb.append("일산화탄소  : ").append(status[4]).append("\n");
-        sb.append("아황산가스  : ").append(status[5]).append("\n");
-        sb.append("통합지수   : ").append(status[6]);
+        sb.append("미세먼지   : ").append(getStatusToString(status[0])).append("\n");
+        sb.append("초미세먼지  : ").append(getStatusToString(status[1])).append("\n");
+        sb.append("오존      : ").append(getStatusToString(status[2])).append("\n");
+        sb.append("이산화질소  : ").append(getStatusToString(status[3])).append("\n");
+        sb.append("일산화탄소  : ").append(getStatusToString(status[4])).append("\n");
+        sb.append("아황산가스  : ").append(getStatusToString(status[5])).append("\n");
+        sb.append("통합지수   : ").append(getStatusToString(status[6]));
+
+        String shortMessage = "외출하기에 좋지 않습니다.";
+
+        for (STATUS s : status) {
+            if (s == STATUS.WORSE)
+                shortMessage = "실내활동을 권장합니다.";
+        }
+
+        for (STATUS s : status) {
+            if (s == STATUS.WORST)
+                shortMessage = "위험합니다. 나가지 마세요!";
+        }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         mBuilder.setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("미세먼지 알림")
-                .setContentText(sb.subSequence(0, 26) + "...");
+                .setContentText(shortMessage);
 
 //        NotificationCompat.BigPictureStyle style1 = new NotificationCompat.BigPictureStyle();
 //        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
@@ -65,20 +78,15 @@ public class DustUtils implements DustConstants {
         mBuilder.setAutoCancel(true);
 
         // 진동 설정
-        mBuilder.setVibrate(new long[]{200, 200, 1500, 200, 200, 1500, 2000});
+        mBuilder.setVibrate(new long[]{0, 500, 200, 500, 200, 1000});
         // 불빛 설정
-        mBuilder.setLights(Color.CYAN, 3000, 3000);
+        mBuilder.setLights(0xFFFF0000, 500, 500);
         Notification noti = mBuilder.build();
 //        noti.bigContentView = views2;
 
         NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mng.notify(100, noti);
     }
-    
-    
-    public enum STATUS {
-        GOOD, NORMAL, BAD, WORSE, WORST, NONE
-    };
     
     /**
      * 받은 data로 미세먼지 확인 후 Notification으로 알려준다.
@@ -264,7 +272,7 @@ public class DustUtils implements DustConstants {
     }
 
     public static int getTextColor(Resources res, STATUS status) {
-        if (status == null) return Color.DKGRAY;
+        if (status == null) return res.getColor(R.color.font_debuggable_color);
 
         switch (status) {
             case GOOD:
@@ -300,5 +308,20 @@ public class DustUtils implements DustConstants {
                 0, spannableString.length(), SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableString;
+    }
+
+    public static String getStatusToString(STATUS status) {
+        switch (status) {
+            case GOOD:
+                return "좋음 :-)";
+            case BAD:
+                return "약간 안 좋음";
+            case WORSE:
+                return "나쁨";
+            case WORST:
+                return "위험!!!";
+            default:
+                return "보통";
+        }
     }
 }

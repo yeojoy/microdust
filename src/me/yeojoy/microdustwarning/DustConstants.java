@@ -3,8 +3,8 @@ package me.yeojoy.microdustwarning;
 public interface DustConstants {
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final int NOTI_TIME_TEST = 1000 * 60 * 2;
-    public static final int NOTI_TIME_REAL = 1000 * 60 * 60;
+    public static final int NOTI_TIME_TEST = 1000 * 60 * 2;     // 2분
+    public static final int NOTI_TIME_REAL = 1000 * 60 * 30;    // 30분
 
     /** Bundle key */
     public static final String KEY_CHECKBOX_AUTO_START = "auto_start";

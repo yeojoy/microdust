@@ -23,12 +23,14 @@ android {
             keyAlias RELEASE_KEY_ALIAS
             keyPassword RELEASE_KEY_PASSWORD
         }
+
     }
 
     buildTypes {
         release {
             signingConfig signingConfigs.release
         }
+
     }
 
     sourceSets {
@@ -54,4 +56,6 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+    
 }
+

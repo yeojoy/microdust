@@ -11,6 +11,7 @@ import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
+import me.yeojoy.microdustwarning.entity.STATUS;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
@@ -141,7 +142,7 @@ public class WebParserService extends Service implements LocationListener, DustC
 
                     if (rawString.startsWith(LOCALITY)) {
                         manager.saveData(measureTime, rawString);
-                        DustUtils.STATUS[] status = DustUtils.analyzeMicroDust(rawString);
+                        STATUS[] status = DustUtils.analyzeMicroDust(rawString);
                         DustUtils.sendNotification(mContext, status);
 
                         // TODO refactoring!

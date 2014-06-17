@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MicroDustWarning</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">안녕하세요?\n앱을 시작하기 위해서\n우측 상단 옵션메뉴에서 자동실행하기를 켜주세요.</string>
     <string name="action_settings">Settings</string>
     <string name="btn_switch_on">ON</string>
     <string name="btn_switch_off">OFF</string>
@@ -34,4 +34,42 @@
     <string name="str_no_location">위치 정보를 가져올 수 없습니다. 위치정보를 켜주세요.</string>
     <string name="can_only_use_in_seoul">\"죄송합니다. 현재 서울에서만 사용하실 수 있습니다.\"</string>
 
+    <string name="micro_dust">미세먼지</string>
+    <string name="so2">아황산가스</string>
+    <string name="no2">이산화질소</string>
+    <string name="co">일산화탄소</string>
+    <string name="o3">오존</string>
+
+    <!-- 좋은상황 -->
+    <string name="good">실외 활동을 하기에 좋은 날입니다.</string>
+
+    <!-- 일반상황 -->
+    <string name="normal_o3">노약자: 실외활동 자제</string>
+    <!-- 약간 안 좋음 -->
+    <string name="bad_micro_dust">호흡기(ex. 천식) 혹은 심질환자: 장시간의 실외활동 자제\n</string>
+    <string name="bad_o3">활동량 많은 어린이와 성인, 호흡기질환자(ex. 천식): 장시간의 실외활동 자제\n</string>
+    <string name="bad_co">심혈관질환자(ex. 협심증): 무리한 작업 자제권고, CO 오염원이 있는 교통체증 지역에서의 활동 자제\n</string>
+    <string name="bad_so2">천식질환자: 실외활동 자제</string>
+    <!-- 나쁜 상황 -->
+    <string name="worse_micro_dust">심장, 폐질환자, 노인, 어린이: 장시간 또는 무리한 활동 자제권고\n일반군: 장시간 또는 무리한 활동 자제\n</string>
+    <string name="worse_o3">활동량 많은 어린이와 성인, 호흡기질환자(ex. 천식)\n장시간의 실외활동 자제 권고\n건강집단내 어린이\n장시간의 실외활동 자제\n오존 주의보 발령\n</string>
+    <string name="worse_co">심혈관질환자(ex. 협심증)\n일상수준의 작업도 자제, CO 오염원이 있는\n교통제증 지역은 피할 것을 권고\n</string>
+    <string name="worse_so2">어린이, 천식환자, 심장, 폐질환자\n실외활동 자제 권고</string>
+    <!-- 위험 상황 -->
+    <string name="worst_micro_dust">호흡기(ex. 천식) 질환자, 노약자\n실외활동 제한\n</string>
+    <string name="worst_o3">활동량 많은 어린이와 성인, 호흡기질환자(ex. 천식)\n실외 활동 금지\n일반군\n실외활동 제한\n오존 경보 발령\n</string>
+    <string name="worst_no2">호흡기(ex. 천식) 질환 어린이, 성인\n과도한 실외활동 제한\n</string>
+    <string name="worst_co">심혈관질환자(ex. 협심증)\n일상수준의 작업도 제한,\n교통제증 지역 활동 제한\n</string>
+    <string name="worst_so2">어린이, 천식환자, 심장, 폐질환자\n실외활동 제한\n일반군\n실외활동 자제 권고</string>
+
+    <!-- Dialog -->
+    <string name="dlg_default_title">알림</string>
+
+    <string name="dlg_status_good_title">상쾌한 운동을 해보는 건 어떨까요?</string>
+    <string name="dlg_status_normal_title">밖으로 나가보는 건 어떠신가요?</string>
+    <string name="dlg_status_bad_title">장시간 외출은 피하세요.</string>
+    <string name="dlg_status_worse_title">집에 계시는 걸 권해드려요.</string>
+    <string name="dlg_status_worst_title">나가지 마세요. 공기가 좋지 않아요!</string>
+
+    <string name="dlg_default_positive_button">확인</string>
 </resources>
