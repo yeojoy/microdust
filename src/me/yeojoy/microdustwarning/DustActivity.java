@@ -26,7 +26,7 @@ public class DustActivity extends Activity implements DustConstants {
 
         mFragmentManager = getFragmentManager();
 
-        boolean isSwitchOff = DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, false);
+        boolean isSwitchOff = DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, true);
 
         if (isSwitchOff) {
             DustLog.d(TAG, "onCreate(), Service is OFF.");

@@ -9,6 +9,8 @@
 
     <string name="on_construction">현재 준비 중입니다. 조금만 기다려 주세요.</string>
 
+    <string name="service_is_on_wait_a_minute">실행 했습니다. 앱을 종료하시거나 잠시 기다려주세요. ;-)</string>
+
     <string name="btn_start">시작</string>
 
     <string name="action_swtich_on">자동실행 ON</string>

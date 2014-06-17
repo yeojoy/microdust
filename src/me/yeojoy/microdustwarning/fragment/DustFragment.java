@@ -100,6 +100,11 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
             }
         }
 
+        if (!DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF)) {
+            mTvResult.setText(R.string.service_is_on_wait_a_minute);
+            setDataToView();
+        }
+
         view.findViewById(R.id.ib_blue).setOnClickListener(this);
         view.findViewById(R.id.ib_light_green).setOnClickListener(this);
         view.findViewById(R.id.ib_yellow).setOnClickListener(this);
@@ -300,6 +305,8 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
      */
     private void launchAlarmManager() {
         DustLog.i(TAG, "launchAlarmManager()");
+        mTvResult.setText(R.string.service_is_on_wait_a_minute);
+
         int notiTime = NOTI_TIME_REAL;
         if (BuildConfig.DEBUG) {
             notiTime = NOTI_TIME_TEST;
@@ -312,6 +319,16 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
     private void refreshData() {
         Intent intent = new Intent(getActivity(), WebParserService.class);
         getActivity().startService(intent);
+    }
+
+    private void setDataToView() {
+        String measuredTime = DustSharedPreferences.getInstance().getString(KEY_PREFS_MEASURE_TIME, null);
+        String rawString = DustSharedPreferences.getInstance().getString(KEY_PREFS_RAW_STRING, null);
+
+        if (TextUtils.isEmpty(measuredTime) || TextUtils.isEmpty(rawString)) return;
+
+        setDataToView(measuredTime, rawString);
+
     }
 
     private void setDataToView(String measureTime, String rawString) {
