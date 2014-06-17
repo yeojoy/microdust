@@ -88,10 +88,15 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         mLlIndicator = (LinearLayout) view.findViewById(R.id.ll_indicator);
 
         // Start Activity에서 checkbox 상태를 보고 시작시킨다.
-        if (getArguments() != null && getArguments().getBoolean(KEY_CHECKBOX_AUTO_START, false)) {
-            DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-            launchAlarmManager();
-            DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, true);
+        if (getArguments() != null) {
+            if (getArguments().getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
+                DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
+                launchAlarmManager();
+                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
+            } else {
+                DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
+                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
+            }
         }
 
         view.findViewById(R.id.ib_blue).setOnClickListener(this);
@@ -107,14 +112,6 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // TODO 마지막 데이터를 보여줌.
-
-        setDataToView();
     }
 
     private void getImageUrls() {
@@ -194,7 +191,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                 else
                     cancelAlarmManager();
 
-                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, !isChecked);
+                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
 
                 return true;
 
@@ -204,7 +201,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
 
             case R.id.action_settings:
                 getActivity().getFragmentManager().beginTransaction()
-                        .add(R.id.container, new SettingFragment())
+                        .replace(R.id.container, new SettingFragment())
                         .addToBackStack(null).commit();
                 return true;
 
@@ -222,7 +219,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         // LESSON AND LEARN
         // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
         boolean serviceSwitchStatus
-                = !DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, false);
+                = !DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, true);
         DustLog.i(TAG, "onPrepareOptionsMenu(), Service Switch status : " + serviceSwitchStatus);
         item.setChecked(serviceSwitchStatus);
 
@@ -264,10 +261,6 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         DustLog.i(TAG, "receiveOttoEventEntity()");
         switch (entity.command) {
             case GET_DATA:
-                if (entity == null || TextUtils.isEmpty(entity.rawString)) {
-                    setDataToView();
-                    return;
-                }
                 setDataToView(entity.measureTime, entity.rawString);
 
                 break;
@@ -308,25 +301,11 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
 
         alarmManager.setInexactRepeating(AlarmManager.RTC,
                 System.currentTimeMillis() + 1000, notiTime, pending);
-        setDataToView();
     }
 
     private void refreshData() {
         Intent intent = new Intent(getActivity(), WebParserService.class);
         getActivity().startService(intent);
-    }
-
-    /**
-     * 수집한 데이터를 View에 보여줌
-     * SpannableStringBuilder를 사용해서 색깔을 달리함.
-     */
-    private void setDataToView() {
-        String string = DustSharedPreferences.getInstance().getString(KEY_PREFS_RAW_STRING, null);
-        String time = DustSharedPreferences.getInstance().getString(KEY_PREFS_MEASURE_TIME, null);
-
-        if (TextUtils.isEmpty(string)) return;
-
-        setDataToView(time, string);
     }
 
     private void setDataToView(String measureTime, String rawString) {

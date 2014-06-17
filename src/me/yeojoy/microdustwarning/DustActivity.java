@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.fragment.DustFragment;
-import me.yeojoy.microdustwarning.fragment.SettingFragment;
 import me.yeojoy.microdustwarning.fragment.StartFragment;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
@@ -30,9 +26,13 @@ public class DustActivity extends Activity implements DustConstants {
 
         mFragmentManager = getFragmentManager();
 
-        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, false)) {
+        boolean isSwitchOff = DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, false);
+
+        if (isSwitchOff) {
+            DustLog.d(TAG, "onCreate(), Service is OFF.");
             mFragment = new StartFragment();
         } else {
+            DustLog.d(TAG, "onCreate(), Service is ON.");
             mFragment = new DustFragment();
         }
 

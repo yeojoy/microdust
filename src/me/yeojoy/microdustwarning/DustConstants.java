@@ -10,8 +10,7 @@ public interface DustConstants {
     public static final String KEY_CHECKBOX_AUTO_START = "auto_start";
 
     /** SharedPreferences key */
-    public static final String KEY_PREFS_FIRST_LAUNCH = "first_launch";
-    public static final String KEY_PREFS_SWITCH = "switch";
+    public static final String KEY_PREFS_SWITCH_OFF = "switch";
 
     public static final String KEY_PREFS_RAW_STRING = "raw_string";
     public static final String KEY_PREFS_MEASURE_TIME = "measure_time";
