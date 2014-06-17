@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -200,9 +201,14 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                 return true;
 
             case R.id.action_settings:
-                getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.container, new SettingFragment())
-                        .addToBackStack(null).commit();
+                if (BuildConfig.DEBUG) {
+                    getActivity().getFragmentManager().beginTransaction()
+                            .replace(R.id.container, new SettingFragment())
+                            .addToBackStack(null).commit();
+                } else {
+                    Toast.makeText(getActivity(), R.string.on_construction,
+                            Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
         }
