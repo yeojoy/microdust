@@ -78,7 +78,7 @@ public class DustUtils implements DustConstants {
         mBuilder.setAutoCancel(true);
 
         // 진동 설정
-        mBuilder.setVibrate(new long[]{0, 500, 200, 500, 200, 1000});
+        mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
         // 불빛 설정
         mBuilder.setLights(0xFFFF0000, 500, 500);
         Notification noti = mBuilder.build();
