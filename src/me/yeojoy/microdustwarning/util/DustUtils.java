@@ -21,6 +21,7 @@ public class DustUtils implements DustConstants {
     public static final String TAG = DustUtils.class.getSimpleName();
 
     public static void sendNotification(Context context, STATUS[] status) {
+        DustLog.i(TAG, "sendNotification()");
         boolean needToSendNoti = false;
         for (STATUS s : status) {
             if (s == STATUS.NONE) continue;
@@ -78,9 +79,14 @@ public class DustUtils implements DustConstants {
         mBuilder.setAutoCancel(true);
 
         // 진동 설정
-        mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
-        // 불빛 설정
-        mBuilder.setLights(0xFFFF0000, 500, 500);
+        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE)) {
+            DustLog.i(TAG, "sendNotification(), Vibrator on");
+            mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
+            // 불빛 설정
+            mBuilder.setLights(0xFFFF0000, 500, 500);
+        } else {
+            DustLog.i(TAG, "sendNotification(), Vibrator off");
+        }
         Notification noti = mBuilder.build();
 //        noti.bigContentView = views2;
 

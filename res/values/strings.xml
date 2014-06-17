@@ -19,7 +19,7 @@
 
     <string name="hello_blank_fragment">
         서울에서 당신이 서 있는 공간의 공기질을\n
-        30분 간격으로 알려드니다.\n
+        1시간 간격으로 알려드니다.\n
         파란색은 좋은 상태를 나타내며\n
         연두색은 보통의 상황을 나타냅니다.\n\n
         만약\n
@@ -79,10 +79,15 @@
 
 
     <!-- Preferences -->
-    <string name="pref_sms_storage_title">카테고리</string>
-    <string name="pref_summary_auto_delete">이미 받은 오래된 메시지 삭제 제한</string>
-    <string name="pref_title_auto_delete">오래된 메시지 삭제</string>
-    <string name="pref_summary_delete_limit">대화당 500메시지</string>
+    <string name="pref_default_category_title">기본</string>
+
+    <string name="pref_title_noti_on">진동알림</string>
+    <string name="pref_summary_noti_on">알림이 올 때 진동을 켜고 끕니다.</string>
+    <!--<string name="pref_summary_delete_limit">대화당 500메시지</string>
     <string name="pref_title_sms_delete">문자메시지 제한</string>
-    <string name="pref_title_mms_delete">MMS 제한</string>
+    <string name="pref_title_mms_delete">MMS 제한</string>-->
+
+    <!-- Preferences Key -->
+    <string name="pref_key_default_category">default_category</string>
+    <string name="pref_key_noti_on">notice_vibrate</string>
 </resources>
