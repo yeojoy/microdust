@@ -31,6 +31,9 @@
         </activity>
         <service 
             android:name="me.yeojoy.microdustwarning.service.WebParserService" />
+
+        <activity android:name=".AboutActivity"
+            android:label="@string/about"/>
     </application>
 
 </manifest>

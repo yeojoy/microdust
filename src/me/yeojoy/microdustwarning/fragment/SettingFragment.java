@@ -23,6 +23,7 @@ public class SettingFragment extends PreferenceFragment implements DustConstants
     public void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getActivity().getActionBar().setTitle(R.string.setting);
     }
 
     @Override

@@ -62,6 +62,12 @@ public class StartFragment extends Fragment implements DustConstants {
         return layout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().getActionBar().setTitle(R.string.start);
+    }
+
     private void setDesc() {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(getActivity().getString(R.string.desc_blue));

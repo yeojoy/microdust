@@ -258,7 +258,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
     public void onResume() {
         super.onResume();
         DustApplication.bus.register(this);
-
+        getActivity().getActionBar().setTitle(R.string.hello);
     }
 
     @Override
