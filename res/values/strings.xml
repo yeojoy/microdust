@@ -82,7 +82,8 @@
     <string name="pref_default_category_title">기본</string>
 
     <string name="pref_title_noti_on">진동알림</string>
-    <string name="pref_summary_noti_on">알림이 올 때 진동을 켜고 끕니다.</string>
+    <string name="pref_summary_noti_on">알림이 올 때 진동을 끕니다.</string>
+    <string name="pref_summary_noti_off">알림이 올 때 진동을 켭니다.</string>
     <!--<string name="pref_summary_delete_limit">대화당 500메시지</string>
     <string name="pref_title_sms_delete">문자메시지 제한</string>
     <string name="pref_title_mms_delete">MMS 제한</string>-->

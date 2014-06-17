@@ -78,8 +78,10 @@ public class DustUtils implements DustConstants {
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setAutoCancel(true);
 
+        DustSharedPreferences.getInstance().init(context);
+
         // 진동 설정
-        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE)) {
+        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
             mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
             // 불빛 설정

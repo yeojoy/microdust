@@ -2,13 +2,13 @@ package me.yeojoy.microdustwarning.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 
 /**
  * Created by yeojoy on 2014. 6. 11..
  */
 public class DustSharedPreferences {
-
-    private static final String SHARED_PREFS_NAME = "dust";
 
     private static DustSharedPreferences instance;
     private SharedPreferences mPrefs;
@@ -25,7 +25,7 @@ public class DustSharedPreferences {
 
     public void init(Context context) {
         if (mPrefs == null)
-            mPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+            mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public boolean putString(String key, String value) {
