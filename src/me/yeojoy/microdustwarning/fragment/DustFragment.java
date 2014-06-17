@@ -1,6 +1,7 @@
 
 package me.yeojoy.microdustwarning.fragment;
 
+import me.yeojoy.microdustwarning.AboutActivity;
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
@@ -206,15 +207,21 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                 return true;
 
             case R.id.action_settings:
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.container, new SettingFragment())
+                        .addToBackStack(null).commit();
+                return true;
+
+            case R.id.action_about:
+
                 if (BuildConfig.DEBUG) {
-                    getActivity().getFragmentManager().beginTransaction()
-                            .replace(R.id.container, new SettingFragment())
-                            .addToBackStack(null).commit();
+                    Intent intent = new Intent(getActivity(), AboutActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), R.string.on_construction,
                             Toast.LENGTH_SHORT).show();
                 }
-                return true;
+                break;
 
         }
 
