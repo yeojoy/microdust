@@ -186,11 +186,15 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         DustLog.i(TAG, "onOptionsItemSelected()");
         switch (item.getItemId()) {
             case R.id.action_on_off:
-
-                if (!item.isChecked())
+                // LESSON AND LEARN
+                // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
+                boolean isChecked = !item.isChecked();
+                if (isChecked)
                     launchAlarmManager();
                 else
                     cancelAlarmManager();
+
+                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, !isChecked);
 
                 return true;
 
@@ -211,12 +215,15 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        // onPrepareOptionsMenu는 "..."을 누를 때 불려진다. 밖으로 나와있는 건 안 불림
         super.onPrepareOptionsMenu(menu);
         DustLog.i(TAG, "onPrepareOptionsMenu()");
         MenuItem item = menu.findItem(R.id.action_on_off);
+        // LESSON AND LEARN
+        // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
         boolean serviceSwitchStatus
-                = DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, true);
-
+                = !DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, false);
+        DustLog.i(TAG, "onPrepareOptionsMenu(), Service Switch status : " + serviceSwitchStatus);
         item.setChecked(serviceSwitchStatus);
 
         if (serviceSwitchStatus) {
@@ -233,6 +240,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        DustLog.i(TAG, "onCreateOptionsMenu()");
         menu.clear();
         inflater.inflate(R.menu.dust, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -275,8 +283,6 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                     cancelAlarmManager();
                 }
 
-                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH, !entity.on_off);
-
                 break;
         }
     }
@@ -285,6 +291,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
      * 알람 매니저 종료
      */
     private void cancelAlarmManager() {
+        DustLog.i(TAG, "cancelAlarmManager()");
         alarmManager.cancel(pending);
         DustSharedPreferences.getInstance().clear();
     }
@@ -293,6 +300,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
      * 알람 매니저 실행
      */
     private void launchAlarmManager() {
+        DustLog.i(TAG, "launchAlarmManager()");
         int notiTime = NOTI_TIME_REAL;
         if (BuildConfig.DEBUG) {
             notiTime = NOTI_TIME_TEST;

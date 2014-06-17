@@ -30,9 +30,8 @@ public class DustActivity extends Activity implements DustConstants {
 
         mFragmentManager = getFragmentManager();
 
-        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_FIRST_LAUNCH, true)) {
+        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH, false)) {
             mFragment = new StartFragment();
-            DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_FIRST_LAUNCH, false);
         } else {
             mFragment = new DustFragment();
         }

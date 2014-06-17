@@ -15,6 +15,7 @@ import android.widget.TextView;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.STATUS;
+import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustUtils;
 
 
@@ -47,6 +48,8 @@ public class StartFragment extends Fragment implements DustConstants {
                 Bundle args = new Bundle();
                 args.putBoolean(KEY_CHECKBOX_AUTO_START, mWantToStartService);
                 dustFragment.setArguments(args);
+
+                DustLog.d(TAG, KEY_CHECKBOX_AUTO_START + " : " + mWantToStartService);
 
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.container, dustFragment, null).commit();
