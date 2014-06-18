@@ -215,13 +215,8 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
 
             case R.id.action_about:
 
-                if (BuildConfig.DEBUG) {
-                    Intent intent = new Intent(getActivity(), AboutActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), R.string.on_construction,
-                            Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
                 break;
 
         }
