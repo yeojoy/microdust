@@ -21,6 +21,18 @@ public interface DustConstants {
         "image01", "image02", "image03", "image04"
     };
 
+    /** About */
+    public static final String DEBUGGABLE = "D";
+    public static final String RELEASE = "R";
+
+    /** Developer's Email */
+    public static final String EMAIL_ADDR = "kim.yeojoy@gmail.com";
+    public static final String EMAIL_SUBJECT = "이건 어떨까요?";
+
+    /** Title */
+    public static final String INFOMATION_TITLE = "Infomation";
+    public static final String THANKS_TO_TITLE = "Thanks to...";
+
     // 미세먼지 수치
     /** 0 ~ 30 까지 좋음 */
     public static final float MICRO_DUST_GOOD = 30f;

@@ -203,6 +203,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                 return true;
 
             case R.id.action_refresh:
+                setRefreshActionButtonState(true);
                 refreshData();
                 return true;
 
@@ -253,10 +254,13 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         super.onConfigurationChanged(newConfig);
     }
 
+    private Menu mOptionMenu;
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         DustLog.i(TAG, "onCreateOptionsMenu()");
-        menu.clear();
+        mOptionMenu = menu;
+        mOptionMenu.clear();
         inflater.inflate(R.menu.dust, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -274,13 +278,31 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         DustApplication.bus.unregister(this);
     }
 
+    /**
+     * Actionbar에 Refresh를 눌렀을 때 Circular Progressbar를 보여줌
+     * @param refreshing
+     */
+    public void setRefreshActionButtonState(final boolean refreshing) {
+        if (mOptionMenu != null) {
+            final MenuItem refreshItem = mOptionMenu
+                    .findItem(R.id.action_refresh);
+            if (refreshItem != null) {
+                if (refreshing) {
+                    refreshItem.setActionView(R.layout.circular_progress);
+                } else {
+                    refreshItem.setActionView(null);
+                }
+            }
+        }
+    }
+
     @Subscribe
     public void receiveOttoEventEntity(OttoEventEntity entity) {
         DustLog.i(TAG, "receiveOttoEventEntity()");
         switch (entity.command) {
             case GET_DATA:
                 setDataToView(entity.measureTime, entity.rawString);
-
+                setRefreshActionButtonState(false);
                 break;
 
             case REFRESH:

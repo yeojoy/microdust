@@ -20,4 +20,13 @@
 
     <!-- DEBUGGABLE font color -->
     <item type="color" name="font_debuggable_color">#ffffc4f9</item>
+
+    <!-- Setting row Background color -->
+    <item type="color" name="bg_setting_row_normal">#202020</item>
+    <item type="color" name="bg_setting_row_pressed">#393939</item>
+
+    <item type="color" name="divider_setting">#909090</item>
+
+    <item type="color" name="font_setting_normal">#D3D3D3</item>
+    <item type="color" name="font_setting_pressed">#FFFFFF</item>
 </resources>

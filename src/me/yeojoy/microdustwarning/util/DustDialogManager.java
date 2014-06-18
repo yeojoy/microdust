@@ -91,6 +91,9 @@ public class DustDialogManager {
     private static String getDialogMessage(Resources res, STATUS status, int... messageIds) {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         int index;
+        // TODO 기본 AlertDialog에 SpannableString 안 먹힘.
+        // solution 1. 아래 코드를 그냥 String으로 변경
+        // solution 2. CustomDialog를 만듦
         switch (status) {
 
             case GOOD:
