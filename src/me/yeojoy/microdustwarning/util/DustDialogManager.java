@@ -1,10 +1,14 @@
 package me.yeojoy.microdustwarning.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -12,13 +16,14 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.STATUS;
 
 /**
  * Created by yeojoy on 2014. 6. 16..
  */
-public class DustDialogManager {
+public class DustDialogManager implements DustConstants {
 
     private static final String TAG = DustDialogManager.class.getSimpleName();
 
@@ -158,5 +163,35 @@ public class DustDialogManager {
         }
 
         return ssb.toString();
+    }
+
+    /**
+     * 서울 외 지역인 경우 Airkorea 모바일 사이트로 이동시킴
+     * @param context
+     * @param location
+     */
+    public static void showWarningOutsideSeoul(final Context context, final Location location) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.dlg_default_title);
+        builder.setMessage(R.string.dlg_warn_out_of_seoul);
+        builder.setPositiveButton(R.string.dlg_btn_move, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(String.format(AIR_KOREA, location.getLatitude(),
+                        location.getLongitude())));
+                context.startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.dlg_btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 }

@@ -89,12 +89,19 @@
 
     <string name="dlg_default_positive_button">확인</string>
 
+    <string name="dlg_warn_out_of_seoul">
+        서울외 지역은 외부화면에서 확인할 수 있습니다.
+        \n화면을 이동하시겠습니까?
+    </string>
+
+    <string name="dlg_btn_move">이동</string>
+    <string name="dlg_btn_cancel">취소</string>
     <!-- Preferences -->
     <string name="pref_default_category_title">기본</string>
 
     <string name="pref_title_noti_on">진동알림</string>
-    <string name="pref_summary_noti_on">알림이 올 때 진동을 끕니다.</string>
-    <string name="pref_summary_noti_off">알림이 올 때 진동을 켭니다.</string>
+    <string name="pref_summary_noti_off">알림이 올 때 진동을 끕니다.</string>
+    <string name="pref_summary_noti_on">알림이 올 때 진동을 켭니다.</string>
 
     <!-- Preferences Key -->
     <string name="pref_key_default_category">default_category</string>

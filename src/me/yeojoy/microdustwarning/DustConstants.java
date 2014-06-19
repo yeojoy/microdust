@@ -2,6 +2,9 @@ package me.yeojoy.microdustwarning;
 
 public interface DustConstants {
 
+    /** 서울외 지역의 경우 airkorea 정보로 보여준다. */
+    public static final String AIR_KOREA = "http://m.airkorea.or.kr/getAddr.do?dmX=%.6f&dmY=%.6f";
+
     /** 자동으로 NOTI를 알려주는 시간 간격 */
     public static final int NOTI_TIME_TEST = 1000 * 60 * 2;     // 2분
     public static final int NOTI_TIME_REAL = 1000 * 60 * 60;    // 1시간

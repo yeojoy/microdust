@@ -12,6 +12,7 @@ import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.entity.STATUS;
+import me.yeojoy.microdustwarning.util.DustDialogManager;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
@@ -64,6 +65,7 @@ public class WebParserService extends Service implements LocationListener, DustC
         if (TextUtils.isEmpty(bestProvider)) {
             Toast.makeText(mContext, R.string.str_no_location, Toast.LENGTH_LONG).show();
             stopSelf();
+            return;
         }
         mLocationManager.requestLocationUpdates(bestProvider, 0, 0, this);
 
@@ -93,6 +95,7 @@ public class WebParserService extends Service implements LocationListener, DustC
 
         final String ADMIN = fromLocation.get(0).getAdminArea();
         if (!"서울특별시".equals(ADMIN)) {
+//            DustDialogManager.showWarningOutsideSeoul(getApplicationContext(), location);
             Toast.makeText(mContext, R.string.can_only_use_in_seoul, Toast.LENGTH_SHORT).show();
             finishService();
             return;
