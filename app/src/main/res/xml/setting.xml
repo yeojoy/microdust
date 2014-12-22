@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!--<PreferenceCategory
+        android:title="@string/pref_sms_storage_title"
+        android:key="pref_key_storage_settings">
+        <CheckBoxPreference
+            android:key="pref_key_auto_delete"
+            android:summary="@string/pref_summary_auto_delete"
+            android:title="@string/pref_title_auto_delete"
+            android:defaultValue="false"/>
+        <Preference
+            android:key="pref_key_sms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:summary="@string/pref_summary_delete_limit"
+            android:title="@string/pref_title_sms_delete" />
+        <Preference
+            android:key="pref_key_mms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:summary="@string/pref_summary_delete_limit"
+            android:title="@string/pref_title_mms_delete" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_default_category_title"
+        android:key="@string/pref_key_default_category">
+
+    </PreferenceCategory>-->
+    <PreferenceCategory
+        android:title="@string/pref_noti_category_title"
+        android:key="@string/pref_key_noti_category">
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_noti_on"
+            android:summary="@string/pref_summary_noti_on"
+            android:key="@string/pref_key_noti_on"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_location_category_title"
+        android:key="@string/pref_key_location_category">
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_location"
+            android:summary="@string/pref_summary_location"
+            android:key="@string/pref_key_location_on"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

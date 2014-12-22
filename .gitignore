@@ -1,0 +1,12 @@
+bin/
+gen/
+build/
+.settings/
+.idea/
+.gradle/
+
+
+local.properties
+yeojoyapp.keystore
+gradle.properties
+

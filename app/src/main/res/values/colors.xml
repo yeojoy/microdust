@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 위험 -->
+    <item type="color" name="font_red">#FF0000</item>
+    <item type="color" name="font_red_pressed">#88FF0000</item>
+    <!-- 나쁨 -->
+    <item type="color" name="font_orange">#FF8900</item>
+    <item type="color" name="font_orange_pressed">#88FF8900</item>
+    <!-- 약간 나쁨 -->
+    <item type="color" name="font_yellow">#FFFF00</item>
+    <item type="color" name="font_yellow_pressed">#88FFFF00</item>
+    <!-- 일반 -->
+    <item type="color" name="font_light_green">#00FF00</item>
+    <item type="color" name="font_light_green_pressed">#8800FF00</item>
+    <!-- 안정 -->
+    <item type="color" name="font_blue">#0030FF</item>
+    <item type="color" name="font_blue_pressed">#880030FF</item>
+    <!-- 일반 폰트 색 -->
+    <item type="color" name="font_default">#BEC7C7</item>
+
+    <!-- DEBUGGABLE font color -->
+    <item type="color" name="font_debuggable_color">#ffffc4f9</item>
+
+    <!-- Setting row Background color -->
+    <item type="color" name="bg_setting_row_normal">#202020</item>
+    <item type="color" name="bg_setting_row_pressed">#393939</item>
+
+    <item type="color" name="divider_setting">#909090</item>
+
+    <item type="color" name="font_setting_normal">#D3D3D3</item>
+    <item type="color" name="font_setting_pressed">#FFFFFF</item>
+</resources>
