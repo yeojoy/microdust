@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
@@ -467,9 +466,7 @@ public class DustUtils implements DustConstants {
                     startTagName = xpp.getName();
                 } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText().trim();
-                    if (startTagName != null && text != null
-                            && !TextUtils.isEmpty(text)) {
-
+                    if (startTagName != null) {
                         if (startTagName.equals("msrdate")) {
                             dto = new DustInfoDto();
                             dto.setDate(text);
@@ -478,7 +475,10 @@ public class DustUtils implements DustConstants {
                         } else if (startTagName.equals("maxindex")) {
                             dto.setMaxIndex(text);
                         } else if (startTagName.equals("pm10")) {
-                            dto.setPm10(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setPm10(NO_VALUE);
+                            else
+                                dto.setPm10(text);
                         } else if (startTagName.equals("pm10index")) {
                             dto.setPm10Index(text);
                         } else if (startTagName.equals("pm24")) {
@@ -486,26 +486,41 @@ public class DustUtils implements DustConstants {
                         } else if (startTagName.equals("pm24index")) {
                             dto.setPm24Index(text);
                         } else if (startTagName.equals("pm25")) {
-                            dto.setPm25(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setPm25(NO_VALUE);
+                            else
+                                dto.setPm25(text);
                         } else if (startTagName.equals("pm25index")) {
                             dto.setPm25Index(text);
                         } else if (startTagName.equals("ozone")) {
-                            dto.setOzone(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setOzone(NO_VALUE);
+                            else 
+                                dto.setOzone(text);
                         } else if (startTagName.equals("ozoneindex")) {
                             dto.setOzoneIndex(text);
                         } else if (startTagName.equals("nitrogen")) {
-                            dto.setNitrogen(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setNitrogen(NO_VALUE);
+                            else 
+                                dto.setNitrogen(text);
                         } else if (startTagName.equals("nitrogenindex")) {
                             dto.setNitrogenIndex(text);
                         } else if (startTagName.equals("carbon")) {
-                            dto.setCarbon(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setCarbon(NO_VALUE);
+                            else
+                                dto.setCarbon(text);
                         } else if (startTagName.equals("carbonindex")) {
                             dto.setCarbonIndex(text);
                         } else if (startTagName.equals("sulfurous")) {
-                            dto.setSulfurous(text);
+                            if (TextUtils.isEmpty(text))
+                                dto.setSulfurous(NO_VALUE);
+                            else
+                                dto.setSulfurous(text);
                         } else if (startTagName.equals("sulfurousindex")) {
                             dto.setSulfurousIndex(text);
-                            list.add(dto);
+                            list.add(setDegreeAndMaterial(dto));
                         }
                     }
                 }
@@ -525,5 +540,30 @@ public class DustUtils implements DustConstants {
         }
         
         return null;
+    }
+    
+    /** 지수등급 및 결정물질 추가 */
+    private static DustInfoDto setDegreeAndMaterial(DustInfoDto dto) {
+        if (dto.getMaxIndex() == null || dto.getMaxIndex().equals("null")
+                || TextUtils.isEmpty(dto.getMaxIndex())) {
+            dto.setMaxIndex(NO_VALUE_TOTAL);
+            dto.setDegree(NO_VALUE_TOTAL);
+            dto.setMaterial(NO_VALUE_TOTAL);
+        } else {
+            dto.setDegree(dto.getMaxIndex());
+            
+            if (dto.getMaxIndex().equals(dto.getPm10Index())) {
+                dto.setMaterial(MATERIALS[0]);
+            } else if (dto.getMaxIndex().equals(dto.getOzoneIndex())) {
+                dto.setMaterial(MATERIALS[1]);
+            } else if (dto.getMaxIndex().equals(dto.getNitrogenIndex())) {
+                dto.setMaterial(MATERIALS[2]);
+            } else if (dto.getMaxIndex().equals(dto.getCarbonIndex())) {
+                dto.setMaterial(MATERIALS[3]);
+            } else if (dto.getMaxIndex().equals(dto.getSulfurousIndex())) {
+                dto.setMaterial(MATERIALS[4]);
+            }
+        }
+        return dto;
     }
 }

@@ -11,10 +11,8 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.List;
 
-import me.yeojoy.microdustwarning.DustApplication;
+import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
-import me.yeojoy.microdustwarning.entity.OttoEventEntity;
-import me.yeojoy.microdustwarning.util.DustFileLogger;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
@@ -22,7 +20,7 @@ import me.yeojoy.microdustwarning.util.DustUtils;
 /**
  * Created by yeojoy on 14. 12. 22..
  */
-public class DustNetworkManager {
+public class DustNetworkManager implements DustConstants {
     private static final String TAG = DustNetworkManager.class.getSimpleName();
     private static DustNetworkManager mDustNetworkManager;
     
@@ -46,10 +44,8 @@ public class DustNetworkManager {
     public List<DustInfoDto> getMicrodustInfo() {
         DustLog.i(TAG, "getMicrodustInfo()");
 
-        final String url = "http://cleanair.seoul.go.kr/air_city.htm?method=airPollutantInfoMeasureXml&msrntwCode=A";
-
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(CLEAN_AIR_API_ADDRESS).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -67,23 +63,23 @@ public class DustNetworkManager {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                return DustUtils.parseRawXmlString(response.body().string());
+                
+                mOnReceiveDataListener.onReceiveData(DustUtils.parseRawXmlString(response.body().string()));
             }
         });
         
         return null;
     }
-    
 
-
-    /** Otto를 사용해서 DustFragment로 데이터를 보내줌 */
-    private void sendMeasuredData(final List<DustInfoDto> dto) {
-        DustLog.i(TAG, "sendMeasuredData()");
-        DustFileLogger.getInstance().writeLogToFile("Send List<DustInfoDto> to Fragment.");
-        
-        OttoEventEntity entity = new OttoEventEntity(OttoEventEntity.COMMAND.GET_DATA_WITH_DTO);
-        entity.setData(dto);
-        DustApplication.bus.post(entity);
-        
+    public interface OnReceiveDataListener {
+        public void onReceiveData(List<DustInfoDto> data);
     }
+
+    public void setOnReceiveDataListener(OnReceiveDataListener onReceiveDataListener) {
+        this.mOnReceiveDataListener = onReceiveDataListener;
+    }
+
+    private OnReceiveDataListener mOnReceiveDataListener;
+    
+    
 }

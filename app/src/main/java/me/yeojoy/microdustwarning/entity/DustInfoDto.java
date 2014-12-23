@@ -8,22 +8,20 @@ import android.os.Parcelable;
  */
 public class DustInfoDto implements Parcelable {
 
-    public DustInfoDto() {
-    }
+    public DustInfoDto() { }
 
     public DustInfoDto(Parcel in) {
         readFromParcel(in);
     }
 
-    public DustInfoDto(String date, String locality, String maxIndex,
-                       String pm10, String pm10Index, String pm24,
-                       String pm24Index, String pm25,String pm25Index,
-                       String ozone, String ozoneIndex, String nitrogen,
-                       String nitrogenIndex, String carbon, String carbonIndex,
-                       String sulfurous, String sulfurousIndex) {
+    public DustInfoDto(String date, String locality, String pm10,
+               String pm10Index, String pm24, String pm24Index, String pm25,
+               String pm25Index, String ozone, String ozoneIndex,
+               String nitrogen, String nitrogenIndex, String carbon,
+               String carbonIndex, String sulfurous, String sulfurousIndex,
+               String maxIndex, String material, String degree) {
         this.date = date;
         this.locality = locality;
-        this.maxIndex = maxIndex;
         this.pm10 = pm10;
         this.pm10Index = pm10Index;
         this.pm24 = pm24;
@@ -38,6 +36,9 @@ public class DustInfoDto implements Parcelable {
         this.carbonIndex = carbonIndex;
         this.sulfurous = sulfurous;
         this.sulfurousIndex = sulfurousIndex;
+        this.maxIndex = maxIndex;
+        this.material = material;
+        this.degree = degree;
     }
 
     public String getDate() {
@@ -172,12 +173,26 @@ public class DustInfoDto implements Parcelable {
         this.sulfurousIndex = sulfurousIndex;
     }
 
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+    
     /** 측정 날짜 시각 */
     private String date;
     /** 구역. xx구 */
     private String locality;
-    /** index로 환산한 것 중 가장 높은 index */
-    private String maxIndex;
     /** 미세먼지 */
     private String pm10;
     private String pm10Index;
@@ -199,6 +214,12 @@ public class DustInfoDto implements Parcelable {
     /** 아황산가스 */
     private String sulfurous;
     private String sulfurousIndex;
+    /** index로 환산한 것 중 가장 높은 index, 통합지수 */
+    private String maxIndex;
+    /** 지수 결정 물질 */
+    private String material;
+    /** 등급 */
+    private String degree;
 
     @Override
     public int describeContents() {
@@ -209,7 +230,6 @@ public class DustInfoDto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(date);
         dest.writeString(locality);
-        dest.writeString(maxIndex);
         dest.writeString(pm10);
         dest.writeString(pm10Index);
         dest.writeString(pm24);
@@ -224,6 +244,9 @@ public class DustInfoDto implements Parcelable {
         dest.writeString(carbonIndex);
         dest.writeString(sulfurous);
         dest.writeString(sulfurousIndex);
+        dest.writeString(maxIndex);
+        dest.writeString(material);
+        dest.writeString(degree);
     }
 
     private void readFromParcel(Parcel in) {
@@ -243,6 +266,9 @@ public class DustInfoDto implements Parcelable {
         carbonIndex = in.readString();
         sulfurous = in.readString();
         sulfurousIndex = in.readString();
+        maxIndex = in.readString();
+        material = in.readString();
+        degree = in.readString();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -260,21 +286,23 @@ public class DustInfoDto implements Parcelable {
         return "DustInfoDto{" +
                 "date='" + date + '\'' +
                 ", locality='" + locality + '\'' +
-                ", maxIndex=" + maxIndex +
-                ", pm10=" + pm10 +
-                ", pm10Index=" + pm10Index +
-                ", pm24=" + pm24 +
-                ", pm24Index=" + pm24Index +
-                ", pm25=" + pm25 +
-                ", pm25Index=" + pm25Index +
-                ", ozone=" + ozone +
-                ", ozoneIndex=" + ozoneIndex +
-                ", nitrogen=" + nitrogen +
-                ", nitrogenIndex=" + nitrogenIndex +
-                ", carbon=" + carbon +
-                ", carbonIndex=" + carbonIndex +
-                ", sulfurous=" + sulfurous +
-                ", sulfurousIndex=" + sulfurousIndex +
+                ", pm10='" + pm10 + '\'' +
+                ", pm10Index='" + pm10Index + '\'' +
+                ", pm24='" + pm24 + '\'' +
+                ", pm24Index='" + pm24Index + '\'' +
+                ", pm25='" + pm25 + '\'' +
+                ", pm25Index='" + pm25Index + '\'' +
+                ", ozone='" + ozone + '\'' +
+                ", ozoneIndex='" + ozoneIndex + '\'' +
+                ", nitrogen='" + nitrogen + '\'' +
+                ", nitrogenIndex='" + nitrogenIndex + '\'' +
+                ", carbon='" + carbon + '\'' +
+                ", carbonIndex='" + carbonIndex + '\'' +
+                ", sulfurous='" + sulfurous + '\'' +
+                ", sulfurousIndex='" + sulfurousIndex + '\'' +
+                ", maxIndex='" + maxIndex + '\'' +
+                ", material='" + material + '\'' +
+                ", degree='" + degree + '\'' +
                 '}';
     }
 }

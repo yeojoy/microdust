@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +41,8 @@ import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 
-public class DustFragment extends Fragment implements DustConstants, View.OnClickListener {
+public class DustFragment extends Fragment implements DustConstants, 
+        View.OnClickListener, DustNetworkManager.OnReceiveDataListener {
 
     private static final String TAG = DustFragment.class.getSimpleName();
 
@@ -127,7 +127,7 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
         mContext = getActivity();
 
         mManager = DustNetworkManager.getInstance(mContext);
-        setDataToView(mManager.getMicrodustInfo());
+        mManager.setOnReceiveDataListener(this);
     }
 
     @Override
@@ -333,7 +333,9 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
             ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
         else
             ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+        
         ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
+        
         ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
         ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
         ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
@@ -369,5 +371,10 @@ public class DustFragment extends Fragment implements DustConstants, View.OnClic
                 DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.WORST);
                 break;
         }
+    }
+
+    @Override
+    public void onReceiveData(List<DustInfoDto> data) {
+        setDataToView(data);
     }
 }

@@ -3,7 +3,12 @@ package me.yeojoy.microdustwarning;
 public interface DustConstants {
 
     /** 서울외 지역의 경우 airkorea 정보로 보여준다. */
-    public static final String AIR_KOREA = "http://m.airkorea.or.kr/getAddr.do?dmX=%.6f&dmY=%.6f";
+    public static final String AIR_KOREA 
+            = "http://m.airkorea.or.kr/getAddr.do?dmX=%.6f&dmY=%.6f";
+    /** cleanair.seoul.go.kr API Address */
+    public static final String CLEAN_AIR_API_ADDRESS 
+            = "http://cleanair.seoul.go.kr/air_city.htm?" +
+                    "method=airPollutantInfoMeasureXml";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
     public static final int NOTI_TIME_TEST = 1000 * 60 * 5;     // 2분
@@ -15,16 +20,9 @@ public interface DustConstants {
     /** SharedPreferences key */
     public static final String KEY_PREFS_SWITCH_OFF = "switch";
 
-    public static final String KEY_PREFS_RAW_STRING = "raw_string";
-    public static final String KEY_PREFS_MEASURE_TIME = "measure_time";
-
     public static final String KEY_PREFS_NOTICE_VIBRATE = "notice_vibrate";
     public static final String KEY_PREFS_NOTICE_ICON = "notice_icon";
     public static final String KEY_PREFS_LOCALITY = "user-locality";
-
-    public static final String[] KEY_PREFS_IMAGES = {
-        "image01", "image02", "image03", "image04"
-    };
 
     public static final String DEFAULT_LOCALITY = "동작구";
 
@@ -105,4 +103,13 @@ public interface DustConstants {
     public static final float TOTAL_DEGREE_BAD = 150f;
     /** 151 ~ 250 까지 나쁨, 251이상 매우나쁨 */
     public static final float TOTAL_DEGREE_WORSE = 250f;
+    
+    /** 값 없음, 각 물질 들 */
+    public static final String NO_VALUE = "점검중";
+    /** 값 없음, 통합 지수 */
+    public static final String NO_VALUE_TOTAL = "-";
+
+    // Material Name
+    public static final String[] MATERIALS = {"PM-10", "O3", "NO2", "CO", "SO2"};
+    
 }

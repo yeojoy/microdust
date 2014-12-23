@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.squareup.okhttp.Callback;
@@ -13,13 +12,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustApplication;
@@ -71,10 +64,8 @@ public class WebParserService extends Service implements DustConstants {
     private void getMicrodustInfo() {
         DustLog.i(TAG, "getMicrodustInfo()");
 
-        final String url = "http://cleanair.seoul.go.kr/air_city.htm?method=airPollutantInfoMeasureXml";
-
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(CLEAN_AIR_API_ADDRESS).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
