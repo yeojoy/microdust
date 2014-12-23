@@ -210,6 +210,26 @@ public class DustUtils implements DustConstants {
 
         return status;
     }
+
+    /**
+     * 미세먼지 수치가 괜찮은지
+     * @param value
+     * @return
+     */
+    private static String getTotalAirQuality(String value) {
+        float microDustValue = Float.parseFloat(value);
+
+        if (microDustValue > TOTAL_DEGREE_WORSE)
+            return AIR_QUALITY_INDEX[4];
+        else if (microDustValue > TOTAL_DEGREE_BAD)
+            return AIR_QUALITY_INDEX[3];
+        else if (microDustValue > TOTAL_DEGREE_NORMAL)
+            return AIR_QUALITY_INDEX[2];
+        else if (microDustValue > TOTAL_DEGREE_GOOD)
+            return AIR_QUALITY_INDEX[1];
+
+        return AIR_QUALITY_INDEX[0];
+    }
     
     /**
      * 미세먼지 수치가 괜찮은지
@@ -466,7 +486,8 @@ public class DustUtils implements DustConstants {
                     startTagName = xpp.getName();
                 } else if (eventType == XmlPullParser.TEXT) {
                     text = xpp.getText().trim();
-                    if (startTagName != null) {
+                    if (startTagName != null && text != null 
+                            && !TextUtils.isEmpty(text)) {
                         if (startTagName.equals("msrdate")) {
                             dto = new DustInfoDto();
                             dto.setDate(text);
@@ -475,10 +496,7 @@ public class DustUtils implements DustConstants {
                         } else if (startTagName.equals("maxindex")) {
                             dto.setMaxIndex(text);
                         } else if (startTagName.equals("pm10")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setPm10(NO_VALUE);
-                            else
-                                dto.setPm10(text);
+                            dto.setPm10(text);
                         } else if (startTagName.equals("pm10index")) {
                             dto.setPm10Index(text);
                         } else if (startTagName.equals("pm24")) {
@@ -486,38 +504,23 @@ public class DustUtils implements DustConstants {
                         } else if (startTagName.equals("pm24index")) {
                             dto.setPm24Index(text);
                         } else if (startTagName.equals("pm25")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setPm25(NO_VALUE);
-                            else
-                                dto.setPm25(text);
+                            dto.setPm25(text);
                         } else if (startTagName.equals("pm25index")) {
                             dto.setPm25Index(text);
                         } else if (startTagName.equals("ozone")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setOzone(NO_VALUE);
-                            else 
-                                dto.setOzone(text);
+                            dto.setOzone(text);
                         } else if (startTagName.equals("ozoneindex")) {
                             dto.setOzoneIndex(text);
                         } else if (startTagName.equals("nitrogen")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setNitrogen(NO_VALUE);
-                            else 
-                                dto.setNitrogen(text);
+                            dto.setNitrogen(text);
                         } else if (startTagName.equals("nitrogenindex")) {
                             dto.setNitrogenIndex(text);
                         } else if (startTagName.equals("carbon")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setCarbon(NO_VALUE);
-                            else
-                                dto.setCarbon(text);
+                            dto.setCarbon(text);
                         } else if (startTagName.equals("carbonindex")) {
                             dto.setCarbonIndex(text);
                         } else if (startTagName.equals("sulfurous")) {
-                            if (TextUtils.isEmpty(text))
-                                dto.setSulfurous(NO_VALUE);
-                            else
-                                dto.setSulfurous(text);
+                            dto.setSulfurous(text);
                         } else if (startTagName.equals("sulfurousindex")) {
                             dto.setSulfurousIndex(text);
                             list.add(setDegreeAndMaterial(dto));
@@ -532,7 +535,7 @@ public class DustUtils implements DustConstants {
                 DustLog.d("TAG", "DTO : " + d);
             }
 
-            return null;
+            return list;
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -543,14 +546,16 @@ public class DustUtils implements DustConstants {
     }
     
     /** 지수등급 및 결정물질 추가 */
-    private static DustInfoDto setDegreeAndMaterial(DustInfoDto dto) {
+    private static DustInfoDto setDegreeAndMaterial(DustInfoDto d) {
+        DustInfoDto dto = verifyDtoValues(d);
+        
         if (dto.getMaxIndex() == null || dto.getMaxIndex().equals("null")
                 || TextUtils.isEmpty(dto.getMaxIndex())) {
             dto.setMaxIndex(NO_VALUE_TOTAL);
             dto.setDegree(NO_VALUE_TOTAL);
             dto.setMaterial(NO_VALUE_TOTAL);
         } else {
-            dto.setDegree(dto.getMaxIndex());
+            dto.setDegree(getTotalAirQuality(dto.getMaxIndex()));
             
             if (dto.getMaxIndex().equals(dto.getPm10Index())) {
                 dto.setMaterial(MATERIALS[0]);
@@ -565,5 +570,33 @@ public class DustUtils implements DustConstants {
             }
         }
         return dto;
+    }
+
+    /**
+     * 각 물질의 값에 xml로 파싱해서 저장한 값이 유효한 값인지 확인 
+     * @param dto
+     * @return
+     */
+    private static DustInfoDto verifyDtoValues(DustInfoDto dto) {
+        dto.setPm10(checkValue(dto.getPm10()));
+        dto.setOzone(checkValue(dto.getOzone()));
+        dto.setNitrogen(checkValue(dto.getNitrogen()));
+        dto.setCarbon(checkValue(dto.getCarbon()));
+        dto.setSulfurous(dto.getSulfurous());
+        
+        return dto;
+    }
+
+    /**
+     * 각 value를 확인해서 null이거나 "null" string이거나 비어있을 때
+     * NO_VALUE 값으로 설정해 준다.
+     * @param value
+     * @return
+     */
+    private static String checkValue(String value) {
+        if (value == null || TextUtils.isEmpty(value) || "null".equals(value)) {
+            return NO_VALUE;
+        }
+        return value;
     }
 }

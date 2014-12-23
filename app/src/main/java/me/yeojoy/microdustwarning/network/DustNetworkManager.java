@@ -64,7 +64,8 @@ public class DustNetworkManager implements DustConstants {
                     return;
                 }
                 
-                mOnReceiveDataListener.onReceiveData(DustUtils.parseRawXmlString(response.body().string()));
+                mOnReceiveDataListener.onReceiveData(
+                        DustUtils.parseRawXmlString(response.body().string()));
             }
         });
         

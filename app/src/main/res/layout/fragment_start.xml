@@ -22,14 +22,15 @@
     </ScrollView>
 
     <CheckBox
-        android:id="@id/cb_auto_start"
+        android:id="@+id/cb_auto_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_start"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         android:text="@string/start_checkbox_desc"
-        android:paddingLeft="5dp"/>
+        android:paddingLeft="5dp"
+        android:checked="false"/>
 
     <Button
         android:id="@id/btn_start"

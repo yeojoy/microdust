@@ -1,6 +1,7 @@
 
 package me.yeojoy.microdustwarning.fragment;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
@@ -9,6 +10,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -102,15 +106,6 @@ public class DustFragment extends Fragment implements DustConstants,
         if (!DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF)) {
             mTvResult.setText(R.string.service_is_on_wait_a_minute);
         }
-
-        mTvResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (INDEX > 4) INDEX = 0;
-                DustUtils.sendTestNotification(getActivity(), INDEX);
-                INDEX++;
-            }
-        });
 
         view.findViewById(R.id.ib_blue).setOnClickListener(this);
         view.findViewById(R.id.ib_light_green).setOnClickListener(this);
@@ -297,6 +292,7 @@ public class DustFragment extends Fragment implements DustConstants,
      * 기상지도이미지를 가져와 보여준다.
      */
     private void setImage() {
+        DustLog.i(TAG, "setImage()");
         mLlIndicator.setVisibility(View.VISIBLE);
 
         mUrlList.add("http://www.webairwatch.com/kaq/modelimg/PM10_24H_AVG.09KM.Day1.gif");
@@ -307,7 +303,43 @@ public class DustFragment extends Fragment implements DustConstants,
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Data를 추가한다.
+     * 추가한 후 setImage()를 호출한다.
+     * @param message
+     */
+    private void setText(final String message) {
+        DustLog.i(TAG, "setText()");
+        // UI Thread인지 확인
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            DustLog.i(TAG, "setText(), running on UI Thread.");
+            mTvResult.setText(message);
+            setImage();
+        } else {
+            // UI Thread가 아님
+            DustLog.i(TAG, "setText(), running on worker Thread.");
+            // ERROR 발생으로 호출해 줘야함.
+            // java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+            Looper.prepare();
+            
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTvResult.setText(message);
+                    setImage();
+                }
+            });
+        }
+        
+    }
+
     private void setDataToView(List<DustInfoDto> dtoList) {
+        DustLog.i(TAG, "setDataToView()");
+        if (dtoList == null) {
+            DustLog.i(TAG, "setDataToView(), dtoList is null");
+            return;
+        }
+        
         DustInfoDto dto = null;
         for (DustInfoDto d : dtoList) {
             if (DEFAULT_LOCALITY.equals(d.getLocality())) {
@@ -342,13 +374,10 @@ public class DustFragment extends Fragment implements DustConstants,
         ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
         ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
         ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
-//        ssb.append(DustUtils.convertString(res, "등급 : " + data[7] + "\n", STATUS.NONE));
-        ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
-//        ssb.append(DustUtils.convertString(res, "지수결정물질 : " + data[9], STATUS.NONE));
-
-        mTvResult.setText(ssb);
-
-        setImage();
+        ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
+        setText(ssb.toString());
     }
 
 
@@ -375,6 +404,8 @@ public class DustFragment extends Fragment implements DustConstants,
 
     @Override
     public void onReceiveData(List<DustInfoDto> data) {
+        DustLog.i(TAG, "onReceiveData()");
+        setRefreshActionButtonState(false);
         setDataToView(data);
     }
 }

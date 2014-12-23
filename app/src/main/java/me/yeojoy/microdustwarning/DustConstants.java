@@ -111,5 +111,8 @@ public interface DustConstants {
 
     // Material Name
     public static final String[] MATERIALS = {"PM-10", "O3", "NO2", "CO", "SO2"};
-    
+ 
+    // Comprehensive Air-quality Index
+    public static final String[] AIR_QUALITY_INDEX 
+            = {"좋음", "보통", "약간나쁨", "나쁨", "매우나쁨"};
 }
