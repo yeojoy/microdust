@@ -141,8 +141,6 @@ public class DustFileLogger {
                 }
 
                 preData = preDataBuilder.toString();
-                if (!TextUtils.isEmpty(preData))
-                    DustLog.d(TAG, "Message : " + preData);
             }
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();

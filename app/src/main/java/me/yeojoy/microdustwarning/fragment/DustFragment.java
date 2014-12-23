@@ -309,7 +309,11 @@ public class DustFragment extends Fragment implements DustConstants,
     private void setImage() {
         DustLog.i(TAG, "setImage()");
         mLlIndicator.setVisibility(View.VISIBLE);
-
+        if (mUrlList == null) {
+            mUrlList = new ArrayList<String>();
+        }
+        mUrlList.clear();
+        
         mUrlList.add("http://www.webairwatch.com/kaq/modelimg/PM10_24H_AVG.09KM.Day1.gif");
         mUrlList.add("http://www.webairwatch.com/kaq/modelimg/PM10_24H_AVG.09KM.Day2.gif");
         mUrlList.add("http://www.webairwatch.com/kaq/modelimg/PM2_5_24H_AVG.09KM.Day1.gif");

@@ -8,7 +8,7 @@ public interface DustConstants {
     /** cleanair.seoul.go.kr API Address */
     public static final String CLEAN_AIR_API_ADDRESS 
             = "http://cleanair.seoul.go.kr/air_city.htm?" +
-                    "method=airPollutantInfoMeasureXml";
+                    "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
     public static final int NOTI_TIME_TEST = 1000 * 60 * 1;
@@ -117,4 +117,5 @@ public interface DustConstants {
             = {"좋음", "보통", "약간나쁨", "나쁨", "매우나쁨"};
     
     public static final String MEASURED_TIME_FORMAT = "%s년 %s월 %s일 %s시";
+    public static final String MEASURED_TIME_FORMAT_D = "%s-%s-%s %s시";
 }
