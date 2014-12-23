@@ -11,7 +11,7 @@ public interface DustConstants {
                     "method=airPollutantInfoMeasureXml";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final int NOTI_TIME_TEST = 1000 * 60 * 5;     // 2분
+    public static final int NOTI_TIME_TEST = 1000 * 60 * 1;
     public static final int NOTI_TIME_REAL = 1000 * 60 * 60;    // 1시간
 
     /** Bundle key */
@@ -115,4 +115,6 @@ public interface DustConstants {
     // Comprehensive Air-quality Index
     public static final String[] AIR_QUALITY_INDEX 
             = {"좋음", "보통", "약간나쁨", "나쁨", "매우나쁨"};
+    
+    public static final String MEASURED_TIME_FORMAT = "%s년 %s월 %s일 %s시";
 }

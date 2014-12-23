@@ -9,6 +9,9 @@ import com.squareup.otto.Bus;
  */
 public class DustApplication extends Application {
     public static Bus bus;
+    
+    public static String locality;
+    
     @Override
     public void onCreate() {
         super.onCreate();

@@ -6,6 +6,7 @@ import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -13,7 +14,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -121,6 +124,15 @@ public class DustFragment extends Fragment implements DustConstants,
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity();
 
+        DustSharedPreferences.getInstance().init(mContext);
+        DustApplication.locality 
+                = DustSharedPreferences.getInstance()
+                        .getString(KEY_PREFS_LOCALITY);
+        if (TextUtils.isEmpty(DustApplication.locality)) {
+            DustDialogManager.chooseUserLocalityDialog(mContext, 
+                    mDialogSelectListener);
+        }
+        
         mManager = DustNetworkManager.getInstance(mContext);
         mManager.setOnReceiveDataListener(this);
     }
@@ -157,6 +169,11 @@ public class DustFragment extends Fragment implements DustConstants,
 
                 Intent intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
+                break;
+            
+            case R.id.action_change_locality:
+                DustDialogManager.chooseUserLocalityDialog(mContext,
+                        mDialogSelectListener);
                 break;
 
         }
@@ -284,9 +301,7 @@ public class DustFragment extends Fragment implements DustConstants,
                 System.currentTimeMillis() + 1000, notiTime, pending);
     }
 
-    private void refreshData() {
-        mManager.getMicrodustInfo();
-    }
+    private void refreshData() { mManager.getMicrodustInfo(); }
 
     /**
      * 기상지도이미지를 가져와 보여준다.
@@ -342,18 +357,13 @@ public class DustFragment extends Fragment implements DustConstants,
         
         DustInfoDto dto = null;
         for (DustInfoDto d : dtoList) {
-            if (DEFAULT_LOCALITY.equals(d.getLocality())) {
+            if (DustApplication.locality.equals(d.getLocality())) {
                 dto = d;
                 break;
             }
         }
 
-        if (dto != null) {
-            DustLog.i(TAG, "===================================================");
-            DustLog.i(TAG, dto.toString());
-            DustLog.i(TAG, "===================================================");
-        }
-
+        if (dto != null) DustLog.i(TAG, dto.toString());
 
         STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
 
@@ -375,11 +385,10 @@ public class DustFragment extends Fragment implements DustConstants,
         ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
         ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
         ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
-        ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", STATUS.NONE));
+        ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
         ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
         setText(ssb.toString());
     }
-
 
     @Override
     public void onClick(View v) {
@@ -405,7 +414,32 @@ public class DustFragment extends Fragment implements DustConstants,
     @Override
     public void onReceiveData(List<DustInfoDto> data) {
         DustLog.i(TAG, "onReceiveData()");
-        setRefreshActionButtonState(false);
         setDataToView(data);
+        
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setRefreshActionButtonState(false);
+            }
+        });
     }
+    
+    private DialogInterface.OnClickListener mDialogSelectListener = 
+            new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            DustLog.d(TAG, "onClick()");
+            String[] localityArray = 
+                    getResources().getStringArray(R.array.all_localities_array);
+            DustApplication.locality = localityArray[which];
+            
+            DustLog.d(TAG, "onClick(), selected Locality : " 
+                    + DustApplication.locality);
+            
+            DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY, 
+                    DustApplication.locality);
+            
+            refreshData();
+        }
+    };
 }

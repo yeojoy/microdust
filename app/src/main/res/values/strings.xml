@@ -38,6 +38,8 @@
     <string name="action_swtich_off">자동실행 OFF</string>
 
     <string name="action_about">About</string>
+    <string name="action_locality">지역변경</string>
+    
 
     <string name="desc_red">빨간색은 위험</string>
     <string name="desc_blue">파란색은 좋음\n</string>
@@ -80,7 +82,8 @@
 
     <!-- Dialog -->
     <string name="dlg_default_title">알림</string>
-
+    <string name="dlg_choose_locality_title">지역을 선택하세요.</string>
+    
     <string name="dlg_status_good_title">상쾌한 운동을 해보는 건 어떨까요?</string>
     <string name="dlg_status_normal_title">밖으로 나가보는 건 어떠신가요?</string>
     <string name="dlg_status_bad_title">장시간 외출은 피하세요.</string>
@@ -126,21 +129,7 @@
     <string name="noti_icon_type_default">A</string>
     <string name="noti_icon_type_b">B</string>
     <string name="noti_icon_type_c">C</string>
-    <string-array name="noti_icon_type_value_array">
-        <item>@string/noti_icon_type_default</item>
-        <item>@string/noti_icon_type_b</item>
-        <item>@string/noti_icon_type_c</item>
-    </string-array>
-    <string-array name="noti_icon_type_array">
-        <item>A타입</item>
-        <item>B타입</item>
-        <item>C타입</item>
-    </string-array>
-    <string-array name="noti_icon_type_empty_array">
-        <item>@string/noti_icon_type_default</item>
-        <item>@string/noti_icon_type_b</item>
-        <item>@string/noti_icon_type_c</item>
-    </string-array>
+
 
 
     <!-- InfoActivity -->

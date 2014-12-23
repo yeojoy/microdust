@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.STATUS;
@@ -188,6 +189,24 @@ public class DustDialogManager implements DustConstants {
         builder.setNegativeButton(R.string.dlg_btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+    }
+    
+    public static void chooseUserLocalityDialog(final Context context,
+              final DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.dlg_choose_locality_title);
+        builder.setItems(R.array.all_localities_array, listener);
+
+        builder.setNegativeButton(R.string.dlg_btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(DustApplication.locality))
+                    DustApplication.locality = DEFAULT_LOCALITY;
                 dialog.dismiss();
             }
         });

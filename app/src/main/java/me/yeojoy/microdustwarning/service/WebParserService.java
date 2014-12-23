@@ -45,14 +45,13 @@ public class WebParserService extends Service implements DustConstants {
             DustSharedPreferences.getInstance().init(mContext);
 
         mHandler = new Handler();
-
-        getMicrodustInfo();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         DustLog.i(TAG, "onStartCommand()");
-
+        getMicrodustInfo();
+        
         return START_STICKY;
     }
 

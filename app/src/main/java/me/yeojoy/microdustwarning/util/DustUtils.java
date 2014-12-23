@@ -21,11 +21,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
+import me.yeojoy.microdustwarning.entity.DustInfoDtoLocalityAscComparer;
 import me.yeojoy.microdustwarning.entity.STATUS;
 
 public class DustUtils implements DustConstants {
@@ -464,12 +466,12 @@ public class DustUtils implements DustConstants {
     }
 
     public static List<DustInfoDto> parseRawXmlString(String str) {
+        DustLog.i(TAG, "parseRawXmlString()");
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
 
-            DustLog.i(TAG, "Respons String : " + str);
             DustFileLogger.getInstance().writeLogToFile("Respons Body String.");
             DustFileLogger.getInstance().writeLogToFile(str);
 
@@ -490,7 +492,7 @@ public class DustUtils implements DustConstants {
                             && !TextUtils.isEmpty(text)) {
                         if (startTagName.equals("msrdate")) {
                             dto = new DustInfoDto();
-                            dto.setDate(text);
+                            dto.setDate(splitDateString(text));
                         } else if (startTagName.equals("msrstename")) {
                             dto.setLocality(text);
                         } else if (startTagName.equals("maxindex")) {
@@ -531,9 +533,8 @@ public class DustUtils implements DustConstants {
             }
 
             DustLog.i(TAG, "DustInfoDto length : " + list.size());
-            for (DustInfoDto d : list) {
-                DustLog.d("TAG", "DTO : " + d);
-            }
+            // 지역이름(Locality) 오름차순 정렬
+            Collections.sort(list, new DustInfoDtoLocalityAscComparer());
 
             return list;
         } catch (XmlPullParserException e) {
@@ -598,5 +599,19 @@ public class DustUtils implements DustConstants {
             return NO_VALUE;
         }
         return value;
+    }
+
+    /**
+     * 201412231000 형식으로 오는 date String을 2014년 12월 23일 10:00 으로 변경
+     * @param date
+     * @return
+     */
+    private static String splitDateString(String date) {
+        // Example 201412231000
+        String year = date.substring(0, 4);
+        String month = date.substring(4, 6);
+        String day = date.substring(6, 8);
+        String hour = date.substring(8, 10);
+        return String.format(MEASURED_TIME_FORMAT, year, month, day, hour);
     }
 }
