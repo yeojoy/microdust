@@ -503,7 +503,7 @@ public class DustFragment extends Fragment implements DustConstants,
                     PROJECTION,                         // Projection to return
                     null,                               // No selection clause
                     null,                               // No selection arguments
-                    "ASC"                                // Default sort order
+                    "measure_time ASC"                  // Default sort order
 
             );
         }
@@ -518,65 +518,27 @@ public class DustFragment extends Fragment implements DustConstants,
             DustLog.d(TAG, "onLoadFinished(), cursor is not null");    
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex(ID));
-                String saveTime = cursor.getString(cursor.getColumnIndex(SAVE_TIME));
-                String measureTime = cursor.getString(cursor.getColumnIndex(MEASURE_TIME));
-                String locality = cursor.getString(cursor.getColumnIndex(MEASURE_LOCALITY));
-                String pm10 = cursor.getString(cursor.getColumnIndex(MICRO_DUST));
-                String pm10Index = cursor.getString(cursor.getColumnIndex(MICRO_DUST_INDEX));
-                String pm25 = cursor.getString(cursor.getColumnIndex(NANO_DUST));
-                String ozon = cursor.getString(cursor.getColumnIndex(OZON));
-                String ozonIndex = cursor.getString(cursor.getColumnIndex(OZON_INDEX));
-                String no2 = cursor.getString(cursor.getColumnIndex(NO2));
-                String no2Index = cursor.getString(cursor.getColumnIndex(NO2_INDEX));
-                String co = cursor.getString(cursor.getColumnIndex(CO));
-                String coIndex = cursor.getString(cursor.getColumnIndex(CO_INDEX));
-                String so2 = cursor.getString(cursor.getColumnIndex(SO2));
-                String so2Index = cursor.getString(cursor.getColumnIndex(SO2_INDEX));
-                String degree = cursor.getString(cursor.getColumnIndex(DEGREE));
-                String airQualIndex = cursor.getString(cursor.getColumnIndex(AIR_QUAL_INDEX));
-                String material = cursor.getString(cursor.getColumnIndex(MATERIAL));
-                DustLog.i(TAG,
-                        id + " " +
-                        saveTime + " " +
-                        measureTime + " " +
-                        locality + " " +
-                        pm10 + " " +
-                        pm10Index + " " +
-                        pm25 + " " +
-                        ozon + " " +
-                        ozonIndex + " " +
-                        no2 + " " +
-                        no2Index + " " +
-                        co + " " +
-                        coIndex + " " +
-                        so2 + " " +
-                        so2Index + " " +
-                        degree + " " +
-                        airQualIndex + " " +
-                        material + "\n"
-                );
-                
-                if (DustApplication.locality.equals(locality)) {
+                if (DustApplication.locality.equals(cursor.getString(
+                        cursor.getColumnIndex(MEASURE_LOCALITY)))) {
                     dto = new DustInfoDto();
-                    dto.setDate(measureTime);
-                    dto.setLocality(locality);
-                    dto.setPm10(pm10);
-                    dto.setPm10Index(pm10Index);
-                    dto.setPm25(pm25);
-                    dto.setOzone(ozon);
-                    dto.setOzoneIndex(ozonIndex);
-                    dto.setNitrogen(no2);
-                    dto.setNitrogenIndex(no2Index);
-                    dto.setCarbon(co);
-                    dto.setCarbonIndex(coIndex);
-                    dto.setSulfurous(so2);
-                    dto.setSulfurousIndex(so2Index);
-                    dto.setDegree(degree);
-                    dto.setMaxIndex(airQualIndex);
-                    dto.setMaterial(material);
+                    dto.setDate(cursor.getString(cursor.getColumnIndex(MEASURE_TIME)));
+                    dto.setLocality(cursor.getString(cursor.getColumnIndex(MEASURE_LOCALITY)));
+                    dto.setPm10(cursor.getString(cursor.getColumnIndex(MICRO_DUST)));
+                    dto.setPm10Index(cursor.getString(cursor.getColumnIndex(MICRO_DUST_INDEX)));
+                    dto.setPm25(cursor.getString(cursor.getColumnIndex(NANO_DUST)));
+                    dto.setOzone(cursor.getString(cursor.getColumnIndex(OZON)));
+                    dto.setOzoneIndex(cursor.getString(cursor.getColumnIndex(OZON_INDEX)));
+                    dto.setNitrogen(cursor.getString(cursor.getColumnIndex(NO2)));
+                    dto.setNitrogenIndex(cursor.getString(cursor.getColumnIndex(NO2_INDEX)));
+                    dto.setCarbon(cursor.getString(cursor.getColumnIndex(CO)));
+                    dto.setCarbonIndex(cursor.getString(cursor.getColumnIndex(CO_INDEX)));
+                    dto.setSulfurous(cursor.getString(cursor.getColumnIndex(SO2)));
+                    dto.setSulfurousIndex(cursor.getString(cursor.getColumnIndex(SO2_INDEX)));
+                    dto.setDegree(cursor.getString(cursor.getColumnIndex(DEGREE)));
+                    dto.setMaxIndex(cursor.getString(cursor.getColumnIndex(AIR_QUAL_INDEX)));
+                    dto.setMaterial(cursor.getString(cursor.getColumnIndex(MATERIAL)));
                     
-                    setText(dto);
+                    break;
                 }
             }
         }
@@ -585,6 +547,7 @@ public class DustFragment extends Fragment implements DustConstants,
             DustLog.d(TAG, "==================================================");
             DustLog.d(TAG, "DTO : " + dto.toString());
             DustLog.d(TAG, "==================================================");
+            setText(dto);
         }
     }
 
