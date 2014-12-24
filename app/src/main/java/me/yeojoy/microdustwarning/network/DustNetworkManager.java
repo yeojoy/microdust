@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
@@ -63,7 +64,7 @@ public class DustNetworkManager implements DustConstants {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                
+
                 mOnReceiveDataListener.onReceiveData(
                         DustUtils.parseRawXmlString(response.body().string()));
             }

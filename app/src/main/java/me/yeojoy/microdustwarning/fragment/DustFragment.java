@@ -4,17 +4,18 @@ package me.yeojoy.microdustwarning.fragment;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,6 +39,8 @@ import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
+import me.yeojoy.microdustwarning.db.DustInfoDBConstants;
+import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.entity.STATUS;
@@ -49,7 +52,9 @@ import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.DustUtils;
 
 public class DustFragment extends Fragment implements DustConstants, 
-        View.OnClickListener, DustNetworkManager.OnReceiveDataListener {
+        View.OnClickListener, DustNetworkManager.OnReceiveDataListener,
+        LoaderManager.LoaderCallbacks<Cursor>,
+        DustInfoDBConstants {
 
     private static final String TAG = DustFragment.class.getSimpleName();
 
@@ -74,6 +79,12 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override
@@ -115,14 +126,20 @@ public class DustFragment extends Fragment implements DustConstants,
         view.findViewById(R.id.ib_yellow).setOnClickListener(this);
         view.findViewById(R.id.ib_orange).setOnClickListener(this);
         view.findViewById(R.id.ib_red).setOnClickListener(this);
-
+         
+         /*
+         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+         * to onCreateLoader().
+         */
+        getLoaderManager().initLoader(AIR_QUALITY_INDEX_CURSOR_LOADER, null,
+                this);
+        
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getActivity();
 
         DustSharedPreferences.getInstance().init(mContext);
         DustApplication.locality 
@@ -257,6 +274,7 @@ public class DustFragment extends Fragment implements DustConstants,
 
             case GET_DATA_WITH_DTO:
                 setDataToView(entity.dtoList);
+                
                 setRefreshActionButtonState(false);
                 break;
 
@@ -325,14 +343,37 @@ public class DustFragment extends Fragment implements DustConstants,
     /**
      * Data를 추가한다.
      * 추가한 후 setImage()를 호출한다.
-     * @param message
+     * @param dto
      */
-    private void setText(final String message) {
+    private void setText(final DustInfoDto dto) {
         DustLog.i(TAG, "setText()");
         // UI Thread인지 확인
         if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
             DustLog.i(TAG, "setText(), running on UI Thread.");
-            mTvResult.setText(message);
+            
+            STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
+
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+
+            Resources res = getResources();
+
+            if (BuildConfig.DEBUG)
+                ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+            else
+                ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+
+            ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
+
+            ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
+            ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
+            ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
+            ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
+            ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
+            ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
+            ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
+            ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
+            ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
+            mTvResult.setText(ssb.toString());
             setImage();
         } else {
             // UI Thread가 아님
@@ -344,7 +385,29 @@ public class DustFragment extends Fragment implements DustConstants,
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mTvResult.setText(message);
+                    STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
+
+                    SpannableStringBuilder ssb = new SpannableStringBuilder();
+
+                    Resources res = getResources();
+
+                    if (BuildConfig.DEBUG)
+                        ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+                    else
+                        ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+
+                    ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
+
+                    ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
+                    ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
+                    ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
+                    ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
+                    ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
+                    ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
+                    ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
+                    ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
+                    ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
+                    mTvResult.setText(ssb.toString());
                     setImage();
                 }
             });
@@ -358,6 +421,10 @@ public class DustFragment extends Fragment implements DustConstants,
             DustLog.i(TAG, "setDataToView(), dtoList is null");
             return;
         }
+
+        // DB에 저장
+        SqliteManager manager = SqliteManager.getInstance(mContext);
+        manager.saveData(dtoList);
         
         DustInfoDto dto = null;
         for (DustInfoDto d : dtoList) {
@@ -369,29 +436,7 @@ public class DustFragment extends Fragment implements DustConstants,
 
         if (dto != null) DustLog.i(TAG, dto.toString());
 
-        STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
-
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-
-        Resources res = getResources();
-
-        if (BuildConfig.DEBUG)
-            ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
-        else
-            ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
-        
-        ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
-        
-        ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
-        ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
-        ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
-        ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
-        ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
-        ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
-        ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
-        ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
-        ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
-        setText(ssb.toString());
+        setText(dto);
     }
 
     @Override
@@ -446,4 +491,104 @@ public class DustFragment extends Fragment implements DustConstants,
             refreshData();
         }
     };
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        DustLog.d(TAG, "onCreateLoader()");
+        
+        if (id == AIR_QUALITY_INDEX_CURSOR_LOADER) {
+            return new CursorLoader(
+                    mContext,                           // Context
+                    AIR_QUALITY_SELECT_ALL_QUERY_URI,   // Table to query
+                    PROJECTION,                         // Projection to return
+                    null,                               // No selection clause
+                    null,                               // No selection arguments
+                    "ASC"                                // Default sort order
+
+            );
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        DustLog.d(TAG, "onLoadFinished()");
+        DustInfoDto dto = null;
+        if (cursor != null && cursor.getCount() > 0) {
+            DustLog.d(TAG, "onLoadFinished(), cursor is not null");    
+            cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex(ID));
+                String saveTime = cursor.getString(cursor.getColumnIndex(SAVE_TIME));
+                String measureTime = cursor.getString(cursor.getColumnIndex(MEASURE_TIME));
+                String locality = cursor.getString(cursor.getColumnIndex(MEASURE_LOCALITY));
+                String pm10 = cursor.getString(cursor.getColumnIndex(MICRO_DUST));
+                String pm10Index = cursor.getString(cursor.getColumnIndex(MICRO_DUST_INDEX));
+                String pm25 = cursor.getString(cursor.getColumnIndex(NANO_DUST));
+                String ozon = cursor.getString(cursor.getColumnIndex(OZON));
+                String ozonIndex = cursor.getString(cursor.getColumnIndex(OZON_INDEX));
+                String no2 = cursor.getString(cursor.getColumnIndex(NO2));
+                String no2Index = cursor.getString(cursor.getColumnIndex(NO2_INDEX));
+                String co = cursor.getString(cursor.getColumnIndex(CO));
+                String coIndex = cursor.getString(cursor.getColumnIndex(CO_INDEX));
+                String so2 = cursor.getString(cursor.getColumnIndex(SO2));
+                String so2Index = cursor.getString(cursor.getColumnIndex(SO2_INDEX));
+                String degree = cursor.getString(cursor.getColumnIndex(DEGREE));
+                String airQualIndex = cursor.getString(cursor.getColumnIndex(AIR_QUAL_INDEX));
+                String material = cursor.getString(cursor.getColumnIndex(MATERIAL));
+                DustLog.i(TAG,
+                        id + " " +
+                        saveTime + " " +
+                        measureTime + " " +
+                        locality + " " +
+                        pm10 + " " +
+                        pm10Index + " " +
+                        pm25 + " " +
+                        ozon + " " +
+                        ozonIndex + " " +
+                        no2 + " " +
+                        no2Index + " " +
+                        co + " " +
+                        coIndex + " " +
+                        so2 + " " +
+                        so2Index + " " +
+                        degree + " " +
+                        airQualIndex + " " +
+                        material + "\n"
+                );
+                
+                if (DustApplication.locality.equals(locality)) {
+                    dto = new DustInfoDto();
+                    dto.setDate(measureTime);
+                    dto.setLocality(locality);
+                    dto.setPm10(pm10);
+                    dto.setPm10Index(pm10Index);
+                    dto.setPm25(pm25);
+                    dto.setOzone(ozon);
+                    dto.setOzoneIndex(ozonIndex);
+                    dto.setNitrogen(no2);
+                    dto.setNitrogenIndex(no2Index);
+                    dto.setCarbon(co);
+                    dto.setCarbonIndex(coIndex);
+                    dto.setSulfurous(so2);
+                    dto.setSulfurousIndex(so2Index);
+                    dto.setDegree(degree);
+                    dto.setMaxIndex(airQualIndex);
+                    dto.setMaterial(material);
+                    
+                    setText(dto);
+                }
+            }
+        }
+        
+        if (dto != null) {
+            DustLog.d(TAG, "==================================================");
+            DustLog.d(TAG, "DTO : " + dto.toString());
+            DustLog.d(TAG, "==================================================");
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 }

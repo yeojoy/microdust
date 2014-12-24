@@ -11,7 +11,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
+import android.view.ViewOutlineProvider;
+import android.widget.Toast;
 
+import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 
 public class SqliteManager implements DustInfoDBConstants {
@@ -20,20 +24,21 @@ public class SqliteManager implements DustInfoDBConstants {
     
     private static SqliteManager mManager;
     
-    private Context mContext;
+    private static Context mContext;
     
-    private DustInfoDBHelper mDBHelper;
+    private static DustInfoDBHelper mDBHelper;
     
-    public static SqliteManager getInstance() {
+    public static SqliteManager getInstance(Context context) {
         if (mManager == null)
             mManager = new SqliteManager();
+        
+        init(context); 
         return mManager;
     }
  
-    public void init(Context context) {
+    private static  void init(Context context) {
         DustLog.i(TAG, "init()");
         mContext = context;
-        
         mDBHelper = new DustInfoDBHelper(mContext);
     }
     
@@ -48,52 +53,55 @@ public class SqliteManager implements DustInfoDBConstants {
         return mContext != null && mDBHelper != null;
     }
     
-    public void saveData(String time, String rawData) {
+    public void saveData(List<DustInfoDto> data) {
         DustLog.i(TAG, "saveData()");
-        ArrayList<String> data = new ArrayList<String>();
-        data.add(time);
-        data.addAll(Arrays.asList(rawData.split(" ")));
-        insertData(data);
+        DBInsertAsyncTask task = new DBInsertAsyncTask();
+        task.execute(data);
     }
     
-    
-    
-    public void insertData(List<String> data) {
+    private void insertData(List<DustInfoDto> data) {
         DustLog.i(TAG, "insertData()");
         
-        if (data == null || data.size() != 11)
+        if (data == null)
             return;
-        
-        StringBuilder sb = new StringBuilder();
-        for (String s : data) {
-            sb.append(s).append(" ");
-        }
-        DustLog.d(TAG, sb.toString().trim());
         
         SQLiteDatabase db = null;
         try {
             // 1. get reference to writable DB
             db = mDBHelper.getWritableDatabase();
-            
+            db.beginTransaction();
+            DustLog.i(TAG, "insertData(), beginTransaction");
+            ContentValues values = null;
             // 2. create ContentValues to add key "column"/value
-            ContentValues values = new ContentValues();
-            values.put(SAVE_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
-            values.put(MEASURE_TIME, data.get(0));
-            values.put(MEASURE_LOCATION, data.get(1));
-            values.put(MICRO_DUST, data.get(2));
-            values.put(NANO_DUST, data.get(3));
-            values.put(OZON, data.get(4));
-            values.put(NO2, data.get(5));
-            values.put(CO, data.get(6));
-            values.put(SO2, data.get(7));
-            values.put(GRADE, data.get(8));
-            values.put(DEGREE, data.get(9));
-            values.put(MATTER, data.get(10));
+            for (DustInfoDto dto : data) {
+                values = new ContentValues();
+                values.put(SAVE_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
+                values.put(MEASURE_TIME, dto.getDate());
+                values.put(MEASURE_LOCALITY, dto.getLocality());
+                values.put(MICRO_DUST, dto.getPm10());
+                values.put(MICRO_DUST_INDEX, dto.getPm10Index());
+                values.put(NANO_DUST, dto.getPm25());
+                values.put(OZON, dto.getOzone());
+                values.put(OZON_INDEX, dto.getOzoneIndex());
+                values.put(NO2, dto.getNitrogen());
+                values.put(NO2_INDEX, dto.getNitrogenIndex());
+                values.put(CO, dto.getCarbon());
+                values.put(CO_INDEX, dto.getCarbonIndex());
+                values.put(SO2, dto.getSulfurous());
+                values.put(SO2_INDEX, dto.getSulfurousIndex());
+                values.put(DEGREE, dto.getDegree());
+                values.put(AIR_QUAL_INDEX, dto.getMaxIndex());
+                values.put(MATERIAL, dto.getMaterial());
+                // 3. insert
+                db.insert(TABLE_NAME, // table
+                        null, //nullColumnHack
+                        values); // key/value -> keys = column names/ values = column values
+                DustLog.i(TAG, "insertData(), insert Data");
+            }
             
-            // 3. insert
-            db.insert(TABLE_NAME, // table
-                    null, //nullColumnHack
-                    values); // key/value -> keys = column names/ values = column values
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            DustLog.i(TAG, "insertData(), endTransaction");
         } catch (SQLiteException e) {
             DustLog.e(TAG, e.getMessage());
         } finally {
@@ -125,4 +133,24 @@ public class SqliteManager implements DustInfoDBConstants {
         return cursor;
     }
     
+    private class DBInsertAsyncTask extends AsyncTask<List<DustInfoDto>, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(List<DustInfoDto>... params) {
+            insertData(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(mContext, "DB Insert Finished.", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
 }
