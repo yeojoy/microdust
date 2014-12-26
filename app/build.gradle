@@ -10,6 +10,19 @@ android {
         targetSdkVersion 21
         versionCode 10
         versionName "1.1.0"
+        applicationVariants.all { variant ->
+            // In Android Studio VER 1.0, Must add below lines.
+            variant.outputs.each { output ->
+                def file = output.outputFile
+                def fdate = new Date().format('MMdd-HHmm')
+                output.outputFile = new File(file.parent,
+                        file.name.replace(".apk", "-" + fdate + "-"
+                                + defaultConfig.versionCode
+                                + "-v" + defaultConfig.versionName + ".apk"))
+                }
+            }
+
+        project.archivesBaseName = "microdust"
     }
 
     signingConfigs{
