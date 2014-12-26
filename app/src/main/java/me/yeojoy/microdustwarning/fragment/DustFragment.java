@@ -311,11 +311,11 @@ public class DustFragment extends Fragment implements DustConstants,
 
         int notiTime = NOTI_TIME_REAL;
         
-        if (BuildConfig.DEBUG) {
-            notiTime = NOTI_TIME_TEST;
-        }
+//        if (BuildConfig.DEBUG) {
+//            notiTime = NOTI_TIME_TEST;
+//        }
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC,
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + 1000, notiTime, pending);
     }
 

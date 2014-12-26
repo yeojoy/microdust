@@ -7,7 +7,7 @@ import me.yeojoy.microdustwarning.BuildConfig;
 
 public interface DustInfoDBConstants {
     public static final String DB_NAME = "dust_info.db";
-    public static final int DB_VERSION = 7;
+    public static final int DB_VERSION = 8;
 
     public static final String TABLE_NAME = "dust_info";
     

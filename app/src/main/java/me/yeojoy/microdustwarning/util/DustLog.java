@@ -47,17 +47,21 @@ public class DustLog {
     public static void e(CharSequence message) {
         if (BuildConfig.DEBUG) Log.e(TAG, getLoggerLocation() + message.toString());
     }
-    
+
+    /**
+     * Class 이름, method이름, line number를 가져옴.
+     * @return
+     */
     private static String getLoggerLocation() {
         StackTraceElement ste = Thread.currentThread().getStackTrace()[4];
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        sb.append(ste.getFileName());
+        sb.append(ste.getFileName().substring(0, ste.getFileName().indexOf(".")));
         sb.append(" > ");
         sb.append(ste.getMethodName());
         sb.append(" > #");
         sb.append(ste.getLineNumber());
-        sb.append("]\n");
+        sb.append("] >>> ");
 
         return sb.toString();
 //
