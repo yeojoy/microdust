@@ -118,4 +118,20 @@ public interface DustConstants {
     
     public static final String MEASURED_TIME_FORMAT = "%s년 %s월 %s일 %s시";
     public static final String MEASURED_TIME_FORMAT_D = "%s-%s-%s %s시";
+    
+    /* Google Analytics 영역 */
+    public static final String SF_EVENT_CATEGORY = "startfragment";
+    public static final String SF_EVENT_LABEL = "dustfragment";
+    
+    public static final String DF_EVENT_CATEGORY = "dustfragment";
+    public static final String DF_EVENT_ACTION = "dustfragment";
+    public static final String DF_EVENT_LABEL = "dustfragment";
+    
+    public static final String GA_ACTION_CHECKED_IN_CHECKBOX = "checkbox_checked";
+    public static final String GA_ACTION_BUTTON_CLICK = "button_click";
+
+    public static final String GA_LABEL_CHECKBOX = "checkbox";
+    public static final String GA_LABEL_BUTTON = "button";
+
+    /* Google Analytics 영역 끝 */
 }

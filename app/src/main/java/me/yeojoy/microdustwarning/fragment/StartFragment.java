@@ -1,5 +1,6 @@
 package me.yeojoy.microdustwarning.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.SpannableString;
@@ -12,6 +13,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.STATUS;
@@ -21,10 +26,23 @@ import me.yeojoy.microdustwarning.util.DustUtils;
 
 public class StartFragment extends Fragment implements DustConstants {
     private static final String TAG = StartFragment.class.getSimpleName();
-
+    private static final String VIEW_NAME = "start fragment";
+    
     private TextView mTvMainDescription;
 
     private boolean mWantToStartService = false;
+
+    private Tracker mTracker;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        if (mTracker == null) {
+            mTracker = ((DustApplication) getActivity().getApplication())
+                    .getTracker(DustApplication.TrackerName.APP_TRACKER);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +54,19 @@ public class StartFragment extends Fragment implements DustConstants {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         mWantToStartService = isChecked;
+                        if (isChecked) {
+                            mTracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory(SF_EVENT_CATEGORY)
+                                    .setAction(GA_ACTION_CHECKED_IN_CHECKBOX)        
+                                    .setLabel(GA_LABEL_CHECKBOX)
+                                    .setValue(1).build());
+                        } else {
+                            mTracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory(SF_EVENT_CATEGORY)
+                                    .setAction(GA_ACTION_CHECKED_IN_CHECKBOX)
+                                    .setLabel(GA_LABEL_CHECKBOX)
+                                    .setValue(0).build());
+                        }
                     }
                 }
         );
@@ -43,6 +74,12 @@ public class StartFragment extends Fragment implements DustConstants {
         layout.findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory(SF_EVENT_CATEGORY)
+                        .setAction(GA_ACTION_BUTTON_CLICK)
+                        .setLabel(GA_LABEL_BUTTON)
+                        .setValue(0).build());
+                
                 Fragment dustFragment = new DustFragment();
                 Bundle args = new Bundle();
                 args.putBoolean(KEY_CHECKBOX_AUTO_START, mWantToStartService);
@@ -61,9 +98,20 @@ public class StartFragment extends Fragment implements DustConstants {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         getActivity().getActionBar().setTitle(R.string.app_name);
+        
+        // Set screen name.
+        mTracker.setScreenName(VIEW_NAME);
+
+        // Send a screen view.
+        mTracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
     private void setDescription() {

@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import me.yeojoy.microdustwarning.util.DustUtils;
 
 public class AboutActivity extends Activity implements DustConstants, View.OnClickListener {
 
     private static final String TAG = AboutActivity.class.getSimpleName();
-
+    private static final String VIEW_NAME = "about activity";
+    
     private TextView mTvAppVersion;
 
     @Override
@@ -29,6 +33,20 @@ public class AboutActivity extends Activity implements DustConstants, View.OnCli
         findViewById(R.id.tv_infomation).setOnClickListener(this);
         findViewById(R.id.tv_thanks_to).setOnClickListener(this);
         findViewById(R.id.tv_send_feedback).setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Get tracker.
+        Tracker t = ((DustApplication) getApplication())
+                .getTracker(DustApplication.TrackerName.APP_TRACKER);
+
+        // Set screen name.
+        t.setScreenName(VIEW_NAME);
+
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
     }
 
     @Override

@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -58,7 +60,8 @@ public class DustFragment extends Fragment implements DustConstants,
         DustInfoDBConstants {
 
     private static final String TAG = DustFragment.class.getSimpleName();
-
+    private static final String VIEW_NAME = "main dust fragment";
+    
     private TextView mTvResult;
 
     private AlarmManager alarmManager;
@@ -76,6 +79,8 @@ public class DustFragment extends Fragment implements DustConstants,
 
     private Bundle mReceivedArguments;
     
+    private Tracker mTracker;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +91,11 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mContext = activity;
+
+        if (mTracker == null) {
+            mTracker = ((DustApplication) getActivity().getApplication())
+                    .getTracker(DustApplication.TrackerName.APP_TRACKER);
+        }
     }
 
     @Override
@@ -231,6 +241,12 @@ public class DustFragment extends Fragment implements DustConstants,
         super.onResume();
         DustApplication.bus.register(this);
         getActivity().getActionBar().setTitle(R.string.app_name);
+        
+        // Set screen name.
+        mTracker.setScreenName(VIEW_NAME);
+
+        // Send a screen view.
+        mTracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
     @Override
@@ -369,7 +385,7 @@ public class DustFragment extends Fragment implements DustConstants,
             // UI Thread가 아님
             DustLog.i(TAG, "setText(), running on worker Thread.");
             // ERROR 발생으로 호출해 줘야함.
-            // java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+            // java.lang.RuntimeException: Can'mTracker create handler inside thread that has not called Looper.prepare()
             Looper.prepare();
             
             getActivity().runOnUiThread(new Runnable() {

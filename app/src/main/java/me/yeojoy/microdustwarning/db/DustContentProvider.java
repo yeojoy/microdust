@@ -71,4 +71,9 @@ public class DustContentProvider extends ContentProvider implements
         DustLog.i(TAG, "update()");
         return 0;
     }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        return super.bulkInsert(uri, values);
+    }
 }

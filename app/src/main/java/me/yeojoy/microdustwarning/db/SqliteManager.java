@@ -12,9 +12,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
+import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 
@@ -151,8 +153,9 @@ public class SqliteManager implements DustInfoDBConstants {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(mContext, "DB Insert Finished.", Toast.LENGTH_SHORT)
-                    .show();
+            if (BuildConfig.DEBUG)
+                Toast.makeText(mContext, "DB Insert Finished.", 
+                        Toast.LENGTH_SHORT).show();
         }
     }
 }

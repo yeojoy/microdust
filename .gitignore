@@ -10,3 +10,5 @@ local.properties
 yeojoyapp.keystore
 gradle.properties
 
+app/src/main/res/values/ga.xml
+app/src/main/res/xml/global_tracker.xml

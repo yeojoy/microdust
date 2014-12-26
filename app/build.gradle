@@ -19,8 +19,8 @@ android {
                         file.name.replace(".apk", "-" + fdate + "-"
                                 + defaultConfig.versionCode
                                 + "-v" + defaultConfig.versionName + ".apk"))
-                }
             }
+        }
 
         project.archivesBaseName = "microdust"
     }
