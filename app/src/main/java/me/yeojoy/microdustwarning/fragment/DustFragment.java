@@ -74,6 +74,8 @@ public class DustFragment extends Fragment implements DustConstants,
     private DustNetworkManager mManager;
     private Context mContext;
 
+    private Bundle mReceivedArguments;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,22 +127,13 @@ public class DustFragment extends Fragment implements DustConstants,
         DustApplication.locality
                 = DustSharedPreferences.getInstance()
                         .getString(KEY_PREFS_LOCALITY);
+        
         if (TextUtils.isEmpty(DustApplication.locality)) {
             DustDialogManager.chooseUserLocalityDialog(mContext,
                     mDialogSelectListener);
         }
 
-        // Start Activity에서 checkbox 상태를 보고 시작시킨다.
-        if (getArguments() != null) {
-            if (getArguments().getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
-                DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-                launchAlarmManager();
-                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
-            } else {
-                DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
-                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
-            }
-        }
+        mReceivedArguments = getArguments();
         
         /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
@@ -484,6 +477,18 @@ public class DustFragment extends Fragment implements DustConstants,
             String[] localityArray = 
                     getResources().getStringArray(R.array.all_localities_array);
             DustApplication.locality = localityArray[which];
+
+            // Start Activity에서 checkbox 상태를 보고 시작시킨다.
+            if (mReceivedArguments != null) {
+                if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
+                    DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
+                    launchAlarmManager();
+                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
+                } else {
+                    DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
+                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
+                }
+            }
             
             DustLog.d(TAG, "onClick(), selected Locality : " 
                     + DustApplication.locality);
