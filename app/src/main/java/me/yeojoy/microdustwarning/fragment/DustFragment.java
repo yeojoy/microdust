@@ -71,8 +71,6 @@ public class DustFragment extends Fragment implements DustConstants,
 
     private LinearLayout mLlIndicator;
 
-    private static int INDEX = 0;
-
     private DustNetworkManager mManager;
     private Context mContext;
 
@@ -94,17 +92,43 @@ public class DustFragment extends Fragment implements DustConstants,
         View view = inflater.inflate(R.layout.fragment_dust, container, false);
         mTvResult = (TextView) view.findViewById(R.id.tv_result);
 
-        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(getActivity(), WebParserService.class);
-        pending = PendingIntent.getService(getActivity(), 10002, intent, 0);
-
         mGvImages = (GridView) view.findViewById(R.id.gv_map);
         mUrlList = new ArrayList<String>();
         mAdapter = new ImageAdapter(getActivity(), mUrlList);
         mGvImages.setAdapter(mAdapter);
 
         mLlIndicator = (LinearLayout) view.findViewById(R.id.ll_indicator);
+
+        if (!DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF)) {
+            mTvResult.setText(R.string.service_is_on_wait_a_minute);
+        }
+
+        view.findViewById(R.id.ib_blue).setOnClickListener(this);
+        view.findViewById(R.id.ib_light_green).setOnClickListener(this);
+        view.findViewById(R.id.ib_yellow).setOnClickListener(this);
+        view.findViewById(R.id.ib_orange).setOnClickListener(this);
+        view.findViewById(R.id.ib_red).setOnClickListener(this);
+         
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(getActivity(), WebParserService.class);
+        pending = PendingIntent.getService(getActivity(), 10002, intent, 0);
+
+        DustSharedPreferences.getInstance().init(mContext);
+        DustApplication.locality
+                = DustSharedPreferences.getInstance()
+                        .getString(KEY_PREFS_LOCALITY);
+        if (TextUtils.isEmpty(DustApplication.locality)) {
+            DustDialogManager.chooseUserLocalityDialog(mContext,
+                    mDialogSelectListener);
+        }
 
         // Start Activity에서 checkbox 상태를 보고 시작시킨다.
         if (getArguments() != null) {
@@ -117,39 +141,13 @@ public class DustFragment extends Fragment implements DustConstants,
                 DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
             }
         }
-
-        if (!DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF)) {
-            mTvResult.setText(R.string.service_is_on_wait_a_minute);
-        }
-
-        view.findViewById(R.id.ib_blue).setOnClickListener(this);
-        view.findViewById(R.id.ib_light_green).setOnClickListener(this);
-        view.findViewById(R.id.ib_yellow).setOnClickListener(this);
-        view.findViewById(R.id.ib_orange).setOnClickListener(this);
-        view.findViewById(R.id.ib_red).setOnClickListener(this);
-         
-         /*
+        
+        /*
          * Initializes the CursorLoader. The URL_LOADER value is eventually passed
          * to onCreateLoader().
          */
         getLoaderManager().initLoader(AIR_QUALITY_INDEX_CURSOR_LOADER, null,
                 this);
-        
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        DustSharedPreferences.getInstance().init(mContext);
-        DustApplication.locality 
-                = DustSharedPreferences.getInstance()
-                        .getString(KEY_PREFS_LOCALITY);
-        if (TextUtils.isEmpty(DustApplication.locality)) {
-            DustDialogManager.chooseUserLocalityDialog(mContext, 
-                    mDialogSelectListener);
-        }
         
         mManager = DustNetworkManager.getInstance(mContext);
         mManager.setOnReceiveDataListener(this);
@@ -240,8 +238,6 @@ public class DustFragment extends Fragment implements DustConstants,
         super.onResume();
         DustApplication.bus.register(this);
         getActivity().getActionBar().setTitle(R.string.app_name);
-
-        INDEX = 0;
     }
 
     @Override
@@ -521,6 +517,8 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         DustLog.d(TAG, "onLoadFinished()");
         DustInfoDto dto = null;
+        
+        
         if (cursor != null && cursor.getCount() > 0) {
             DustLog.d(TAG, "onLoadFinished(), cursor is not null");    
             cursor.moveToFirst();
@@ -560,5 +558,6 @@ public class DustFragment extends Fragment implements DustConstants,
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        
     }
 }
