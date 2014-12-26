@@ -535,7 +535,8 @@ public class DustUtils implements DustConstants {
         } else {
             dto.setDegree(getTotalAirQuality(dto.getMaxIndex()));
             
-            if (dto.getMaxIndex().equals(dto.getPm10Index())) {
+            if (dto.getMaxIndex().equals(dto.getPm10Index()) ||
+                    dto.getMaxIndex().equals(dto.getPm24Index())) {
                 dto.setMaterial(MATERIALS[0]);
             } else if (dto.getMaxIndex().equals(dto.getOzoneIndex())) {
                 dto.setMaterial(MATERIALS[1]);

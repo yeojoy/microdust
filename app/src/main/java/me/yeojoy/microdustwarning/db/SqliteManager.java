@@ -80,6 +80,8 @@ public class SqliteManager implements DustInfoDBConstants {
                 values.put(MEASURE_LOCALITY, dto.getLocality());
                 values.put(MICRO_DUST, dto.getPm10());
                 values.put(MICRO_DUST_INDEX, dto.getPm10Index());
+                values.put(MICRO_DUST_PM24, dto.getPm24());
+                values.put(MICRO_DUST_PM24_INDEX, dto.getPm24Index());
                 values.put(NANO_DUST, dto.getPm25());
                 values.put(OZON, dto.getOzone());
                 values.put(OZON_INDEX, dto.getOzoneIndex());

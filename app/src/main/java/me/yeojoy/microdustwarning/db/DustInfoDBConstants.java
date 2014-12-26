@@ -9,26 +9,28 @@ public interface DustInfoDBConstants {
     public static final String DB_NAME = "dust_info.db";
     public static final int DB_VERSION = 8;
 
-    public static final String TABLE_NAME = "dust_info";
+    public static final String TABLE_NAME = "DUST_INFO";
     
     public static final String ID = BaseColumns._ID;
-    public static final String SAVE_TIME = "save_time";
-    public static final String MEASURE_TIME = "measure_time";
-    public static final String MEASURE_LOCALITY = "locality";
-    public static final String MICRO_DUST = "micro_dust";
-    public static final String MICRO_DUST_INDEX = "micro_dust_index";
-    public static final String NANO_DUST = "nano_dust";
-    public static final String OZON = "ozon";
-    public static final String OZON_INDEX = "ozon_index";
-    public static final String NO2 = "no2";
-    public static final String NO2_INDEX = "no2_index";
-    public static final String CO = "co";
-    public static final String CO_INDEX = "co_index";
-    public static final String SO2 = "so2";
-    public static final String SO2_INDEX = "so2_index";
-    public static final String DEGREE = "degree";
-    public static final String AIR_QUAL_INDEX = "air_index";
-    public static final String MATERIAL = "material";
+    public static final String SAVE_TIME = "SAVE_TIME";
+    public static final String MEASURE_TIME = "MEASURE_TIME";
+    public static final String MEASURE_LOCALITY = "LOCALITY";
+    public static final String MICRO_DUST = "PM10";
+    public static final String MICRO_DUST_INDEX = "PM10_INDEX";
+    public static final String MICRO_DUST_PM24 = "PM24";
+    public static final String MICRO_DUST_PM24_INDEX = "PM24_INDEX";
+    public static final String NANO_DUST = "PM25";
+    public static final String OZON = "OZON";
+    public static final String OZON_INDEX = "OZON_INDEX";
+    public static final String NO2 = "NO2";
+    public static final String NO2_INDEX = "NO2_INDEX";
+    public static final String CO = "CO";
+    public static final String CO_INDEX = "CO_INDEX";
+    public static final String SO2 = "SO2";
+    public static final String SO2_INDEX = "SO2_INDEX";
+    public static final String DEGREE = "DEGREE";
+    public static final String AIR_QUAL_INDEX = "AIR_INDEX";
+    public static final String MATERIAL = "MATERIAL";
 
     // CursorLoader
     public static final int AIR_QUALITY_INDEX_CURSOR_LOADER = 1212;
@@ -40,6 +42,8 @@ public interface DustInfoDBConstants {
             MEASURE_LOCALITY,
             MICRO_DUST,
             MICRO_DUST_INDEX,
+            MICRO_DUST_PM24,
+            MICRO_DUST_PM24_INDEX,
             NANO_DUST,
             OZON,
             OZON_INDEX,

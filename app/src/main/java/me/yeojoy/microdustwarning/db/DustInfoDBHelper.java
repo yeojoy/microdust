@@ -31,6 +31,8 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
         sb.append(MEASURE_LOCALITY).append(" TEXT, ");      // 측정장소 (~~구)
         sb.append(MICRO_DUST).append(" TEXT, ");            // 미세먼지
         sb.append(MICRO_DUST_INDEX).append(" TEXT, ");      // 미세먼지 지수
+        sb.append(MICRO_DUST_PM24).append(" TEXT, ");       // 미세먼지
+        sb.append(MICRO_DUST_PM24_INDEX).append(" TEXT, "); // 미세먼지 지수
         sb.append(NANO_DUST).append(" TEXT, ");             // 초미세먼지
         sb.append(OZON).append(" TEXT, ");                  // 오존
         sb.append(OZON_INDEX).append(" TEXT, ");            // 오존 지수
@@ -52,7 +54,7 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         DustLog.i(TAG, "onUpgrade()");
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 

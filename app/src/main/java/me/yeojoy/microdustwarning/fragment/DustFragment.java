@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -419,6 +420,12 @@ public class DustFragment extends Fragment implements DustConstants,
         DustLog.i(TAG, "setDataToView()");
         if (dtoList == null) {
             DustLog.i(TAG, "setDataToView(), dtoList is null");
+            return;
+        }
+        
+        if (TextUtils.isEmpty(DustApplication.locality)) {
+            Toast.makeText(mContext, R.string.toast_warning_not_found_locality,
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -151,6 +151,8 @@
         \n\n관심을 가져주셔서 감사합니다. ;-)
         \n\n\n개발 : 은율아빠
         \n디자인 : 승회엄마
-
     </string>
+    
+    <!-- TOAST message -->
+    <string name="toast_warning_not_found_locality">지역을 선택하지 않았습니다. 메뉴에서 지역을 선택해 주세요.</string>
 </resources>
