@@ -13,7 +13,7 @@ public interface DustConstants {
                     "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final long NOTI_TIME_TEST = 1000 * 60 * 5;     // 5분
+    public static final long NOTI_TIME_TEST = 1000 * 60 * 15;     // 15분
     public static final long NOTI_TIME_REAL = AlarmManager.INTERVAL_HOUR; // 1시간
 
     /** Bundle key */
