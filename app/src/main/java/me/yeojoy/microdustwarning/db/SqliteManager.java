@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Debug;
+import android.text.TextUtils;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
@@ -43,24 +44,15 @@ public class SqliteManager implements DustInfoDBConstants {
         mContext = context;
         mDBHelper = new DustInfoDBHelper(mContext);
     }
-    
-    /**
-     * context를 갖고 있고 mDBHelper obj가 있는지 확인
-     * @return
-     *  true : NOT NULL
-     *  false : NULL
-     */
-    public boolean isDoneInit() {
-        DustLog.i(TAG, "isDoneInit()");
-        return mContext != null && mDBHelper != null;
-    }
-    
-    public void saveData(List<DustInfoDto> data) {
+
+    public synchronized void saveData(List<DustInfoDto> data) {
         DustLog.i(TAG, "saveData()");
-        DBInsertAsyncTask task = new DBInsertAsyncTask();
-        task.execute(data);
+        if (!isAleadySaved(data.get(0))) {
+            DBInsertAsyncTask task = new DBInsertAsyncTask();
+            task.execute(data);
+        }
     }
-    
+
     private void insertData(List<DustInfoDto> data) {
         DustLog.i(TAG, "insertData()");
         
@@ -113,8 +105,15 @@ public class SqliteManager implements DustInfoDBConstants {
             if (db != null) db.close();
         }
     }
-    
-    public Cursor getDBData() {
+
+    /**
+     * 가장 최근 데이터 하나를 가져온다.
+     * @return
+     */
+    public Cursor getDBDataByMeasureTime(String measureTime) {
+        DustLog.i(TAG, "getDBDataByMeasureTime()");
+
+        if (TextUtils.isEmpty(measureTime)) return null;
         Cursor cursor = null;
         
         // TODO select last data
@@ -122,10 +121,11 @@ public class SqliteManager implements DustInfoDBConstants {
         try {
             db = mDBHelper.getReadableDatabase();
 
-//            cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
-            String selectQuery = "SELECT * FROM " + TABLE_NAME;
-
-            db.rawQuery(selectQuery, null);
+            String selection = MEASURE_TIME + " = ?";
+            String[] selectionArgs = { measureTime };
+            cursor = db.query(TABLE_NAME, null, selection, selectionArgs, 
+                    null, null, null);
+            return cursor;
         } catch (SQLiteException e) {
             DustLog.e(TAG, e.getMessage());
         } finally {
@@ -136,7 +136,43 @@ public class SqliteManager implements DustInfoDBConstants {
 
         return cursor;
     }
-    
+
+    /**
+     * 동일한 시간대에 데이터가 저장 됐는지 확인한다.
+     * @param dustInfoDto
+     * @return 이미 같은 시간이 저장 됐으면 true
+     *         없으면 false
+     */
+    private boolean isAleadySaved(DustInfoDto dustInfoDto) {
+        DustLog.i(TAG, "isAleadySaved()");
+
+        if (dustInfoDto == null) return false;
+        Cursor cursor = null;
+
+        // TODO select last data
+        SQLiteDatabase db = null;
+        try {
+            db = mDBHelper.getReadableDatabase();
+
+            String selection = MEASURE_TIME + " = ?";
+            String[] selectionArgs = { dustInfoDto.getDate() };
+            cursor = db.query(TABLE_NAME, null, selection, selectionArgs,
+                    null, null, null);
+            if (cursor != null && cursor.getCount() > 0) return true;
+        } catch (SQLiteException e) {
+            DustLog.e(TAG, e.getMessage());
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * AsyncTask를 사용해서 DB에 데이터를 입력한다.
+     */
     private class DBInsertAsyncTask extends AsyncTask<List<DustInfoDto>, Void, Void> {
 
         @Override
@@ -146,6 +182,7 @@ public class SqliteManager implements DustInfoDBConstants {
 
         @Override
         protected Void doInBackground(List<DustInfoDto>... params) {
+            DustLog.i(TAG, "DBInsertAsyncTask, doInBackground()");
             insertData(params[0]);
             return null;
         }

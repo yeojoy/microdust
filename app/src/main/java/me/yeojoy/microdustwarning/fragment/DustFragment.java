@@ -137,7 +137,7 @@ public class DustFragment extends Fragment implements DustConstants,
         DustApplication.locality
                 = DustSharedPreferences.getInstance()
                         .getString(KEY_PREFS_LOCALITY);
-        
+
         if (TextUtils.isEmpty(DustApplication.locality)) {
             DustDialogManager.chooseUserLocalityDialog(mContext,
                     mDialogSelectListener);
@@ -317,11 +317,11 @@ public class DustFragment extends Fragment implements DustConstants,
 
         int notiTime = NOTI_TIME_REAL;
         
-//        if (BuildConfig.DEBUG) {
-//            notiTime = NOTI_TIME_TEST;
-//        }
+        if (BuildConfig.DEBUG) {
+            notiTime = NOTI_TIME_TEST;
+        }
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 System.currentTimeMillis() + 1000, notiTime, pending);
     }
 
