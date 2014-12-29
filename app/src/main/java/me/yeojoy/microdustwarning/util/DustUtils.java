@@ -20,8 +20,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.BuildConfig;
@@ -95,13 +97,64 @@ public class DustUtils implements DustConstants {
         // Add Action Buttons to Wear
         // REFS : http://developer.android.com/training/wearables/notifications/creating.html#ActionButtons
 
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("37.239217, 127.384724"));
-        mapIntent.setData(geoUri);
-        PendingIntent mapPendingIntent =
-                PendingIntent.getActivity(context, 0, mapIntent, 0);
+//        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+//        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("37.239217, 127.384724"));
+//        mapIntent.setData(geoUri);
+//        PendingIntent mapPendingIntent =
+//                PendingIntent.getActivity(context, 0, mapIntent, 0);
+//
+//        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
+        mBuilder.setAutoCancel(true);
 
-        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
+        DustSharedPreferences.getInstance().init(context);
+
+        // 진동 설정
+        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
+            DustLog.i(TAG, "sendNotification(), Vibrator on");
+            mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
+            // 불빛 설정
+            mBuilder.setLights(0xFFFF0000, 500, 500);
+        } else {
+            DustLog.i(TAG, "sendNotification(), Vibrator off");
+        }
+        Notification noti = mBuilder.build();
+//        noti.bigContentView = views2;
+
+        NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mng.notify(100, noti);
+    }
+    
+    public static void sendNotification(Context context, String[] args) {
+        DustLog.i(TAG, "sendNotification()");
+
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("S미세먼지 알림")
+                .setContentText(date + " >>> " + args[0] + " : " + args[1]);
+
+        NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
+        style2.setBigContentTitle("B미세먼지 알림");
+        style2.bigText(date + " >>> " + args[0] + " : " + args[1]);
+        mBuilder.setStyle(style2);
+
+        Intent intent = new Intent(context, me.yeojoy.microdustwarning.DustActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pendingIntent);
+
+        // Add Action Buttons to Wear
+        // REFS : http://developer.android.com/training/wearables/notifications/creating.html#ActionButtons
+
+//        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+//        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("37.239217, 127.384724"));
+//        mapIntent.setData(geoUri);
+//        PendingIntent mapPendingIntent =
+//                PendingIntent.getActivity(context, 0, mapIntent, 0);
+//
+//        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
         mBuilder.setAutoCancel(true);
 
         DustSharedPreferences.getInstance().init(context);
@@ -445,7 +498,7 @@ public class DustUtils implements DustConstants {
         return null;
     }
 
-    public static List<DustInfoDto> parseRawXmlString(String str) {
+    public static List<DustInfoDto> parseRawXmlString(Context context, String str) {
         DustLog.i(TAG, "parseRawXmlString()");
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -513,6 +566,8 @@ public class DustUtils implements DustConstants {
             // 지역이름(Locality) 오름차순 정렬
             Collections.sort(list, new DustInfoDtoLocalityAscComparer());
 
+            sendNotification(context, new String[] {dto.getMaterial(), dto.getMaxIndex()});
+            
             return list;
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -547,6 +602,8 @@ public class DustUtils implements DustConstants {
             } else if (dto.getMaxIndex().equals(dto.getSulfurousIndex())) {
                 dto.setMaterial(MATERIALS[4]);
             }
+            
+            
         }
         return dto;
     }

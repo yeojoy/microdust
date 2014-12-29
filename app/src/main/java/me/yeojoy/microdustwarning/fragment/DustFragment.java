@@ -128,12 +128,15 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
+        alarmManager = (AlarmManager) 
+                getActivity().getSystemService(Context.ALARM_SERVICE);
+        
         Intent intent = new Intent(getActivity(), WebParserService.class);
         pending = PendingIntent.getService(getActivity(), 10002, intent, 0);
 
         DustSharedPreferences.getInstance().init(mContext);
+        mReceivedArguments = getArguments();
+
         DustApplication.locality
                 = DustSharedPreferences.getInstance()
                         .getString(KEY_PREFS_LOCALITY);
@@ -141,16 +144,26 @@ public class DustFragment extends Fragment implements DustConstants,
         if (TextUtils.isEmpty(DustApplication.locality)) {
             DustDialogManager.chooseUserLocalityDialog(mContext,
                     mDialogSelectListener);
+        } else {
+            // Start Activity에서 checkbox 상태를 보고 시작시킨다.
+            if (mReceivedArguments != null) {
+                if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
+                    DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
+                    launchAlarmManager();
+                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
+                } else {
+                    DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
+                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
+                }
+            }
+            /*
+             * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+             * to onCreateLoader().
+             */
+            getLoaderManager().initLoader(AIR_QUALITY_INDEX_CURSOR_LOADER,
+                    null, DustFragment.this);
         }
 
-        mReceivedArguments = getArguments();
-        
-        /*
-         * Initializes the CursorLoader. The URL_LOADER value is eventually passed
-         * to onCreateLoader().
-         */
-        getLoaderManager().initLoader(AIR_QUALITY_INDEX_CURSOR_LOADER, null,
-                this);
         
         mManager = DustNetworkManager.getInstance(mContext);
         mManager.setOnReceiveDataListener(this);
@@ -315,14 +328,14 @@ public class DustFragment extends Fragment implements DustConstants,
         DustLog.i(TAG, "launchAlarmManager()");
         mTvResult.setText(R.string.service_is_on_wait_a_minute);
 
-        int notiTime = NOTI_TIME_REAL;
+        long notiTime = NOTI_TIME_REAL;
         
         if (BuildConfig.DEBUG) {
             notiTime = NOTI_TIME_TEST;
         }
 
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                System.currentTimeMillis() + 1000, notiTime, pending);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + 1000l, notiTime, pending);
     }
 
     private void refreshData() { mManager.getMicrodustInfo(); }
@@ -434,10 +447,6 @@ public class DustFragment extends Fragment implements DustConstants,
             return;
         }
 
-        // DB에 저장
-        SqliteManager manager = SqliteManager.getInstance(mContext);
-        manager.saveData(dtoList);
-        
         DustInfoDto dto = null;
         for (DustInfoDto d : dtoList) {
             if (DustApplication.locality.equals(d.getLocality())) {
@@ -505,14 +514,21 @@ public class DustFragment extends Fragment implements DustConstants,
                     DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
                 }
             }
+            /*
+             * Initializes the CursorLoader. The URL_LOADER value is eventually passed
+             * to onCreateLoader().
+             */
+            getLoaderManager().initLoader(AIR_QUALITY_INDEX_CURSOR_LOADER,
+                    null, DustFragment.this);
             
             DustLog.d(TAG, "onClick(), selected Locality : " 
                     + DustApplication.locality);
-            
+
             DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY, 
                     DustApplication.locality);
             
             refreshData();
+            
         }
     };
 
@@ -527,7 +543,7 @@ public class DustFragment extends Fragment implements DustConstants,
                     PROJECTION,                         // Projection to return
                     null,                               // No selection clause
                     null,                               // No selection arguments
-                    "measure_time ASC"                  // Default sort order
+                    "measure_time DESC"                  // Default sort order
 
             );
         }

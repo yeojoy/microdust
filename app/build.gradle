@@ -16,9 +16,9 @@ android {
                 def file = output.outputFile
                 def fdate = new Date().format('MMdd-HHmm')
                 output.outputFile = new File(file.parent,
-                        file.name.replace(".apk", "-" + fdate + "-"
-                                + defaultConfig.versionCode
-                                + "-v" + defaultConfig.versionName + ".apk"))
+                        file.name.replace(".apk", "-" + defaultConfig.versionCode
+                                + "-v" + defaultConfig.versionName + "-" + fdate +
+                                ".apk"))
             }
         }
 

@@ -17,6 +17,7 @@ import java.util.List;
 
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.util.DustFileLogger;
@@ -82,7 +83,15 @@ public class WebParserService extends Service implements DustConstants {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                sendMeasuredData(DustUtils.parseRawXmlString(response.body().string()));
+
+                List<DustInfoDto> dtoList = DustUtils.parseRawXmlString(mContext,
+                        response.body().string());
+
+                // DB에 저장
+                SqliteManager manager = SqliteManager.getInstance(mContext);
+                manager.saveData(dtoList);
+                
+                sendMeasuredData(dtoList);
             }
         });
     }

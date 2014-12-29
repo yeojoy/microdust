@@ -65,8 +65,15 @@ public class DustNetworkManager implements DustConstants {
                     return;
                 }
 
-                mOnReceiveDataListener.onReceiveData(
-                        DustUtils.parseRawXmlString(response.body().string()));
+
+                List<DustInfoDto> dtoList = DustUtils.parseRawXmlString(mContext,
+                        response.body().string());
+
+                // DB에 저장
+                SqliteManager manager = SqliteManager.getInstance(mContext);
+                manager.saveData(dtoList);
+
+                mOnReceiveDataListener.onReceiveData(dtoList);
             }
         });
         

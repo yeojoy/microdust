@@ -1,5 +1,7 @@
 package me.yeojoy.microdustwarning;
 
+import android.app.AlarmManager;
+
 public interface DustConstants {
 
     /** 서울외 지역의 경우 airkorea 정보로 보여준다. */
@@ -11,8 +13,8 @@ public interface DustConstants {
                     "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final int NOTI_TIME_TEST = 1000 * 60 * 5;     // 5분
-    public static final int NOTI_TIME_REAL = 1000 * 60 * 60;    // 1시간
+    public static final long NOTI_TIME_TEST = 1000 * 60 * 5;     // 5분
+    public static final long NOTI_TIME_REAL = AlarmManager.INTERVAL_HOUR; // 1시간
 
     /** Bundle key */
     public static final String KEY_CHECKBOX_AUTO_START = "auto_start";
