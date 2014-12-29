@@ -38,6 +38,7 @@ import java.util.List;
 
 import me.yeojoy.microdustwarning.AboutActivity;
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
@@ -401,7 +402,7 @@ public class DustFragment extends Fragment implements DustConstants,
             // java.lang.RuntimeException: Can'mTracker create handler inside thread that has not called Looper.prepare()
             Looper.prepare();
             
-            getActivity().runOnUiThread(new Runnable() {
+            ((DustActivity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
