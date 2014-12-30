@@ -1,21 +1,17 @@
 package me.yeojoy.microdustwarning.db;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
-import android.os.Debug;
 import android.text.TextUtils;
-import android.view.ViewOutlineProvider;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;

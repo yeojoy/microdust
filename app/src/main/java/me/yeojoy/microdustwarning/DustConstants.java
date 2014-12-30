@@ -1,7 +1,5 @@
 package me.yeojoy.microdustwarning;
 
-import android.app.AlarmManager;
-
 public interface DustConstants {
 
     /** 서울외 지역의 경우 airkorea 정보로 보여준다. */
