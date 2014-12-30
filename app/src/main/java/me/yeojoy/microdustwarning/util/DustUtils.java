@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.data.TextDataUtil;
@@ -106,7 +107,7 @@ public class DustUtils implements DustConstants {
         // 진동 설정
         if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
-            mBuilder.setVibrate(new long[]{0, 300, 200, 300});
+            mBuilder.setVibrate(new long[]{0, 200, 200, 200});
             // 불빛 설정
             mBuilder.setLights(0xFFFF0000, 500, 500);
         } else {
@@ -126,51 +127,54 @@ public class DustUtils implements DustConstants {
         
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         Resources res = context.getResources();
+
+        mBuilder.setContentTitle("미세먼지 알림");
+
+        NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
+        style2.setBigContentTitle("미세먼지 알림");
+        
         switch (s) {
             case GOOD:
                 mBuilder.setSmallIcon(R.drawable.icon_good);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res, 
                         R.drawable.icon_good));
+                style2.bigText(context.getString(R.string.dlg_status_good_title));
                 break;
             case NORMAL:
                 mBuilder.setSmallIcon(R.drawable.icon_normal);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_normal));
+                style2.bigText(context.getString(R.string.dlg_status_normal_title));
                 break;
             case BAD:
                 mBuilder.setSmallIcon(R.drawable.icon_bad);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_bad));
+                style2.bigText(context.getString(R.string.dlg_status_bad_title));
                 break;
             case WORSE:
                 mBuilder.setSmallIcon(R.drawable.icon_worse);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worse));
+                style2.bigText(context.getString(R.string.dlg_status_worse_title));
                 break;
             case WORST:
                 mBuilder.setSmallIcon(R.drawable.icon_worst);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worst));
+                style2.bigText(context.getString(R.string.dlg_status_worst_title));
                 break;
             default:
-                mBuilder.setSmallIcon(R.drawable.ic_launcher);
-                mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
-                        R.drawable.ic_launcher));
-                break;
+                return;
         }
-        
-        mBuilder.setContentTitle("S미세먼지 알림")
-                .setContentText(date + " >>> " + args[0] + " : " + args[1]);
 
-        NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
-        style2.setBigContentTitle("B미세먼지 알림");
-        style2.bigText(date + " >>> " + args[0] + " : " + args[1]);
         mBuilder.setStyle(style2);
+        Intent intent = new Intent(context, DustActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK 
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        Intent intent = new Intent(context, me.yeojoy.microdustwarning.DustActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, 
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
         // Add Action Buttons to Wear
@@ -190,7 +194,7 @@ public class DustUtils implements DustConstants {
         // 진동 설정
         if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
-            mBuilder.setVibrate(new long[]{0, 300, 200, 300});
+            mBuilder.setVibrate(new long[]{0, 200, 200, 200});
             // 불빛 설정
             mBuilder.setLights(0xFFFF0000, 500, 500);
         } else {
@@ -203,55 +207,6 @@ public class DustUtils implements DustConstants {
         mng.notify(100, noti);
     }
 
-    public static void sendTestNotification(Context context, int index) {
-        DustLog.i(TAG, "sendTestNotification()");
-        if (index < 0 || index > 4) index = 0;
-
-        String shortMessage = "외출하기에 좋지 않습니다.";
-
-//        String notiIconType = DustSharedPreferences.getInstance().getString(KEY_PREFS_NOTICE_ICON, "");
-
-        int[] iconArray = new int[5];
-        iconArray[0] = R.drawable.icon_good;
-        iconArray[1] = R.drawable.icon_normal;
-        iconArray[2] = R.drawable.icon_bad;
-        iconArray[3] = R.drawable.icon_worse;
-        iconArray[4] = R.drawable.icon_worst;
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-
-        mBuilder.setSmallIcon(iconArray[index]);
-
-        mBuilder.setContentTitle("미세먼지 알림").setContentText(shortMessage);
-
-//        NotificationCompat.BigPictureStyle style1 = new NotificationCompat.BigPictureStyle();
-//        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
-//        Bitmap picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.s1);
-//        style1.bigLargeIcon(icon).bigPicture(picture);
-//        style1.setBigContentTitle("큰화면에서 보여주는 거");
-
-//        RemoteViews views2 = new RemoteViews(context.getPackageName(), R.layout.noti);
-//        views2.setTextViewText(R.id.tv_noti_msg, sb);
-
-        mBuilder.setAutoCancel(true);
-        DustSharedPreferences.getInstance().init(context);
-
-        // 진동 설정
-        if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
-            DustLog.i(TAG, "sendNotification(), Vibrator on");
-//            mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
-            // 불빛 설정
-            mBuilder.setLights(0xFFFF0000, 500, 500);
-        } else {
-            DustLog.i(TAG, "sendNotification(), Vibrator off");
-        }
-        Notification noti = mBuilder.build();
-//        noti.bigContentView = views2;
-
-        NotificationManager mng = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mng.notify(100, noti);
-    }
-    
     /**
      * get Application Version
      * @param context
