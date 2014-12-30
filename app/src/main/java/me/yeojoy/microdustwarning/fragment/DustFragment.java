@@ -137,9 +137,9 @@ public class DustFragment extends Fragment implements DustConstants,
         DustSharedPreferences.getInstance().init(mContext);
         mReceivedArguments = getArguments();
 
-        DustApplication.locality
-                = DustSharedPreferences.getInstance()
-                        .getString(KEY_PREFS_LOCALITY);
+        if (TextUtils.isEmpty(DustApplication.locality))
+            DustApplication.locality = DustSharedPreferences.getInstance()
+                    .getString(KEY_PREFS_LOCALITY);
 
         if (TextUtils.isEmpty(DustApplication.locality)) {
             DustDialogManager.chooseUserLocalityDialog(mContext,
@@ -318,7 +318,11 @@ public class DustFragment extends Fragment implements DustConstants,
     private void cancelAlarmManager() {
         DustLog.i(TAG, "cancelAlarmManager()");
         alarmManager.cancel(pending);
+        
+        // TODO 이후 변경 필요. 임시방편으로 지역만 저장
         DustSharedPreferences.getInstance().clear();
+        DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY,
+                DustApplication.locality);
     }
 
     /**

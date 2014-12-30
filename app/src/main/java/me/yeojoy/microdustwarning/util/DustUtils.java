@@ -106,7 +106,7 @@ public class DustUtils implements DustConstants {
         // 진동 설정
         if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
-            mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
+            mBuilder.setVibrate(new long[]{0, 300, 200, 300});
             // 불빛 설정
             mBuilder.setLights(0xFFFF0000, 500, 500);
         } else {
@@ -190,7 +190,7 @@ public class DustUtils implements DustConstants {
         // 진동 설정
         if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
-            mBuilder.setVibrate(new long[]{0, 500, 200, 1000});
+            mBuilder.setVibrate(new long[]{0, 300, 200, 300});
             // 불빛 설정
             mBuilder.setLights(0xFFFF0000, 500, 500);
         } else {

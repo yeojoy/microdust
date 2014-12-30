@@ -13,8 +13,8 @@ public interface DustConstants {
                     "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final long NOTI_TIME_TEST = 1000 * 60 * 15;     // 15분
-    public static final long NOTI_TIME_REAL = AlarmManager.INTERVAL_HOUR; // 1시간
+    public static final long NOTI_TIME_TEST = 1000 * 60 * 30;     // 30분
+    public static final long NOTI_TIME_REAL = 1000 * 60 * 60;     // 1시간
 
     /** Bundle key */
     public static final String KEY_CHECKBOX_AUTO_START = "auto_start";
@@ -23,7 +23,6 @@ public interface DustConstants {
     public static final String KEY_PREFS_SWITCH_OFF = "switch";
 
     public static final String KEY_PREFS_NOTICE_VIBRATE = "notice_vibrate";
-    public static final String KEY_PREFS_NOTICE_ICON = "notice_icon";
     public static final String KEY_PREFS_LOCALITY = "user-locality";
 
     public static final String DEFAULT_LOCALITY = "동작구";
