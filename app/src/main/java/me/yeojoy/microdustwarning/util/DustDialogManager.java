@@ -1,15 +1,12 @@
 package me.yeojoy.microdustwarning.util;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -19,6 +16,7 @@ import android.util.Log;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.entity.STATUS;
 
 /**
@@ -94,7 +92,8 @@ public class DustDialogManager implements DustConstants {
         builder.create().show();
     }
 
-    private static String getDialogMessage(Resources res, STATUS status, int... messageIds) {
+    private static SpannableStringBuilder 
+            getDialogMessage(Resources res, STATUS status, int... messageIds) {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         int index;
         // TODO 기본 AlertDialog에 SpannableString 안 먹힘.
@@ -107,63 +106,63 @@ public class DustDialogManager implements DustConstants {
                 break;
             case NORMAL:
                 ssb.append(res.getString(R.string.o3)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         0, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[0]));
                 break;
             case BAD:
             case WORSE:
                 ssb.append(res.getString(R.string.micro_dust)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         0, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[0]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.o3)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[1]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.co)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[2]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.so2)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[3]));
 
                 break;
             case WORST:
                 ssb.append(res.getString(R.string.micro_dust)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         0, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[0]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.o3)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[1]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.co)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[2]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.co)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[3]));
                 index = ssb.length();
                 ssb.append("\n").append(res.getString(R.string.so2)).append("\n");
-                ssb.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(res, status)),
+                ssb.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(res, status)),
                         index, ssb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 ssb.append(res.getString(messageIds[4]));
 
                 break;
         }
 
-        return ssb.toString();
+        return ssb;
     }
 
     /**

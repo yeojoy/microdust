@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
-import me.yeojoy.microdustwarning.util.DustUtils;
 
 /**
  * Created by yeojoy on 14. 12. 22..
@@ -66,7 +66,7 @@ public class DustNetworkManager implements DustConstants {
                 }
 
 
-                List<DustInfoDto> dtoList = DustUtils.parseRawXmlString(mContext,
+                List<DustInfoDto> dtoList = TextDataUtil.parseRawXmlString(mContext,
                         response.body().string());
 
                 // DB에 저장

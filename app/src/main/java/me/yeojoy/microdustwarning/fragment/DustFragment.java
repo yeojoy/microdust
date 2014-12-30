@@ -43,8 +43,8 @@ import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
+import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.db.DustInfoDBConstants;
-import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.entity.STATUS;
@@ -53,7 +53,6 @@ import me.yeojoy.microdustwarning.service.WebParserService;
 import me.yeojoy.microdustwarning.util.DustDialogManager;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
-import me.yeojoy.microdustwarning.util.DustUtils;
 
 public class DustFragment extends Fragment implements DustConstants, 
         View.OnClickListener, DustNetworkManager.OnReceiveDataListener,
@@ -371,29 +370,29 @@ public class DustFragment extends Fragment implements DustConstants,
         if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
             DustLog.i(TAG, "setText(), running on UI Thread.");
             
-            STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
+            STATUS[] statuses = TextDataUtil.analyzeMicroDust(dto);
 
             SpannableStringBuilder ssb = new SpannableStringBuilder();
 
             Resources res = getResources();
 
             if (BuildConfig.DEBUG)
-                ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
             else
-                ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
 
-            ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
+            ssb.append(TextDataUtil.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
 
-            ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
-            ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
-            ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
-            ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
-            ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
-            ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
-            ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
-            ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
-            ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
-            mTvResult.setText(ssb.toString());
+            ssb.append(TextDataUtil.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
+            ssb.append(TextDataUtil.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
+            ssb.append(TextDataUtil.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
+            ssb.append(TextDataUtil.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
+            ssb.append(TextDataUtil.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
+            ssb.append(TextDataUtil.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
+            ssb.append(TextDataUtil.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
+            ssb.append(TextDataUtil.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
+            ssb.append(TextDataUtil.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
+            mTvResult.setText(ssb);
             setImage();
         } else {
             // UI Thread가 아님
@@ -405,29 +404,29 @@ public class DustFragment extends Fragment implements DustConstants,
             ((DustActivity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    STATUS[] statuses = DustUtils.analyzeMicroDust(dto);
+                    STATUS[] statuses = TextDataUtil.analyzeMicroDust(dto);
 
                     SpannableStringBuilder ssb = new SpannableStringBuilder();
 
                     Resources res = getResources();
 
                     if (BuildConfig.DEBUG)
-                        ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
                     else
-                        ssb.append(DustUtils.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
 
-                    ssb.append(DustUtils.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
+                    ssb.append(TextDataUtil.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
 
-                    ssb.append(DustUtils.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
-                    ssb.append(DustUtils.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
-                    ssb.append(DustUtils.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
-                    ssb.append(DustUtils.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
-                    ssb.append(DustUtils.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
-                    ssb.append(DustUtils.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
-                    ssb.append(DustUtils.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
-                    ssb.append(DustUtils.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
-                    ssb.append(DustUtils.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
-                    mTvResult.setText(ssb.toString());
+                    ssb.append(TextDataUtil.convertString(res, "미세먼지 : " + dto.getPm10() + "\n", statuses[0]));
+                    ssb.append(TextDataUtil.convertString(res, "초미세먼지 : " + dto.getPm25() + "\n", statuses[1]));
+                    ssb.append(TextDataUtil.convertString(res, "오존 : " + dto.getOzone() + "\n", statuses[2]));
+                    ssb.append(TextDataUtil.convertString(res, "이산화질소 : " + dto.getNitrogen() + "\n", statuses[3]));
+                    ssb.append(TextDataUtil.convertString(res, "일산화탄소 : " + dto.getCarbon() + "\n", statuses[4]));
+                    ssb.append(TextDataUtil.convertString(res, "아황산가스 : " + dto.getSulfurous() + "\n", statuses[5]));
+                    ssb.append(TextDataUtil.convertString(res, "등급 : " + dto.getDegree() + "\n", STATUS.NONE));
+                    ssb.append(TextDataUtil.convertString(res, "통합지수 : " + dto.getMaxIndex() + "\n", statuses[6]));
+                    ssb.append(TextDataUtil.convertString(res, "지수결정물질 : " + dto.getMaterial(), STATUS.NONE));
+                    mTvResult.setText(ssb);
                     setImage();
                 }
             });

@@ -17,13 +17,13 @@ import java.util.List;
 
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.util.DustFileLogger;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
-import me.yeojoy.microdustwarning.util.DustUtils;
 
 public class WebParserService extends Service implements DustConstants {
 
@@ -84,7 +84,7 @@ public class WebParserService extends Service implements DustConstants {
                     return;
                 }
 
-                List<DustInfoDto> dtoList = DustUtils.parseRawXmlString(mContext,
+                List<DustInfoDto> dtoList = TextDataUtil.parseRawXmlString(mContext,
                         response.body().string());
 
                 // DB에 저장

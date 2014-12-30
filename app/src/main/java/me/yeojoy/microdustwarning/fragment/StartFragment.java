@@ -1,8 +1,8 @@
 package me.yeojoy.microdustwarning.fragment;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -19,9 +19,9 @@ import com.google.android.gms.analytics.Tracker;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.entity.STATUS;
 import me.yeojoy.microdustwarning.util.DustLog;
-import me.yeojoy.microdustwarning.util.DustUtils;
 
 
 public class StartFragment extends Fragment implements DustConstants {
@@ -117,27 +117,27 @@ public class StartFragment extends Fragment implements DustConstants {
     private void setDescription() {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(getActivity().getString(R.string.desc_blue));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.GOOD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(getResources(), STATUS.GOOD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_ligth_green));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.NORMAL)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(getResources(), STATUS.NORMAL)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_yellow));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.BAD)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(getResources(), STATUS.BAD)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_orange));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.WORSE)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(getResources(), STATUS.WORSE)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
         ss = new SpannableString(getActivity().getString(R.string.desc_red));
-        ss.setSpan(new ForegroundColorSpan(DustUtils.getTextColor(getResources(), STATUS.WORST)), 0, ss.length(),
+        ss.setSpan(new ForegroundColorSpan(TextDataUtil.getTextColor(getResources(), STATUS.WORST)), 0, ss.length(),
                 SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
         ssb.append(ss);
 
