@@ -123,7 +123,7 @@ public class DustUtils implements DustConstants {
     public static void sendNotification(Context context, STATUS s, String[] args) {
         DustLog.i(TAG, "sendNotification()");
 
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        if (s == STATUS.GOOD || s == STATUS.NORMAL) return;
         
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         Resources res = context.getResources();

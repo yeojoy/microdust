@@ -407,6 +407,7 @@ public class TextDataUtil implements DustConstants {
      */
     private static DustInfoDto verifyDtoValues(DustInfoDto dto) {
         dto.setPm10(checkValue(dto.getPm10()));
+        dto.setPm25(checkValue(dto.getPm25()));
         dto.setOzone(checkValue(dto.getOzone()));
         dto.setNitrogen(checkValue(dto.getNitrogen()));
         dto.setCarbon(checkValue(dto.getCarbon()));
