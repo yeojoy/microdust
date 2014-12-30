@@ -152,18 +152,24 @@ public class DustUtils implements DustConstants {
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_bad));
                 style2.bigText(context.getString(R.string.dlg_status_bad_title));
+                // 불빛 설정
+                mBuilder.setLights(0xFFFFFF00, 500, 500);
                 break;
             case WORSE:
                 mBuilder.setSmallIcon(R.drawable.icon_worse);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worse));
                 style2.bigText(context.getString(R.string.dlg_status_worse_title));
+                // 불빛 설정
+                mBuilder.setLights(0xFFFF8900, 500, 500);
                 break;
             case WORST:
                 mBuilder.setSmallIcon(R.drawable.icon_worst);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worst));
                 style2.bigText(context.getString(R.string.dlg_status_worst_title));
+                // 불빛 설정
+                mBuilder.setLights(0xFFFF0000, 500, 500);
                 break;
             default:
                 return;
@@ -196,8 +202,6 @@ public class DustUtils implements DustConstants {
         if (DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
             mBuilder.setVibrate(new long[]{0, 200, 200, 200});
-            // 불빛 설정
-            mBuilder.setLights(0xFFFF0000, 500, 500);
         } else {
             DustLog.i(TAG, "sendNotification(), Vibrator off");
         }

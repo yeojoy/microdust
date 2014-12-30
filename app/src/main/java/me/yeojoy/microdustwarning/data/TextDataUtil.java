@@ -42,7 +42,7 @@ public class TextDataUtil implements DustConstants {
         // 동네 미세먼지 초미세먼지 오존 이산화질소 일산화탄소 아황산가스 등급 지수 지수결정물질
         // 관악구 60 39 0.012 0.051 0.6 0.005 보통 85 NO2
         STATUS[] status = new STATUS[7];
-        status[0] = getTotalDegree(data.getPm10());
+        status[0] = getMicroDustDegree(data.getPm10());
         status[1] = getNanoDustDegree(data.getPm25());
         status[2] = getOzonDegree(data.getOzone());
         status[3] = getNO2Degree(data.getNitrogen());
