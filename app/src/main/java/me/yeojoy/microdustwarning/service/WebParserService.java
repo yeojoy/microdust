@@ -21,7 +21,6 @@ import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
-import me.yeojoy.microdustwarning.util.DustFileLogger;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 
@@ -38,9 +37,6 @@ public class WebParserService extends Service implements DustConstants {
         super.onCreate();
         DustLog.i(TAG, "onCreate()");
         mContext = this;
-
-        DustFileLogger.getInstance().init(mContext);
-        DustFileLogger.getInstance().writeLogToFile("Service starts.");
 
         if (!DustSharedPreferences.getInstance().hasPrefs())
             DustSharedPreferences.getInstance().init(mContext);
@@ -99,7 +95,6 @@ public class WebParserService extends Service implements DustConstants {
     /** Otto를 사용해서 DustFragment로 데이터를 보내줌 */
     private void sendMeasuredData(final List<DustInfoDto> dto) {
         DustLog.i(TAG, "sendMeasuredData()");
-        DustFileLogger.getInstance().writeLogToFile("Send List<DustInfoDto> to Fragment.");
 
         mHandler.post(new Runnable() {
             @Override
@@ -115,6 +110,5 @@ public class WebParserService extends Service implements DustConstants {
     public void onDestroy() {
         super.onDestroy();
         DustLog.i(TAG, "onDestroy()");
-        DustFileLogger.getInstance().writeLogToFile("Service destroies.");
     }
 }
