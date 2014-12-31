@@ -1,4 +1,4 @@
-package me.yeojoy.microdustwarning.data;
+package me.yeojoy.microdustwarning.util;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -22,8 +22,6 @@ import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.DustInfoDtoLocalityAscComparer;
 import me.yeojoy.microdustwarning.entity.STATUS;
-import me.yeojoy.microdustwarning.util.DustLog;
-import me.yeojoy.microdustwarning.util.DustUtils;
 
 /**
  * Created by yeojoy on 14. 12. 30..

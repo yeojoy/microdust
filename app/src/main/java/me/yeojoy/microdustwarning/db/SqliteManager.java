@@ -103,37 +103,6 @@ public class SqliteManager implements DustInfoDBConstants {
     }
 
     /**
-     * 가장 최근 데이터 하나를 가져온다.
-     * @return
-     */
-    public Cursor getDBDataByMeasureTime(String measureTime) {
-        DustLog.i(TAG, "getDBDataByMeasureTime()");
-
-        if (TextUtils.isEmpty(measureTime)) return null;
-        Cursor cursor = null;
-        
-        // TODO select last data
-        SQLiteDatabase db = null;
-        try {
-            db = mDBHelper.getReadableDatabase();
-
-            String selection = MEASURE_TIME + " = ?";
-            String[] selectionArgs = { measureTime };
-            cursor = db.query(TABLE_NAME, null, selection, selectionArgs, 
-                    null, null, null);
-            return cursor;
-        } catch (SQLiteException e) {
-            DustLog.e(TAG, e.getMessage());
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
-
-        return cursor;
-    }
-
-    /**
      * 동일한 시간대에 데이터가 저장 됐는지 확인한다.
      * @param dustInfoDto
      * @return 이미 같은 시간이 저장 됐으면 true

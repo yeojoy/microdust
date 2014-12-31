@@ -19,7 +19,7 @@ import com.google.android.gms.analytics.Tracker;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
-import me.yeojoy.microdustwarning.data.TextDataUtil;
+import me.yeojoy.microdustwarning.util.TextDataUtil;
 import me.yeojoy.microdustwarning.entity.STATUS;
 import me.yeojoy.microdustwarning.util.DustLog;
 

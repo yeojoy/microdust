@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustConstants;
-import me.yeojoy.microdustwarning.data.TextDataUtil;
+import me.yeojoy.microdustwarning.util.TextDataUtil;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
@@ -42,7 +42,7 @@ public class DustNetworkManager implements DustConstants {
             DustSharedPreferences.getInstance().init(mContext);
     }
 
-    public List<DustInfoDto> getMicrodustInfo() {
+    public void getMicrodustInfo() {
         DustLog.i(TAG, "getMicrodustInfo()");
 
         OkHttpClient client = new OkHttpClient();
@@ -76,8 +76,6 @@ public class DustNetworkManager implements DustConstants {
                 mOnReceiveDataListener.onReceiveData(dtoList);
             }
         });
-        
-        return null;
     }
 
     public interface OnReceiveDataListener {

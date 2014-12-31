@@ -12,14 +12,10 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
-import me.yeojoy.microdustwarning.data.TextDataUtil;
 import me.yeojoy.microdustwarning.entity.STATUS;
 
 public class DustUtils implements DustConstants {
