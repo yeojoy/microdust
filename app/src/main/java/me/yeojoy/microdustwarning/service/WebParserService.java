@@ -80,9 +80,13 @@ public class WebParserService extends Service implements DustConstants,
     @Override
     public void onReceiveData(List<DustInfoDto> data) {
         DustLog.i(TAG, "onReceiveData()");
-        if (data == null || data.size() > 0) {
-            DustLog.i(TAG, "onReceiveData(), data is null or data's size is under 1");
-
+        if (data == null) {
+            DustLog.i(TAG, "onReceiveData(), data is null.");
+            return;
+        }
+        
+        if (data.size() < 1) {
+            DustLog.i(TAG, "onReceiveData(), data is null. or data's size is under 1");
             return;
         }
         sendMeasuredData(data);

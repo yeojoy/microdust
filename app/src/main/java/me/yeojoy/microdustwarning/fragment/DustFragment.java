@@ -43,7 +43,6 @@ import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
-import me.yeojoy.microdustwarning.util.TextDataUtil;
 import me.yeojoy.microdustwarning.db.DustInfoDBConstants;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
@@ -53,6 +52,7 @@ import me.yeojoy.microdustwarning.service.WebParserService;
 import me.yeojoy.microdustwarning.util.DustDialogManager;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
+import me.yeojoy.microdustwarning.util.TextDataUtil;
 
 public class DustFragment extends Fragment implements DustConstants, 
         View.OnClickListener, DustNetworkManager.OnReceiveDataListener,
@@ -64,7 +64,7 @@ public class DustFragment extends Fragment implements DustConstants,
     
     private TextView mTvResult;
 
-    private AlarmManager alarmManager;
+    private AlarmManager mAlarmManager;
 
     private GridView mGvImages;
     private ImageAdapter mAdapter;
@@ -74,7 +74,7 @@ public class DustFragment extends Fragment implements DustConstants,
 
     private LinearLayout mLlIndicator;
 
-    private DustNetworkManager mManager;
+    private DustNetworkManager mNetworkManager;
     private Context mContext;
 
     private Bundle mReceivedArguments;
@@ -128,7 +128,7 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        alarmManager = (AlarmManager) 
+        mAlarmManager = (AlarmManager)
                 getActivity().getSystemService(Context.ALARM_SERVICE);
         
         Intent intent = new Intent(getActivity(), WebParserService.class);
@@ -164,9 +164,9 @@ public class DustFragment extends Fragment implements DustConstants,
                     null, DustFragment.this);
         }
 
-        
-        mManager = DustNetworkManager.getInstance(mContext);
-        mManager.setOnReceiveDataListener(this);
+
+        mNetworkManager = DustNetworkManager.getInstance(mContext);
+        mNetworkManager.setOnReceiveDataListener(this);
     }
 
     @Override
@@ -317,7 +317,7 @@ public class DustFragment extends Fragment implements DustConstants,
      */
     private void cancelAlarmManager() {
         DustLog.i(TAG, "cancelAlarmManager()");
-        alarmManager.cancel(pending);
+        mAlarmManager.cancel(pending);
         
         // TODO 이후 변경 필요. 임시방편으로 지역만 저장
         DustSharedPreferences.getInstance().clear();
@@ -338,11 +338,11 @@ public class DustFragment extends Fragment implements DustConstants,
             notiTime = NOTI_TIME_TEST;
         }
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + 1000l, notiTime, pending);
     }
 
-    private void refreshData() { mManager.getMicrodustInfo(); }
+    private void refreshData() { mNetworkManager.getMicrodustInfo(); }
 
     /**
      * 기상지도이미지를 가져와 보여준다.

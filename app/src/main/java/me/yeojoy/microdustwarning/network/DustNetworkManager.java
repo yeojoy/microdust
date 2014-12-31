@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.DustConstants;
-import me.yeojoy.microdustwarning.util.TextDataUtil;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
+import me.yeojoy.microdustwarning.util.TextDataUtil;
 
 /**
  * Created by yeojoy on 14. 12. 22..
@@ -50,9 +50,9 @@ public class DustNetworkManager implements DustConstants {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                DustLog.i(TAG, "onFailure()");
-                Toast.makeText(mContext, "데이터를 가져오는 데 실패했습니다.",
-                        Toast.LENGTH_SHORT).show();
+                DustLog.i(TAG, "onFailure()\n" + e.getMessage());
+
+                e.printStackTrace();
             }
 
             @Override

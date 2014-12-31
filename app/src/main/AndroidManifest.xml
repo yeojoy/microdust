@@ -16,11 +16,16 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="me.yeojoy.microdustwarning" />
+    
     <application
         android:name="me.yeojoy.microdustwarning.DustApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/AppTheme" >
+        android:theme="@android:style/Theme.Holo" >
+        <uses-library android:name="android:test.runner" />
         <activity
             android:name="me.yeojoy.microdustwarning.DustActivity"
             android:label="@string/app_name"

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +34,7 @@ public class SqliteManager implements DustInfoDBConstants {
         return mManager;
     }
  
-    private static  void init(Context context) {
+    private static void init(Context context) {
         DustLog.i(TAG, "init()");
         mContext = context;
         mDBHelper = new DustInfoDBHelper(mContext);
