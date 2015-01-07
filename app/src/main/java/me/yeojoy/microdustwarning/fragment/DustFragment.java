@@ -43,6 +43,7 @@ import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
+import me.yeojoy.microdustwarning.alarm.AlarmHelper;
 import me.yeojoy.microdustwarning.db.DustInfoDBConstants;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
@@ -64,13 +65,9 @@ public class DustFragment extends Fragment implements DustConstants,
     
     private TextView mTvResult;
 
-    private AlarmManager mAlarmManager;
-
     private GridView mGvImages;
     private ImageAdapter mAdapter;
     private ArrayList<String> mUrlList;
-
-    private PendingIntent pending;
 
     private LinearLayout mLlIndicator;
 
@@ -128,12 +125,6 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAlarmManager = (AlarmManager)
-                getActivity().getSystemService(Context.ALARM_SERVICE);
-        
-        Intent intent = new Intent(getActivity(), WebParserService.class);
-        pending = PendingIntent.getService(getActivity(), 10002, intent, 0);
-
         DustSharedPreferences.getInstance().init(mContext);
         mReceivedArguments = getArguments();
 
@@ -149,7 +140,8 @@ public class DustFragment extends Fragment implements DustConstants,
             if (mReceivedArguments != null) {
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-                    launchAlarmManager();
+                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    mTvResult.setText(R.string.service_is_on_wait_a_minute);
                     DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
@@ -165,7 +157,7 @@ public class DustFragment extends Fragment implements DustConstants,
         }
 
 
-        mNetworkManager = DustNetworkManager.getInstance(mContext);
+        mNetworkManager = DustNetworkManager.getInstance();
         mNetworkManager.setOnReceiveDataListener(this);
     }
 
@@ -177,10 +169,11 @@ public class DustFragment extends Fragment implements DustConstants,
                 // LESSON AND LEARN
                 // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
                 boolean isChecked = !item.isChecked();
-                if (isChecked)
-                    launchAlarmManager();
-                else
-                    cancelAlarmManager();
+                if (isChecked) {
+                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    mTvResult.setText(R.string.service_is_on_wait_a_minute);
+                } else
+                    AlarmHelper.cancelAlarmManager(mContext.getApplicationContext());
 
                 DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
 
@@ -303,46 +296,16 @@ public class DustFragment extends Fragment implements DustConstants,
 
             case ON_OFF:
                 if (entity.on_off) {
-                    launchAlarmManager();
+                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
                 } else {
-                    cancelAlarmManager();
+                    AlarmHelper.cancelAlarmManager(mContext.getApplicationContext());
                 }
 
                 break;
         }
     }
 
-    /**
-     * 알람 매니저 종료
-     */
-    private void cancelAlarmManager() {
-        DustLog.i(TAG, "cancelAlarmManager()");
-        mAlarmManager.cancel(pending);
-        
-        // TODO 이후 변경 필요. 임시방편으로 지역만 저장
-        DustSharedPreferences.getInstance().clear();
-        DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY,
-                DustApplication.locality);
-    }
-
-    /**
-     * 알람 매니저 실행
-     */
-    private void launchAlarmManager() {
-        DustLog.i(TAG, "launchAlarmManager()");
-        mTvResult.setText(R.string.service_is_on_wait_a_minute);
-
-        long notiTime = NOTI_TIME_REAL;
-        
-        if (BuildConfig.DEBUG) {
-            notiTime = NOTI_TIME_TEST;
-        }
-
-        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + 1000l, notiTime, pending);
-    }
-
-    private void refreshData() { mNetworkManager.getMicrodustInfo(); }
+    private void refreshData() { mNetworkManager.getMicrodustInfo(mContext); }
 
     /**
      * 기상지도이미지를 가져와 보여준다.
@@ -511,7 +474,7 @@ public class DustFragment extends Fragment implements DustConstants,
             if (mReceivedArguments != null) {
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-                    launchAlarmManager();
+                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
                     DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");

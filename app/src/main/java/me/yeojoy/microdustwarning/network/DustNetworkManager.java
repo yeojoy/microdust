@@ -15,7 +15,6 @@ import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.db.SqliteManager;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
-import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 import me.yeojoy.microdustwarning.util.TextDataUtil;
 
 /**
@@ -25,24 +24,14 @@ public class DustNetworkManager implements DustConstants {
     private static final String TAG = DustNetworkManager.class.getSimpleName();
     private static DustNetworkManager mDustNetworkManager;
     
-    private static Context mContext;
-    
-    public static DustNetworkManager getInstance(Context context) {
+    public static DustNetworkManager getInstance() {
         if (mDustNetworkManager == null)
             mDustNetworkManager = new DustNetworkManager();
         
-        init(context);
         return mDustNetworkManager;
     }
     
-    private static void init(Context context) {
-        mContext = context;
-
-        if (!DustSharedPreferences.getInstance().hasPrefs())
-            DustSharedPreferences.getInstance().init(mContext);
-    }
-
-    public void getMicrodustInfo() {
+    public void getMicrodustInfo(final Context context) {
         DustLog.i(TAG, "getMicrodustInfo()");
 
         OkHttpClient client = new OkHttpClient();
@@ -60,17 +49,17 @@ public class DustNetworkManager implements DustConstants {
                 DustLog.i(TAG, "onResponse()");
 
                 if (response.body() == null) {
-                    Toast.makeText(mContext, "데이터 body가 없습니다.",
+                    Toast.makeText(context, "데이터 body가 없습니다.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
 
-                List<DustInfoDto> dtoList = TextDataUtil.parseRawXmlString(mContext,
+                List<DustInfoDto> dtoList = TextDataUtil.parseRawXmlString(context,
                         response.body().string());
 
                 // DB에 저장
-                SqliteManager manager = SqliteManager.getInstance(mContext);
+                SqliteManager manager = SqliteManager.getInstance(context);
                 manager.saveData(dtoList);
 
                 mOnReceiveDataListener.onReceiveData(dtoList);

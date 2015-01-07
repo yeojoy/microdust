@@ -43,10 +43,10 @@ public class WebParserService extends Service implements DustConstants,
     public int onStartCommand(Intent intent, int flags, int startId) {
         DustLog.i(TAG, "onStartCommand()");
         if (mNetworkManager == null)
-            mNetworkManager = DustNetworkManager.getInstance(mContext);
+            mNetworkManager = DustNetworkManager.getInstance();
 
         mNetworkManager.setOnReceiveDataListener(this);
-        mNetworkManager.getMicrodustInfo();
+        mNetworkManager.getMicrodustInfo(mContext);
         
         return START_STICKY;
     }
