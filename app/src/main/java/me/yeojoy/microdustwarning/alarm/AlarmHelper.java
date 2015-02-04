@@ -14,8 +14,7 @@ import me.yeojoy.microdustwarning.util.DustSharedPreferences;
  */
 public class AlarmHelper implements DustConstants {
     private static final String TAG = AlarmHelper.class.getSimpleName();
-    private static AlarmHelper mAlarmHelper;
-    
+
     /**
      * 알람 매니저 종료
      */
@@ -46,7 +45,7 @@ public class AlarmHelper implements DustConstants {
             notiTime = NOTI_TIME_TEST;
         }
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + 1000l, notiTime,
                 DustApplication.mPendingIntent);
     }
