@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +34,7 @@ public class SqliteManager implements DustInfoDBConstants {
         return mManager;
     }
  
-    private static  void init(Context context) {
+    private static void init(Context context) {
         DustLog.i(TAG, "init()");
         mContext = context;
         mDBHelper = new DustInfoDBHelper(mContext);
@@ -100,37 +99,6 @@ public class SqliteManager implements DustInfoDBConstants {
             // 4. close
             if (db != null) db.close();
         }
-    }
-
-    /**
-     * 가장 최근 데이터 하나를 가져온다.
-     * @return
-     */
-    public Cursor getDBDataByMeasureTime(String measureTime) {
-        DustLog.i(TAG, "getDBDataByMeasureTime()");
-
-        if (TextUtils.isEmpty(measureTime)) return null;
-        Cursor cursor = null;
-        
-        // TODO select last data
-        SQLiteDatabase db = null;
-        try {
-            db = mDBHelper.getReadableDatabase();
-
-            String selection = MEASURE_TIME + " = ?";
-            String[] selectionArgs = { measureTime };
-            cursor = db.query(TABLE_NAME, null, selection, selectionArgs, 
-                    null, null, null);
-            return cursor;
-        } catch (SQLiteException e) {
-            DustLog.e(TAG, e.getMessage());
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
-
-        return cursor;
     }
 
     /**

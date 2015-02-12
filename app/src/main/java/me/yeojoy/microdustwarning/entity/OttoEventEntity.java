@@ -6,8 +6,6 @@ import java.util.List;
  * Created by yeojoy on 2014. 6. 12..
  */
 public class OttoEventEntity {
-    public String rawString;
-    public String measureTime;
     public List<DustInfoDto> dtoList;
     public COMMAND command;
     public boolean on_off;
@@ -18,11 +16,6 @@ public class OttoEventEntity {
 
     public OttoEventEntity(COMMAND c) {
         command = c;
-    }
-
-    public void setData(String time, String str) {
-        measureTime = time;
-        rawString = str;
     }
 
     public void setData(List<DustInfoDto> dtoList) { this.dtoList = dtoList; }

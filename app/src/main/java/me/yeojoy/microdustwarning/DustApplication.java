@@ -1,12 +1,16 @@
 package me.yeojoy.microdustwarning;
 
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Intent;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Bus;
 
 import java.util.HashMap;
+
+import me.yeojoy.microdustwarning.service.WebParserService;
 
 /**
  * Created by yeojoy on 2014. 6. 12..
@@ -15,8 +19,8 @@ public class DustApplication extends Application {
     public static Bus bus;
     
     public static String locality;
-    
 
+    public static PendingIntent mPendingIntent;
     /* GA */
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
@@ -52,5 +56,8 @@ public class DustApplication extends Application {
     public void onCreate() {
         super.onCreate();
         bus = new Bus();
+
+        Intent intent = new Intent("me.yeojoy.microdust.action.RUN_SERVICE");
+        mPendingIntent = PendingIntent.getService(getApplicationContext(), 10002, intent, 0);
     }
 }
