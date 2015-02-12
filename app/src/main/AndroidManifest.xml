@@ -41,7 +41,8 @@
         <activity android:name=".AboutActivity" android:label="@string/about"
                   android:screenOrientation="portrait"/>
         <activity android:name=".InfoActivity" android:screenOrientation="portrait" />
-        
+        <activity android:name=".DebugActivity" android:screenOrientation="portrait" />
+
         <provider
             android:authorities="me.yeojoy.microdustwarning"
             android:name=".db.DustContentProvider"

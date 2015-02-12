@@ -75,8 +75,8 @@ public class WebParserService extends Service implements DustConstants,
 
     @Override
     public void onDestroy() {
-        DustLog.i(TAG, "onDestroy()");
         super.onDestroy();
+        DustLog.i(TAG, "onDestroy()");
     }
 
     @Override

@@ -38,6 +38,7 @@ import java.util.List;
 
 import me.yeojoy.microdustwarning.AboutActivity;
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.DebugActivity;
 import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
@@ -164,6 +165,8 @@ public class DustFragment extends Fragment implements DustConstants,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         DustLog.i(TAG, "onOptionsItemSelected()");
+        Intent intent;
+
         switch (item.getItemId()) {
             case R.id.action_on_off:
                 // LESSON AND LEARN
@@ -192,13 +195,18 @@ public class DustFragment extends Fragment implements DustConstants,
 
             case R.id.action_about:
 
-                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
                 break;
             
             case R.id.action_change_locality:
                 DustDialogManager.chooseUserLocalityDialog(mContext,
                         mDialogSelectListener);
+                break;
+
+            case R.id.action_debug:
+                intent = new Intent(getActivity(), DebugActivity.class);
+                startActivity(intent);
                 break;
 
         }
@@ -223,6 +231,16 @@ public class DustFragment extends Fragment implements DustConstants,
             item.setTitle(R.string.action_swtich_on);
         } else {
             item.setTitle(R.string.action_swtich_off);
+        }
+
+        if (BuildConfig.DEBUG) {
+
+//            <item
+//            android:id="@+id/action_debug"
+//            android:orderInCategory="100"
+//            android:showAsAction="never"
+//            android:title="@string/action_debug" />
+            menu.add(100, R.id.action_debug, 100, R.string.action_debug);
         }
     }
 
@@ -344,9 +362,9 @@ public class DustFragment extends Fragment implements DustConstants,
             Resources res = getResources();
 
             if (BuildConfig.DEBUG)
-                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getMesuredDate() + "\n", null));
             else
-                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+                ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getMesuredDate() + "\n", STATUS.NONE));
 
             ssb.append(TextDataUtil.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
 
@@ -378,9 +396,9 @@ public class DustFragment extends Fragment implements DustConstants,
                     Resources res = getResources();
 
                     if (BuildConfig.DEBUG)
-                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", null));
+                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getMesuredDate() + "\n", null));
                     else
-                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getDate() + "\n", STATUS.NONE));
+                        ssb.append(TextDataUtil.convertString(res, "측정시각 : " + dto.getMesuredDate() + "\n", STATUS.NONE));
 
                     ssb.append(TextDataUtil.convertString(res, "지역 : " + dto.getLocality() + "\n", STATUS.NONE));
 
@@ -530,22 +548,25 @@ public class DustFragment extends Fragment implements DustConstants,
                 if (DustApplication.locality.equals(cursor.getString(
                         cursor.getColumnIndex(MEASURE_LOCALITY)))) {
                     dto = new DustInfoDto();
-                    dto.setDate(cursor.getString(cursor.getColumnIndex(MEASURE_TIME)));
-                    dto.setLocality(cursor.getString(cursor.getColumnIndex(MEASURE_LOCALITY)));
-                    dto.setPm10(cursor.getString(cursor.getColumnIndex(MICRO_DUST)));
-                    dto.setPm10Index(cursor.getString(cursor.getColumnIndex(MICRO_DUST_INDEX)));
-                    dto.setPm25(cursor.getString(cursor.getColumnIndex(NANO_DUST)));
-                    dto.setOzone(cursor.getString(cursor.getColumnIndex(OZON)));
-                    dto.setOzoneIndex(cursor.getString(cursor.getColumnIndex(OZON_INDEX)));
-                    dto.setNitrogen(cursor.getString(cursor.getColumnIndex(NO2)));
-                    dto.setNitrogenIndex(cursor.getString(cursor.getColumnIndex(NO2_INDEX)));
-                    dto.setCarbon(cursor.getString(cursor.getColumnIndex(CO)));
-                    dto.setCarbonIndex(cursor.getString(cursor.getColumnIndex(CO_INDEX)));
-                    dto.setSulfurous(cursor.getString(cursor.getColumnIndex(SO2)));
-                    dto.setSulfurousIndex(cursor.getString(cursor.getColumnIndex(SO2_INDEX)));
-                    dto.setDegree(cursor.getString(cursor.getColumnIndex(DEGREE)));
-                    dto.setMaxIndex(cursor.getString(cursor.getColumnIndex(AIR_QUAL_INDEX)));
-                    dto.setMaterial(cursor.getString(cursor.getColumnIndex(MATERIAL)));
+                    dto.setMesuredDate(cursor.getString(INDEX_MEASURE_TIME));
+                    dto.setSavedDate(cursor.getString(INDEX_SAVE_TIME));
+                    dto.setLocality(cursor.getString(INDEX_MEASURE_LOCALITY));
+                    dto.setPm10(cursor.getString(INDEX_MICRO_DUST));
+                    dto.setPm10Index(cursor.getString(INDEX_MICRO_DUST_INDEX));
+                    dto.setPm24(cursor.getString(INDEX_MICRO_DUST_PM24));
+                    dto.setPm24Index(cursor.getString(INDEX_MICRO_DUST_PM24_INDEX));
+                    dto.setPm25(cursor.getString(INDEX_NANO_DUST));
+                    dto.setOzone(cursor.getString(INDEX_OZON));
+                    dto.setOzoneIndex(cursor.getString(INDEX_OZON_INDEX));
+                    dto.setNitrogen(cursor.getString(INDEX_NO2));
+                    dto.setNitrogenIndex(cursor.getString(INDEX_NO2_INDEX));
+                    dto.setCarbon(cursor.getString(INDEX_CO));
+                    dto.setCarbonIndex(cursor.getString(INDEX_CO_INDEX));
+                    dto.setSulfurous(cursor.getString(INDEX_SO2));
+                    dto.setSulfurousIndex(cursor.getString(INDEX_SO2_INDEX));
+                    dto.setDegree(cursor.getString(INDEX_DEGREE));
+                    dto.setMaxIndex(cursor.getString(INDEX_AIR_QUAL_INDEX));
+                    dto.setMaterial(cursor.getString(INDEX_MATERIAL));
                     
                     break;
                 }

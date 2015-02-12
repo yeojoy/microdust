@@ -65,7 +65,7 @@ public class SqliteManager implements DustInfoDBConstants {
             for (DustInfoDto dto : data) {
                 values = new ContentValues();
                 values.put(SAVE_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
-                values.put(MEASURE_TIME, dto.getDate());
+                values.put(MEASURE_TIME, dto.getMesuredDate());
                 values.put(MEASURE_LOCALITY, dto.getLocality());
                 values.put(MICRO_DUST, dto.getPm10());
                 values.put(MICRO_DUST_INDEX, dto.getPm10Index());
@@ -119,7 +119,7 @@ public class SqliteManager implements DustInfoDBConstants {
             db = mDBHelper.getReadableDatabase();
 
             String selection = MEASURE_TIME + " = ?";
-            String[] selectionArgs = { dustInfoDto.getDate() };
+            String[] selectionArgs = { dustInfoDto.getMesuredDate() };
             cursor = db.query(TABLE_NAME, null, selection, selectionArgs,
                     null, null, null);
             if (cursor != null && cursor.getCount() > 0) return true;

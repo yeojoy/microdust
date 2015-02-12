@@ -310,7 +310,7 @@ public class TextDataUtil implements DustConstants {
                             && !TextUtils.isEmpty(text)) {
                         if (startTagName.equals("msrdate")) {
                             dto = new DustInfoDto();
-                            dto.setDate(splitDateString(text));
+                            dto.setMesuredDate(splitDateString(text));
                         } else if (startTagName.equals("msrstename")) {
                             dto.setLocality(text);
                         } else if (startTagName.equals("maxindex")) {

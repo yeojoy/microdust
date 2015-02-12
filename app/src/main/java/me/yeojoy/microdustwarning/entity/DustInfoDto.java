@@ -14,39 +14,117 @@ public class DustInfoDto implements Parcelable {
         readFromParcel(in);
     }
 
-    public DustInfoDto(String date, String locality, String pm10,
-               String pm10Index, String pm24, String pm24Index, String pm25,
-               String pm25Index, String ozone, String ozoneIndex,
-               String nitrogen, String nitrogenIndex, String carbon,
-               String carbonIndex, String sulfurous, String sulfurousIndex,
-               String maxIndex, String material, String degree) {
-        this.date = date;
-        this.locality = locality;
-        this.pm10 = pm10;
-        this.pm10Index = pm10Index;
-        this.pm24 = pm24;
-        this.pm24Index = pm24Index;
-        this.pm25 = pm25;
-        this.pm25Index = pm25Index;
-        this.ozone = ozone;
-        this.ozoneIndex = ozoneIndex;
-        this.nitrogen = nitrogen;
-        this.nitrogenIndex = nitrogenIndex;
-        this.carbon = carbon;
-        this.carbonIndex = carbonIndex;
-        this.sulfurous = sulfurous;
-        this.sulfurousIndex = sulfurousIndex;
-        this.maxIndex = maxIndex;
-        this.material = material;
-        this.degree = degree;
+
+    /** 측정 날짜 시각 */
+    private String mesuredDate;
+    /** 저장 날짜 시각 */
+    private String savedDate;
+    /** 구역. xx구 */
+    private String locality;
+    /** 미세먼지 */
+    private String pm10;
+    private String pm10Index;
+    /** ??? 뭘까? */
+    private String pm24;
+    private String pm24Index;
+    /** 초미세 먼지 */
+    private String pm25;
+    private String pm25Index;
+    /** 오존 */
+    private String ozone;
+    private String ozoneIndex;
+    /** 이산화 질소 */
+    private String nitrogen;
+    private String nitrogenIndex;
+    /** 일산화탄소 */
+    private String carbon;
+    private String carbonIndex;
+    /** 아황산가스 */
+    private String sulfurous;
+    private String sulfurousIndex;
+    /** index로 환산한 것 중 가장 높은 index, 통합지수 */
+    private String maxIndex;
+    /** 지수 결정 물질 */
+    private String material;
+    /** 등급 */
+    private String degree;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getDate() {
-        return date;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mesuredDate);
+        dest.writeString(savedDate);
+        dest.writeString(locality);
+        dest.writeString(pm10);
+        dest.writeString(pm10Index);
+        dest.writeString(pm24);
+        dest.writeString(pm24Index);
+        dest.writeString(pm25);
+        dest.writeString(pm25Index);
+        dest.writeString(ozone);
+        dest.writeString(ozoneIndex);
+        dest.writeString(nitrogen);
+        dest.writeString(nitrogenIndex);
+        dest.writeString(carbon);
+        dest.writeString(carbonIndex);
+        dest.writeString(sulfurous);
+        dest.writeString(sulfurousIndex);
+        dest.writeString(maxIndex);
+        dest.writeString(material);
+        dest.writeString(degree);
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    private void readFromParcel(Parcel in) {
+        mesuredDate = in.readString();
+        savedDate = in.readString();
+        locality = in.readString();
+        pm10 = in.readString();
+        pm10Index = in.readString();
+        pm24 = in.readString();
+        pm24Index = in.readString();
+        pm25 = in.readString();
+        pm25Index = in.readString();
+        ozone = in.readString();
+        ozoneIndex = in.readString();
+        nitrogen = in.readString();
+        nitrogenIndex = in.readString();
+        carbon = in.readString();
+        carbonIndex = in.readString();
+        sulfurous = in.readString();
+        sulfurousIndex = in.readString();
+        maxIndex = in.readString();
+        material = in.readString();
+        degree = in.readString();
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public DustInfoDto createFromParcel(Parcel in) {
+            return new DustInfoDto(in);
+        }
+
+        public DustInfoDto[] newArray(int size) {
+            return new DustInfoDto[size];
+        }
+    };
+
+    public String getMesuredDate() {
+        return mesuredDate;
+    }
+
+    public void setMesuredDate(String mesuredDate) {
+        this.mesuredDate = mesuredDate;
+    }
+
+    public String getSavedDate() {
+        return savedDate;
+    }
+
+    public void setSavedDate(String savedDate) {
+        this.savedDate = savedDate;
     }
 
     public String getLocality() {
@@ -55,14 +133,6 @@ public class DustInfoDto implements Parcelable {
 
     public void setLocality(String locality) {
         this.locality = locality;
-    }
-
-    public String getMaxIndex() {
-        return maxIndex;
-    }
-
-    public void setMaxIndex(String maxIndex) {
-        this.maxIndex = maxIndex;
     }
 
     public String getPm10() {
@@ -81,9 +151,13 @@ public class DustInfoDto implements Parcelable {
         this.pm10Index = pm10Index;
     }
 
-    public String getPm24() { return pm24; }
+    public String getPm24() {
+        return pm24;
+    }
 
-    public void setPm24(String pm24) { this.pm24 = pm24; }
+    public void setPm24(String pm24) {
+        this.pm24 = pm24;
+    }
 
     public String getPm24Index() {
         return pm24Index;
@@ -173,12 +247,12 @@ public class DustInfoDto implements Parcelable {
         this.sulfurousIndex = sulfurousIndex;
     }
 
-    public String getDegree() {
-        return degree;
+    public String getMaxIndex() {
+        return maxIndex;
     }
 
-    public void setDegree(String degree) {
-        this.degree = degree;
+    public void setMaxIndex(String maxIndex) {
+        this.maxIndex = maxIndex;
     }
 
     public String getMaterial() {
@@ -188,103 +262,20 @@ public class DustInfoDto implements Parcelable {
     public void setMaterial(String material) {
         this.material = material;
     }
-    
-    /** 측정 날짜 시각 */
-    private String date;
-    /** 구역. xx구 */
-    private String locality;
-    /** 미세먼지 */
-    private String pm10;
-    private String pm10Index;
-    /** ??? 뭘까? */
-    private String pm24;
-    private String pm24Index;
-    /** 초미세 먼지 */
-    private String pm25;
-    private String pm25Index;
-    /** 오존 */
-    private String ozone;
-    private String ozoneIndex;
-    /** 이산화 질소 */
-    private String nitrogen;
-    private String nitrogenIndex;
-    /** 일산화탄소 */
-    private String carbon;
-    private String carbonIndex;
-    /** 아황산가스 */
-    private String sulfurous;
-    private String sulfurousIndex;
-    /** index로 환산한 것 중 가장 높은 index, 통합지수 */
-    private String maxIndex;
-    /** 지수 결정 물질 */
-    private String material;
-    /** 등급 */
-    private String degree;
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getDegree() {
+        return degree;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(date);
-        dest.writeString(locality);
-        dest.writeString(pm10);
-        dest.writeString(pm10Index);
-        dest.writeString(pm24);
-        dest.writeString(pm24Index);
-        dest.writeString(pm25);
-        dest.writeString(pm25Index);
-        dest.writeString(ozone);
-        dest.writeString(ozoneIndex);
-        dest.writeString(nitrogen);
-        dest.writeString(nitrogenIndex);
-        dest.writeString(carbon);
-        dest.writeString(carbonIndex);
-        dest.writeString(sulfurous);
-        dest.writeString(sulfurousIndex);
-        dest.writeString(maxIndex);
-        dest.writeString(material);
-        dest.writeString(degree);
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
-
-    private void readFromParcel(Parcel in) {
-        date = in.readString();
-        locality = in.readString();
-        pm10 = in.readString();
-        pm10Index = in.readString();
-        pm24 = in.readString();
-        pm24Index = in.readString();
-        pm25 = in.readString();
-        pm25Index = in.readString();
-        ozone = in.readString();
-        ozoneIndex = in.readString();
-        nitrogen = in.readString();
-        nitrogenIndex = in.readString();
-        carbon = in.readString();
-        carbonIndex = in.readString();
-        sulfurous = in.readString();
-        sulfurousIndex = in.readString();
-        maxIndex = in.readString();
-        material = in.readString();
-        degree = in.readString();
-    }
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public DustInfoDto createFromParcel(Parcel in) {
-            return new DustInfoDto(in);
-        }
-
-        public DustInfoDto[] newArray(int size) {
-            return new DustInfoDto[size];
-        }
-    };
 
     @Override
     public String toString() {
         return "DustInfoDto{" +
-                "date='" + date + '\'' +
+                "mesuredDate='" + mesuredDate + '\'' +
+                ", savedDate='" + savedDate + '\'' +
                 ", locality='" + locality + '\'' +
                 ", pm10='" + pm10 + '\'' +
                 ", pm10Index='" + pm10Index + '\'' +
