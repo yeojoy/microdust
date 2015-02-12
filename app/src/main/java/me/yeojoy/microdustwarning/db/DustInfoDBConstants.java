@@ -32,6 +32,27 @@ public interface DustInfoDBConstants {
     public static final String AIR_QUAL_INDEX = "AIR_INDEX";
     public static final String MATERIAL = "MATERIAL";
 
+    public static final int INDEX_ID                        = 0;
+    public static final int INDEX_SAVE_TIME                 = 1;
+    public static final int INDEX_MEASURE_TIME              = 2;
+    public static final int INDEX_MEASURE_LOCALITY          = 3;
+    public static final int INDEX_MICRO_DUST                = 4;
+    public static final int INDEX_MICRO_DUST_INDEX          = 5;
+    public static final int INDEX_MICRO_DUST_PM24           = 6;
+    public static final int INDEX_MICRO_DUST_PM24_INDEX     = 7;
+    public static final int INDEX_NANO_DUST                 = 8;
+    public static final int INDEX_OZON                      = 9;
+    public static final int INDEX_OZON_INDEX                = 10;
+    public static final int INDEX_NO2                       = 11;
+    public static final int INDEX_NO2_INDEX                 = 12;
+    public static final int INDEX_CO                        = 13;
+    public static final int INDEX_CO_INDEX                  = 14;
+    public static final int INDEX_SO2                       = 15;
+    public static final int INDEX_SO2_INDEX                 = 16;
+    public static final int INDEX_DEGREE                    = 17;
+    public static final int INDEX_AIR_QUAL_INDEX            = 18;
+    public static final int INDEX_MATERIAL                  = 19;
+
     // CursorLoader
     public static final int AIR_QUALITY_INDEX_CURSOR_LOADER = 1212;
 

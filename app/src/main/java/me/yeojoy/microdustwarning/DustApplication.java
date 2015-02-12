@@ -57,7 +57,7 @@ public class DustApplication extends Application {
         super.onCreate();
         bus = new Bus();
 
-        Intent intent = new Intent(getApplicationContext(), WebParserService.class);
+        Intent intent = new Intent("me.yeojoy.microdust.action.RUN_SERVICE");
         mPendingIntent = PendingIntent.getService(getApplicationContext(), 10002, intent, 0);
     }
 }

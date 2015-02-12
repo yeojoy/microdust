@@ -67,14 +67,16 @@ public class WebParserService extends Service implements DustConstants,
                         OttoEventEntity.COMMAND.GET_DATA_WITH_DTO);
                 entity.setData(dto);
                 DustApplication.bus.post(entity);
+
+                stopSelf();
             }
         });
     }
 
     @Override
     public void onDestroy() {
-        DustLog.i(TAG, "onDestroy()");
         super.onDestroy();
+        DustLog.i(TAG, "onDestroy()");
     }
 
     @Override

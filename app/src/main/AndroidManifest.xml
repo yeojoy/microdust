@@ -33,19 +33,23 @@
             </intent-filter>
         </activity>
         <service
-            android:name="me.yeojoy.microdustwarning.service.WebParserService" />
+            android:name="me.yeojoy.microdustwarning.service.WebParserService" >
+            <intent-filter>
+                <action android:name="me.yeojoy.microdust.action.RUN_SERVICE" />
+            </intent-filter>
+        </service>
 
         <activity android:name=".AboutActivity" android:label="@string/about"
                   android:screenOrientation="portrait"/>
         <activity android:name=".InfoActivity" android:screenOrientation="portrait" />
-        
+        <activity android:name=".DebugActivity" android:screenOrientation="portrait" />
+
         <provider
             android:authorities="me.yeojoy.microdustwarning"
             android:name=".db.DustContentProvider"
             android:exported="false" />
 
-        <receiver
-            android:name=".PhoneTurnOnReceiver" >
+        <receiver android:name=".PhoneTurnOnReceiver">
             <intent-filter >
                 <action android:name="android.intent.action.SCREEN_ON" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
