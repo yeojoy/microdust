@@ -9,6 +9,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,9 +58,9 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
             return new CursorLoader(
                     mContext,                           // Context
                     AIR_QUALITY_SELECT_ALL_QUERY_URI,   // Table to query
-                    PROJECTION,                         // Projection to return
-                    null,                               // No selection clause
-                    null,                               // No selection arguments
+                    null,                         // Projection to return
+                    SELECTION,                               // No selection clause
+                    new String[] {DustApplication.locality},    // selection arguments
                     "measure_time DESC"                 // Default sort order
 
             );
@@ -73,9 +74,13 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
 
         if (cursor != null && cursor.getCount() > 0) {
             DustLog.d(TAG, "onLoadFinished(), cursor is not null");
+            DustLog.d(TAG, "================================================================");
             cursor.moveToFirst();
             mTvResult.setText("");
             while (cursor.moveToNext()) {
+                if (!cursor.getString(INDEX_MEASURE_LOCALITY).equals(DustApplication.locality))
+                    continue;
+
                 DustInfoDto dto = new DustInfoDto();
 
                 dto.setMesuredDate(cursor.getString(INDEX_MEASURE_TIME));
@@ -97,9 +102,11 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
                 dto.setDegree(cursor.getString(INDEX_DEGREE));
                 dto.setMaxIndex(cursor.getString(INDEX_AIR_QUAL_INDEX));
                 dto.setMaterial(cursor.getString(INDEX_MATERIAL));
+                DustLog.d(TAG, dto.toString());
                 mTvResult.append(dto.toString());
                 mTvResult.append("\n\n");
             }
+            DustLog.d(TAG, "================================================================");
         } else {
             Toast.makeText(mContext, "Cursor is null.", Toast.LENGTH_SHORT).show();
         }

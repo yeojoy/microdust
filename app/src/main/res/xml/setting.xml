@@ -37,17 +37,17 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/pref_location_category_title"
-        android:key="@string/pref_key_location_category">
+    <!--<PreferenceCategory-->
+        <!--android:title="@string/pref_location_category_title"-->
+        <!--android:key="@string/pref_key_location_category">-->
 
-        <CheckBoxPreference
-            android:title="@string/pref_title_location"
-            android:summary="@string/pref_summary_location"
-            android:key="@string/pref_key_location_on"
-            android:defaultValue="true" />
+        <!--<CheckBoxPreference-->
+            <!--android:title="@string/pref_title_location"-->
+            <!--android:summary="@string/pref_summary_location"-->
+            <!--android:key="@string/pref_key_location_on"-->
+            <!--android:defaultValue="true" />-->
 
-    </PreferenceCategory>
+    <!--</PreferenceCategory>-->
 
 
 </PreferenceScreen>
