@@ -79,6 +79,8 @@ public interface DustInfoDBConstants {
             MATERIAL
     };
 
+    public static final String SELECTION = MEASURE_LOCALITY + " = ?";
+
     // The URI scheme used for content URIs
     public static final String SCHEME = "content";
 
