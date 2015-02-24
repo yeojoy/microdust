@@ -43,9 +43,6 @@ public class AlarmHelper implements DustConstants {
      */
     public void cancelAlarmManager() {
         DustLog.i(TAG, "cancelAlarmManager()");
-//        AlarmManager alarmManager =
-//                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); 
-//        alarmManager.cancel(DustApplication.mPendingIntent);
 
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
@@ -73,18 +70,6 @@ public class AlarmHelper implements DustConstants {
         
         scheduledFuture = service.scheduleAtFixedRate(mServiceLauncherRunnable, 
                 1000, notiTime, TimeUnit.MILLISECONDS);
-//        AlarmManager alarmManager =
-//                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//
-//        long notiTime = NOTI_TIME_REAL;
-//
-//        if (BuildConfig.DEBUG) {
-//            notiTime = NOTI_TIME_TEST;
-//        }
-//
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-//                System.currentTimeMillis() + 1000l, notiTime,
-//                DustApplication.mPendingIntent);
     }
     
     private Runnable mServiceLauncherRunnable = new Runnable() {

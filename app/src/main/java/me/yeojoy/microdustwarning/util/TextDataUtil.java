@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
@@ -57,15 +58,17 @@ public class TextDataUtil implements DustConstants {
      * @return
      */
     private static String getTotalAirQuality(String value) {
+        DustLog.i(TAG, "getTotalAirQuality()");
         float microDustValue = Float.parseFloat(value);
-
-        if (microDustValue > TOTAL_DEGREE_WORSE)
+        DustLog.d(TAG, "getTotalAirQuality(), Total Value : " + microDustValue);
+        
+        if (microDustValue > TOTAL_DEGREE_WORST)
             return AIR_QUALITY_INDEX[4];
-        else if (microDustValue > TOTAL_DEGREE_BAD)
+        else if (microDustValue > TOTAL_DEGREE_WORSE)
             return AIR_QUALITY_INDEX[3];
-        else if (microDustValue > TOTAL_DEGREE_NORMAL)
+        else if (microDustValue > TOTAL_DEGREE_BAD)
             return AIR_QUALITY_INDEX[2];
-        else if (microDustValue > TOTAL_DEGREE_GOOD)
+        else if (microDustValue > TOTAL_DEGREE_NORMAL)
             return AIR_QUALITY_INDEX[1];
 
         return AIR_QUALITY_INDEX[0];
@@ -215,18 +218,20 @@ public class TextDataUtil implements DustConstants {
      * @return
      */
     private static STATUS getTotalDegree(String value) {
+        DustLog.i(TAG, "getTotalDegree()");
         if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
             return STATUS.NONE;
 
         float totalValue = Float.parseFloat(value);
+        DustLog.d(TAG, "getTotalDegree(), Total Value : " + totalValue);
 
-        if (totalValue > TOTAL_DEGREE_WORSE)
+        if (totalValue > TOTAL_DEGREE_WORST)
             return STATUS.WORST;
-        else if (totalValue > TOTAL_DEGREE_BAD)
+        else if (totalValue > TOTAL_DEGREE_WORSE)
             return STATUS.WORSE;
-        else if (totalValue > TOTAL_DEGREE_NORMAL)
+        else if (totalValue > TOTAL_DEGREE_BAD)
             return STATUS.BAD;
-        else if (totalValue > TOTAL_DEGREE_GOOD)
+        else if (totalValue > TOTAL_DEGREE_NORMAL)
             return STATUS.NORMAL;
 
         return STATUS.GOOD;
@@ -350,13 +355,19 @@ public class TextDataUtil implements DustConstants {
                 eventType = xpp.next();
             }
 
-            DustLog.i(TAG, "DustInfoDto length : " + list.size());
+            DustLog.d(TAG, "DustInfoDto length : " + list.size());
             // 지역이름(Locality) 오름차순 정렬
             Collections.sort(list, new DustInfoDtoLocalityAscComparer());
 
-            DustUtils.sendNotification(context, 
-                    getTotalDegree(dto.getMaxIndex()),
-                    new String[] {dto.getMaterial(), dto.getMaxIndex()});
+            for (DustInfoDto d : list) {
+                if (d.getLocality().equals(DustApplication.locality)) {
+                    STATUS s = getTotalDegree(d.getMaxIndex());
+                    DustUtils.sendNotification(context, s, d);
+                    DustLog.d(TAG, "STATUS for Notification : " + s);
+                    DustLog.d(TAG, "dto for Notification : " + d.toString());
+                    break;
+                }
+            }
 
             return list;
         } catch (XmlPullParserException e) {
@@ -380,8 +391,8 @@ public class TextDataUtil implements DustConstants {
             dto.setDegree(NO_VALUE_TOTAL);
             dto.setMaterial(NO_VALUE_TOTAL);
         } else {
-            dto.setDegree(getTotalAirQuality(dto.getMaxIndex()));
-
+            dto.setDegree(dto.getMaxIndex());
+            
             if (dto.getMaxIndex().equals(dto.getPm10Index()) ||
                     dto.getMaxIndex().equals(dto.getPm24Index())) {
                 dto.setMaterial(MATERIALS[0]);

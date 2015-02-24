@@ -95,13 +95,13 @@ public interface DustConstants {
     
     // 통합대기지수
     /** 0 ~ 50 까지 좋음 */
-    public static final float TOTAL_DEGREE_GOOD = 50f;
+    public static final float TOTAL_DEGREE_NORMAL = 50f;
     /** 51 ~ 100 까지 보통 */
-    public static final float TOTAL_DEGREE_NORMAL = 100f;
+    public static final float TOTAL_DEGREE_BAD = 100f;
     /** 100 ~ 150 까지 약간나쁨 */
-    public static final float TOTAL_DEGREE_BAD = 150f;
+    public static final float TOTAL_DEGREE_WORSE = 150f;
     /** 151 ~ 250 까지 나쁨, 251이상 매우나쁨 */
-    public static final float TOTAL_DEGREE_WORSE = 250f;
+    public static final float TOTAL_DEGREE_WORST = 250f;
     
     /** 값 없음, 각 물질 들 */
     public static final String NO_VALUE = "점검중";

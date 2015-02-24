@@ -17,19 +17,22 @@ import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.STATUS;
 
 public class DustUtils implements DustConstants {
 
     public static final String TAG = DustUtils.class.getSimpleName();
 
-    public static void sendNotification(Context context, STATUS s, String[] args) {
+    public static void sendNotification(Context context, STATUS s, DustInfoDto dto) {
         DustLog.i(TAG, "sendNotification()");
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         Resources res = context.getResources();
 
         mBuilder.setTicker("미세먼지 알림");
+        
+        // TODO Setting에 Switch를 넣어서 작동하게 함.
         mBuilder.setOngoing(true);
 
         NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
