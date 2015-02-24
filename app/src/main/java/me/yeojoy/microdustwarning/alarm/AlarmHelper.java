@@ -65,7 +65,7 @@ public class AlarmHelper implements DustConstants {
         long notiTime = NOTI_TIME_REAL;
 
         if (BuildConfig.DEBUG) {
-            notiTime = 10000;
+            notiTime = NOTI_TIME_TEST;
         }
         
         scheduledFuture = service.scheduleAtFixedRate(mServiceLauncherRunnable, 

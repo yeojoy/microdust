@@ -13,6 +13,8 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
+import java.util.Calendar;
+
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustActivity;
 import me.yeojoy.microdustwarning.DustConstants;
@@ -96,19 +98,9 @@ public class DustUtils implements DustConstants {
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
-        // Add Action Buttons to Wear
-        // REFS : http://developer.android.com/training/wearables/notifications/creating.html#ActionButtons
-
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-//        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("37.239217, 127.384724"));
-//        mapIntent.setData(geoUri);
-//        PendingIntent mapPendingIntent =
-//                PendingIntent.getActivity(context, 0, mapIntent, 0);
-//
-//        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
-//        mBuilder.setAutoCancel(false);
-
         DustSharedPreferences.getInstance().init(context);
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         // 진동 설정
         if (s != STATUS.GOOD && s != STATUS.NORMAL &&
@@ -123,26 +115,5 @@ public class DustUtils implements DustConstants {
         NotificationManager mng = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         mng.notify(100, noti);
-    }
-
-    /**
-     * get Application Version
-     * @param context
-     * @return
-     */
-    public static String getAppVersion(Context context) {
-        
-        if (!TextUtils.isEmpty(BuildConfig.VERSION_NAME))
-            return BuildConfig.VERSION_NAME;
-        
-        PackageInfo info = null;
-        try {
-                info = context.getPackageManager()
-                        .getPackageInfo(context.getPackageName(), 0);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        if (info != null) return info.versionName;
-        return null;
     }
 }

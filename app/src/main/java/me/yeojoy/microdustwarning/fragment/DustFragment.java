@@ -35,6 +35,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.AboutActivity;
@@ -162,6 +163,11 @@ public class DustFragment extends Fragment implements DustConstants,
 
         mNetworkManager = DustNetworkManager.getInstance();
         mNetworkManager.setOnReceiveDataListener(this);
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        DustLog.d(TAG, "HOUR_OF_DAY " + hour);
+        hour = Calendar.getInstance().get(Calendar.HOUR);
+        DustLog.d(TAG, "HOUR " + hour);
     }
 
     @Override
