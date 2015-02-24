@@ -30,13 +30,14 @@ public class DustUtils implements DustConstants {
         Resources res = context.getResources();
 
         mBuilder.setTicker("미세먼지 알림");
-        
+        mBuilder.setOngoing(true);
+
         NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
         style2.setBigContentTitle("미세먼지 알림");
 
         switch (s) {
             case GOOD:
-                mBuilder.setSmallIcon(R.drawable.icon_good);
+                mBuilder.setSmallIcon(R.drawable.icon_good_small);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res, 
                         R.drawable.icon_good));
                 mBuilder.setContentTitle("좋습니다.");
@@ -44,7 +45,7 @@ public class DustUtils implements DustConstants {
                 style2.bigText(context.getString(R.string.dlg_status_good_title));
                 break;
             case NORMAL:
-                mBuilder.setSmallIcon(R.drawable.icon_normal);
+                mBuilder.setSmallIcon(R.drawable.icon_normal_small);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_normal));
                 mBuilder.setContentTitle("보통입니다.");
@@ -52,7 +53,7 @@ public class DustUtils implements DustConstants {
                 style2.bigText(context.getString(R.string.dlg_status_normal_title));
                 break;
             case BAD:
-                mBuilder.setSmallIcon(R.drawable.icon_bad);
+                mBuilder.setSmallIcon(R.drawable.icon_bad_small);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_bad));
                 mBuilder.setContentTitle("안 좋습니다.");
@@ -62,7 +63,7 @@ public class DustUtils implements DustConstants {
                 mBuilder.setLights(0xFFFFFF00, 500, 500);
                 break;
             case WORSE:
-                mBuilder.setSmallIcon(R.drawable.icon_worse);
+                mBuilder.setSmallIcon(R.drawable.icon_worse_small);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worse));
                 mBuilder.setContentTitle("꽤 안 좋습니다!");
@@ -72,7 +73,7 @@ public class DustUtils implements DustConstants {
                 mBuilder.setLights(0xFFFF8900, 500, 500);
                 break;
             case WORST:
-                mBuilder.setSmallIcon(R.drawable.icon_worst);
+                mBuilder.setSmallIcon(R.drawable.icon_worst_small);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worst));
                 mBuilder.setContentTitle("아주 안 좋습니다!!!");
