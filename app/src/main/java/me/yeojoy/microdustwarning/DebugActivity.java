@@ -59,8 +59,9 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
                     mContext,                           // Context
                     AIR_QUALITY_SELECT_ALL_QUERY_URI,   // Table to query
                     null,                         // Projection to return
-                    SELECTION,                               // No selection clause
-                    new String[] {DustApplication.locality},    // selection arguments
+                    null, null,
+//                    SELECTION,                               // selection clause
+//                    new String[] {DustApplication.locality},    // selection arguments
                     "measure_time DESC"                 // Default sort order
 
             );
@@ -71,18 +72,24 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         DustLog.d(TAG, "onLoadFinished()");
-
+        
         if (cursor != null && cursor.getCount() > 0) {
             DustLog.d(TAG, "onLoadFinished(), cursor is not null");
             DustLog.d(TAG, "================================================================");
-            cursor.moveToFirst();
+            
             mTvResult.setText("");
-            while (cursor.moveToNext()) {
-                if (!cursor.getString(INDEX_MEASURE_LOCALITY).equals(DustApplication.locality))
+            cursor.moveToFirst();
+            
+            DustLog.d(TAG, "user's locality : " + DustApplication.locality);
+
+            do {
+
+                if (!cursor.getString(INDEX_MEASURE_LOCALITY).equals(DustApplication.locality)) {
                     continue;
-
+                }
+                
                 DustInfoDto dto = new DustInfoDto();
-
+                
                 dto.setMesuredDate(cursor.getString(INDEX_MEASURE_TIME));
                 dto.setSavedDate(cursor.getString(INDEX_SAVE_TIME));
                 dto.setLocality(cursor.getString(INDEX_MEASURE_LOCALITY));
@@ -105,7 +112,7 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
                 DustLog.d(TAG, dto.toString());
                 mTvResult.append(dto.toString());
                 mTvResult.append("\n\n");
-            }
+            } while (cursor.moveToNext());
             DustLog.d(TAG, "================================================================");
         } else {
             Toast.makeText(mContext, "Cursor is null.", Toast.LENGTH_SHORT).show();

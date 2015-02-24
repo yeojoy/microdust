@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:scaleType="matrix"
-        android:src="@drawable/icon" />
+        android:src="@drawable/icon_good" />
 
     <TextView
         android:id="@+id/tv_noti_msg"

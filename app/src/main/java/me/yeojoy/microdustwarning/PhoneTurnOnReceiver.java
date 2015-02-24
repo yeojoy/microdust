@@ -16,6 +16,7 @@ public class PhoneTurnOnReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "onReceive()");
-        AlarmHelper.launchAlarmManager(context.getApplicationContext());
+        AlarmHelper.getInstance(context.getApplicationContext())
+                .launchAlarmManager();
     }
 }

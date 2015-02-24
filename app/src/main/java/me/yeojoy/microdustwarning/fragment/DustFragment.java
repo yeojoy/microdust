@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -141,7 +142,8 @@ public class DustFragment extends Fragment implements DustConstants,
             if (mReceivedArguments != null) {
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).launchAlarmManager();
+                    
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
                     DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
@@ -173,10 +175,10 @@ public class DustFragment extends Fragment implements DustConstants,
                 // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
                 boolean isChecked = !item.isChecked();
                 if (isChecked) {
-                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).launchAlarmManager();
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
                 } else
-                    AlarmHelper.cancelAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).cancelAlarmManager();
 
                 DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
 
@@ -207,6 +209,12 @@ public class DustFragment extends Fragment implements DustConstants,
             case R.id.action_debug:
                 intent = new Intent(getActivity(), DebugActivity.class);
                 startActivity(intent);
+                break;
+            
+            case R.id.action_noti_off:
+                NotificationManager mng = (NotificationManager)
+                        mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                mng.cancel(100);
                 break;
 
         }
@@ -308,9 +316,9 @@ public class DustFragment extends Fragment implements DustConstants,
 
             case ON_OFF:
                 if (entity.on_off) {
-                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).launchAlarmManager();
                 } else {
-                    AlarmHelper.cancelAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).cancelAlarmManager();
                 }
 
                 break;
@@ -486,7 +494,7 @@ public class DustFragment extends Fragment implements DustConstants,
             if (mReceivedArguments != null) {
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
-                    AlarmHelper.launchAlarmManager(mContext.getApplicationContext());
+                    AlarmHelper.getInstance(mContext).launchAlarmManager();
                     DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");

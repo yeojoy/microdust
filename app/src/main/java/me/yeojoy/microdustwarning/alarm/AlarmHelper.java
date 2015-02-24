@@ -1,7 +1,12 @@
 package me.yeojoy.microdustwarning.alarm;
 
-import android.app.AlarmManager;
 import android.content.Context;
+import android.content.Intent;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustApplication;
@@ -15,15 +20,37 @@ import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 public class AlarmHelper implements DustConstants {
     private static final String TAG = AlarmHelper.class.getSimpleName();
 
+    private static ScheduledFuture scheduledFuture;
+    
+    private static AlarmHelper mAlarmHelper;
+    
+    private Context mContext;
+
+    public AlarmHelper(Context context) {
+        mContext = context;
+    }
+    
+    public static AlarmHelper getInstance(Context context) {
+        if (mAlarmHelper == null) {
+            mAlarmHelper = new AlarmHelper(context);
+        }
+        
+        return mAlarmHelper;
+    }
+    
     /**
      * 알람 매니저 종료
      */
-    public static void cancelAlarmManager(Context context) {
+    public void cancelAlarmManager() {
         DustLog.i(TAG, "cancelAlarmManager()");
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); 
-        alarmManager.cancel(DustApplication.mPendingIntent);
+//        AlarmManager alarmManager =
+//                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); 
+//        alarmManager.cancel(DustApplication.mPendingIntent);
 
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+        }
+        
         // TODO 이후 변경 필요. 임시방편으로 지역만 저장
         DustSharedPreferences.getInstance().clear();
         DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY,
@@ -33,21 +60,40 @@ public class AlarmHelper implements DustConstants {
     /**
      * 알람 매니저 실행
      */
-    public static void launchAlarmManager(Context context) {
+    public void launchAlarmManager() {
         DustLog.i(TAG, "launchAlarmManager()");
 
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        ScheduledExecutorService service =  Executors.newScheduledThreadPool(1);
 
         long notiTime = NOTI_TIME_REAL;
 
         if (BuildConfig.DEBUG) {
-            notiTime = NOTI_TIME_TEST;
+            notiTime = 10000;
         }
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + 1000l, notiTime,
-                DustApplication.mPendingIntent);
+        
+        scheduledFuture = service.scheduleAtFixedRate(mServiceLauncherRunnable, 
+                1000, notiTime, TimeUnit.MILLISECONDS);
+//        AlarmManager alarmManager =
+//                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//
+//        long notiTime = NOTI_TIME_REAL;
+//
+//        if (BuildConfig.DEBUG) {
+//            notiTime = NOTI_TIME_TEST;
+//        }
+//
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+//                System.currentTimeMillis() + 1000l, notiTime,
+//                DustApplication.mPendingIntent);
     }
+    
+    private Runnable mServiceLauncherRunnable = new Runnable() {
+        @Override
+        public void run() {
+            DustLog.i(TAG, "Runnable, run()");
+            Intent intent = new Intent("me.yeojoy.microdust.action.RUN_SERVICE");
+            mContext.startService(intent);
+        }
+    };
     
 }

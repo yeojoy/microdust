@@ -39,18 +39,24 @@ public class DustUtils implements DustConstants {
                 mBuilder.setSmallIcon(R.drawable.icon_good);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res, 
                         R.drawable.icon_good));
+                mBuilder.setContentTitle("좋습니다.");
+                mBuilder.setContentText(context.getString(R.string.dlg_status_good_title));
                 style2.bigText(context.getString(R.string.dlg_status_good_title));
                 break;
             case NORMAL:
                 mBuilder.setSmallIcon(R.drawable.icon_normal);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_normal));
+                mBuilder.setContentTitle("보통입니다.");
+                mBuilder.setContentTitle(context.getString(R.string.dlg_status_normal_title));
                 style2.bigText(context.getString(R.string.dlg_status_normal_title));
                 break;
             case BAD:
                 mBuilder.setSmallIcon(R.drawable.icon_bad);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_bad));
+                mBuilder.setContentTitle("안 좋습니다.");
+                mBuilder.setContentTitle(context.getString(R.string.dlg_status_bad_title));
                 style2.bigText(context.getString(R.string.dlg_status_bad_title));
                 // 불빛 설정
                 mBuilder.setLights(0xFFFFFF00, 500, 500);
@@ -59,6 +65,8 @@ public class DustUtils implements DustConstants {
                 mBuilder.setSmallIcon(R.drawable.icon_worse);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worse));
+                mBuilder.setContentTitle("꽤 안 좋습니다!");
+                mBuilder.setContentTitle(context.getString(R.string.dlg_status_worse_title));
                 style2.bigText(context.getString(R.string.dlg_status_worse_title));
                 // 불빛 설정
                 mBuilder.setLights(0xFFFF8900, 500, 500);
@@ -67,6 +75,8 @@ public class DustUtils implements DustConstants {
                 mBuilder.setSmallIcon(R.drawable.icon_worst);
                 mBuilder.setLargeIcon(BitmapFactory.decodeResource(res,
                         R.drawable.icon_worst));
+                mBuilder.setContentTitle("아주 안 좋습니다!!!");
+                mBuilder.setContentTitle(context.getString(R.string.dlg_status_worst_title));
                 style2.bigText(context.getString(R.string.dlg_status_worst_title));
                 // 불빛 설정
                 mBuilder.setLights(0xFFFF0000, 500, 500);
@@ -77,7 +87,7 @@ public class DustUtils implements DustConstants {
 
         mBuilder.setStyle(style2);
         
-        Intent intent = new Intent("me.yeojoy.microdustwarning.action.START_APP");
+        Intent intent = new Intent(context, DustActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 10002,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
@@ -92,7 +102,7 @@ public class DustUtils implements DustConstants {
 //                PendingIntent.getActivity(context, 0, mapIntent, 0);
 //
 //        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
-        mBuilder.setAutoCancel(true);
+//        mBuilder.setAutoCancel(false);
 
         DustSharedPreferences.getInstance().init(context);
 

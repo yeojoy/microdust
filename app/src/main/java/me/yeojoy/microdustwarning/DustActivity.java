@@ -3,6 +3,7 @@ package me.yeojoy.microdustwarning;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 
 import me.yeojoy.microdustwarning.fragment.DustFragment;
@@ -45,4 +46,9 @@ public class DustActivity extends Activity implements DustConstants {
         mFragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        
+    }
 }

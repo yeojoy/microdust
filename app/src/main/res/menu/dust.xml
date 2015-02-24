@@ -16,6 +16,13 @@
         android:checkable="true"/>
 
     <item
+        android:id="@+id/action_noti_off"
+        android:title="@string/action_noti_off"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
