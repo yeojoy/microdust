@@ -35,6 +35,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.AboutActivity;
@@ -72,15 +73,15 @@ public class DustFragment extends Fragment implements DustConstants,
     private ImageAdapter mAdapter;
     private ArrayList<String> mUrlList;
 
-    private LinearLayout mLlIndicator;
-
     private DustNetworkManager mNetworkManager;
     private Context mContext;
 
     private Bundle mReceivedArguments;
-    
+
     private Tracker mTracker;
-    
+
+    private Menu mOptionMenu;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,15 @@ public class DustFragment extends Fragment implements DustConstants,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         DustLog.i(TAG, "onCreateView()");
-        View view = inflater.inflate(R.layout.fragment_dust, container, false);
+
+        return inflater.inflate(R.layout.fragment_dust, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        DustLog.i(TAG, "onViewCreated()");
+
         mTvResult = (TextView) view.findViewById(R.id.tv_result);
 
         mGvImages = (GridView) view.findViewById(R.id.gv_map);
@@ -109,19 +118,10 @@ public class DustFragment extends Fragment implements DustConstants,
         mAdapter = new ImageAdapter(getActivity(), mUrlList);
         mGvImages.setAdapter(mAdapter);
 
-        mLlIndicator = (LinearLayout) view.findViewById(R.id.ll_indicator);
-
         if (!DustSharedPreferences.getInstance(mContext).getBoolean(KEY_PREFS_SWITCH_OFF)) {
             mTvResult.setText(R.string.service_is_on_wait_a_minute);
         }
 
-        view.findViewById(R.id.ib_blue).setOnClickListener(this);
-        view.findViewById(R.id.ib_light_green).setOnClickListener(this);
-        view.findViewById(R.id.ib_yellow).setOnClickListener(this);
-        view.findViewById(R.id.ib_orange).setOnClickListener(this);
-        view.findViewById(R.id.ib_red).setOnClickListener(this);
-         
-        return view;
     }
 
     @Override
@@ -143,12 +143,19 @@ public class DustFragment extends Fragment implements DustConstants,
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
                     AlarmHelper.getInstance(mContext).launchAlarmManager();
-                    
+
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
                     DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, false);
+                    
+                    if (mGvImages != null) {
+                        mGvImages.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
                     DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, true);
+                    if (mGvImages != null) {
+                        mGvImages.setVisibility(View.GONE);
+                    }
                 }
             }
             /*
@@ -162,6 +169,7 @@ public class DustFragment extends Fragment implements DustConstants,
 
         mNetworkManager = DustNetworkManager.getInstance();
         mNetworkManager.setOnReceiveDataListener(this);
+
     }
 
     @Override
@@ -177,8 +185,9 @@ public class DustFragment extends Fragment implements DustConstants,
                 if (isChecked) {
                     AlarmHelper.getInstance(mContext).launchAlarmManager();
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
-                } else
+                } else {
                     AlarmHelper.getInstance(mContext).cancelAlarmManager();
+                }
 
                 DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
 
@@ -200,7 +209,7 @@ public class DustFragment extends Fragment implements DustConstants,
                 intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
                 break;
-            
+
             case R.id.action_change_locality:
                 DustDialogManager.chooseUserLocalityDialog(mContext,
                         mDialogSelectListener);
@@ -210,7 +219,7 @@ public class DustFragment extends Fragment implements DustConstants,
                 intent = new Intent(getActivity(), DebugActivity.class);
                 startActivity(intent);
                 break;
-            
+
             case R.id.action_noti_off:
                 NotificationManager notificationManager = (NotificationManager)
                         mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -250,8 +259,6 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
-
-    private Menu mOptionMenu;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -332,7 +339,6 @@ public class DustFragment extends Fragment implements DustConstants,
      */
     private void setImage() {
         DustLog.i(TAG, "setImage()");
-        mLlIndicator.setVisibility(View.VISIBLE);
         if (mUrlList == null) {
             mUrlList = new ArrayList<String>();
         }
@@ -449,23 +455,6 @@ public class DustFragment extends Fragment implements DustConstants,
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ib_blue:
-                DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.GOOD);
-                break;
-            case R.id.ib_light_green:
-                DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.NORMAL);
-                break;
-            case R.id.ib_yellow:
-                DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.BAD);
-                break;
-            case R.id.ib_orange:
-                DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.WORSE);
-                break;
-            case R.id.ib_red:
-                DustDialogManager.showDialogWarningMessage(getActivity(), STATUS.WORST);
-                break;
-        }
     }
 
     @Override

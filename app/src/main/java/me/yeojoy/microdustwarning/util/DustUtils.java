@@ -107,19 +107,6 @@ public class DustUtils implements DustConstants {
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
-        // Add Action Buttons to Wear
-        // REFS : http://developer.android.com/training/wearables/notifications/creating.html#ActionButtons
-
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-//        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("37.239217, 127.384724"));
-//        mapIntent.setData(geoUri);
-//        PendingIntent mapPendingIntent =
-//                PendingIntent.getActivity(context, 0, mapIntent, 0);
-//
-//        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
-//        mBuilder.setAutoCancel(false);
-
-
         // 진동 설정
         if (s != STATUS.GOOD && s != STATUS.NORMAL &&
                 DustSharedPreferences.getInstance(context)

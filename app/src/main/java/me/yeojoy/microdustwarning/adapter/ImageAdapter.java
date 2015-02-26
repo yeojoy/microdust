@@ -40,7 +40,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public String getItem(int position) {
         return mUrls.get(position);
     }
 
@@ -83,7 +83,9 @@ public class ImageAdapter extends BaseAdapter {
                 break;
         }
 
-        if (TextUtils.isEmpty(mUrls.get(position))) {
+        String url = getItem(position);
+
+        if (TextUtils.isEmpty(url)) {
             holder.mIvMapImage.setImageDrawable(null);
             holder.mTvDesc.setText("");
             holder.mIvMapImage.setVisibility(View.GONE);
@@ -91,7 +93,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             holder.mIvMapImage.setVisibility(View.VISIBLE);
             holder.mTvDesc.setVisibility(View.VISIBLE);
-            setImage(holder.mIvMapImage, mUrls.get(position));
+            setImage(holder.mIvMapImage, url);
             holder.mTvDesc.setText(desc);
         }
 

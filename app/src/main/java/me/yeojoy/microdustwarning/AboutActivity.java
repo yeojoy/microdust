@@ -26,7 +26,7 @@ public class AboutActivity extends Activity implements DustConstants, View.OnCli
         setContentView(R.layout.activity_about);
 
         mTvAppVersion = (TextView) findViewById(R.id.tv_app_version);
-        mTvAppVersion.setText("v" + DustUtils.getAppVersion(this));
+        mTvAppVersion.setText("v" + BuildConfig.VERSION_NAME);
 
         if (BuildConfig.DEBUG) mTvAppVersion.setTextColor(Color.RED);
 
