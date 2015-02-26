@@ -147,15 +147,9 @@ public class DustFragment extends Fragment implements DustConstants,
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
                     DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, false);
                     
-                    if (mGvImages != null) {
-                        mGvImages.setVisibility(View.VISIBLE);
-                    }
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
                     DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, true);
-                    if (mGvImages != null) {
-                        mGvImages.setVisibility(View.GONE);
-                    }
                 }
             }
             /*
