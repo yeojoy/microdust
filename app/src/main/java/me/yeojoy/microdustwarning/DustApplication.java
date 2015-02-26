@@ -11,16 +11,20 @@ import com.squareup.otto.Bus;
 import java.util.HashMap;
 
 import me.yeojoy.microdustwarning.service.WebParserService;
+import me.yeojoy.microdustwarning.util.DustSharedPreferences;
 
 /**
  * Created by yeojoy on 2014. 6. 12..
  */
-public class DustApplication extends Application {
+public class DustApplication extends Application implements DustConstants {
     public static Bus bus;
     
     public static String locality;
 
-    public static PendingIntent mPendingIntent;
+    public static boolean mIsEnabledDoNotBother;
+    
+    public static boolean mIsOnGoing;
+    
     /* GA */
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
@@ -57,8 +61,9 @@ public class DustApplication extends Application {
         super.onCreate();
         bus = new Bus();
 
-        Intent intent = new Intent("me.yeojoy.microdust.action.RUN_SERVICE");
-        mPendingIntent = PendingIntent.getService(getApplicationContext(), 
-                10002, intent, PendingIntent.FLAG_ONE_SHOT);
+        mIsEnabledDoNotBother = DustSharedPreferences.getInstance(this)
+                .getBoolean(KEY_PREFS_IS_ENABLED_DO_NOT_BOTHER, true);
+        mIsOnGoing = DustSharedPreferences.getInstance(this)
+                .getBoolean(KEY_PREFS_IS_ON_GOING, true);
     }
 }

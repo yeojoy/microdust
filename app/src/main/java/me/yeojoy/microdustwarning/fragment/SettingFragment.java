@@ -56,6 +56,18 @@ public class SettingFragment extends PreferenceFragment implements DustConstants
                 noticePref.setSummary(getString(R.string.pref_summary_noti_on));
             else
                 noticePref.setSummary(getString(R.string.pref_summary_noti_off));
+        } else if (key.equals(KEY_PREFS_IS_ENABLED_DO_NOT_BOTHER)) {
+            if (sharedPreferences.getBoolean(key, true)) {
+                DustApplication.mIsEnabledDoNotBother = true;
+            } else {
+                DustApplication.mIsEnabledDoNotBother = false;
+            }
+        } else if (key.equals(KEY_PREFS_IS_ON_GOING)) {
+            if (sharedPreferences.getBoolean(key, true)) {
+                DustApplication.mIsOnGoing = true;
+            } else {
+                DustApplication.mIsOnGoing = true;
+            }
         }
     }
 }

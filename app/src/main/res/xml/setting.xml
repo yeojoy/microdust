@@ -34,6 +34,18 @@
             android:summary="@string/pref_summary_noti_on"
             android:key="@string/pref_key_noti_on"
             android:defaultValue="true" />
+        
+        <CheckBoxPreference
+            android:title="@string/pref_title_do_not_bother"
+            android:summary="@string/pref_summary_do_not_bother"
+            android:key="@string/pref_key_do_not_bother"
+            android:defaultValue="true" />
+        
+        <CheckBoxPreference
+            android:title="@string/pref_title_on_going"
+            android:summary="@string/pref_summary_on_going"
+            android:key="@string/pref_key_on_going"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 

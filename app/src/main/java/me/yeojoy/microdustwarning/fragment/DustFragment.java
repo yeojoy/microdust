@@ -55,6 +55,7 @@ import me.yeojoy.microdustwarning.service.WebParserService;
 import me.yeojoy.microdustwarning.util.DustDialogManager;
 import me.yeojoy.microdustwarning.util.DustLog;
 import me.yeojoy.microdustwarning.util.DustSharedPreferences;
+import me.yeojoy.microdustwarning.util.DustUtils;
 import me.yeojoy.microdustwarning.util.TextDataUtil;
 
 public class DustFragment extends Fragment implements DustConstants, 
@@ -110,7 +111,7 @@ public class DustFragment extends Fragment implements DustConstants,
 
         mLlIndicator = (LinearLayout) view.findViewById(R.id.ll_indicator);
 
-        if (!DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF)) {
+        if (!DustSharedPreferences.getInstance(mContext).getBoolean(KEY_PREFS_SWITCH_OFF)) {
             mTvResult.setText(R.string.service_is_on_wait_a_minute);
         }
 
@@ -127,11 +128,10 @@ public class DustFragment extends Fragment implements DustConstants,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        DustSharedPreferences.getInstance().init(mContext);
         mReceivedArguments = getArguments();
 
         if (TextUtils.isEmpty(DustApplication.locality))
-            DustApplication.locality = DustSharedPreferences.getInstance()
+            DustApplication.locality = DustSharedPreferences.getInstance(mContext)
                     .getString(KEY_PREFS_LOCALITY);
 
         if (TextUtils.isEmpty(DustApplication.locality)) {
@@ -145,10 +145,10 @@ public class DustFragment extends Fragment implements DustConstants,
                     AlarmHelper.getInstance(mContext).launchAlarmManager();
                     
                     mTvResult.setText(R.string.service_is_on_wait_a_minute);
-                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
+                    DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
-                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
+                    DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, true);
                 }
             }
             /*
@@ -180,7 +180,7 @@ public class DustFragment extends Fragment implements DustConstants,
                 } else
                     AlarmHelper.getInstance(mContext).cancelAlarmManager();
 
-                DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
+                DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, !isChecked);
 
                 return true;
 
@@ -212,9 +212,9 @@ public class DustFragment extends Fragment implements DustConstants,
                 break;
             
             case R.id.action_noti_off:
-                NotificationManager mng = (NotificationManager)
+                NotificationManager notificationManager = (NotificationManager)
                         mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                mng.cancel(100);
+                notificationManager.cancel(NOTIFICATION_ID);
                 break;
 
         }
@@ -231,7 +231,7 @@ public class DustFragment extends Fragment implements DustConstants,
         // LESSON AND LEARN
         // checked true를 ON상태로 나타내 주기 위해선 isChecked()로 해줘야 한다.
         boolean serviceSwitchStatus
-                = !DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, true);
+                = !DustSharedPreferences.getInstance(mContext).getBoolean(KEY_PREFS_SWITCH_OFF, true);
         DustLog.i(TAG, "onPrepareOptionsMenu(), Service Switch status : " + serviceSwitchStatus);
         item.setChecked(serviceSwitchStatus);
 
@@ -495,10 +495,10 @@ public class DustFragment extends Fragment implements DustConstants,
                 if (mReceivedArguments.getBoolean(KEY_CHECKBOX_AUTO_START, true)) {
                     DustLog.i(TAG, ">>>>>> start Service. <<<<<<");
                     AlarmHelper.getInstance(mContext).launchAlarmManager();
-                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, false);
+                    DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, false);
                 } else {
                     DustLog.i(TAG, ">>>>>> nothing happend. <<<<<<");
-                    DustSharedPreferences.getInstance().putBoolean(KEY_PREFS_SWITCH_OFF, true);
+                    DustSharedPreferences.getInstance(mContext).putBoolean(KEY_PREFS_SWITCH_OFF, true);
                 }
             }
             /*
@@ -511,7 +511,7 @@ public class DustFragment extends Fragment implements DustConstants,
             DustLog.d(TAG, "onClick(), selected Locality : " 
                     + DustApplication.locality);
 
-            DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY, 
+            DustSharedPreferences.getInstance(mContext).putString(KEY_PREFS_LOCALITY,
                     DustApplication.locality);
             
             refreshData();

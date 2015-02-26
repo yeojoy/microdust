@@ -23,7 +23,6 @@ public class DustActivity extends Activity implements DustConstants {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dust);
         // SharedPreferences init
-        DustSharedPreferences.getInstance().init(this);
 
         mFragmentManager = getFragmentManager();
 
@@ -31,7 +30,7 @@ public class DustActivity extends Activity implements DustConstants {
             mFragmentManager.popBackStack();
         }
 
-        boolean isSwitchOff = DustSharedPreferences.getInstance().getBoolean(KEY_PREFS_SWITCH_OFF, true);
+        boolean isSwitchOff = DustSharedPreferences.getInstance(this).getBoolean(KEY_PREFS_SWITCH_OFF, true);
 
         if (mFragment == null) {
             if (isSwitchOff) {

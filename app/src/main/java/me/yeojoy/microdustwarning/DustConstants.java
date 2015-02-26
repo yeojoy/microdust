@@ -11,7 +11,7 @@ public interface DustConstants {
                     "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
     /** 자동으로 NOTI를 알려주는 시간 간격 */
-    public static final long NOTI_TIME_TEST = new Long(1000 * 60 * 60);     // 10분
+    public static final long NOTI_TIME_TEST = new Long(1000 * 60 * 10);
     public static final long NOTI_TIME_REAL = new Long(1000 * 60 * 60);     // 1시간
 
     /** Bundle key */
@@ -22,9 +22,12 @@ public interface DustConstants {
 
     public static final String KEY_PREFS_NOTICE_VIBRATE = "notice_vibrate";
     public static final String KEY_PREFS_LOCALITY = "user-locality";
-
+    public static final String KEY_PREFS_IS_ENABLED_DO_NOT_BOTHER = "do_not_bother";
+    public static final String KEY_PREFS_IS_ON_GOING = "on_going";
+    
     public static final String DEFAULT_LOCALITY = "동작구";
 
+    
     /** Developer's Email */
     public static final String EMAIL_ADDR = "kim.yeojoy@gmail.com";
     public static final String EMAIL_SUBJECT = "이건 어떨까요?";
@@ -133,4 +136,6 @@ public interface DustConstants {
     public static final String GA_LABEL_BUTTON = "button";
 
     /* Google Analytics 영역 끝 */
+    
+    public static int NOTIFICATION_ID = 100;
 }

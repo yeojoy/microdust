@@ -46,11 +46,12 @@ public class AlarmHelper implements DustConstants {
 
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
+            scheduledFuture = null;
         }
         
         // TODO 이후 변경 필요. 임시방편으로 지역만 저장
-        DustSharedPreferences.getInstance().clear();
-        DustSharedPreferences.getInstance().putString(KEY_PREFS_LOCALITY,
+        DustSharedPreferences.getInstance(mContext).clear();
+        DustSharedPreferences.getInstance(mContext).putString(KEY_PREFS_LOCALITY,
                 DustApplication.locality);
     }
 
@@ -65,7 +66,7 @@ public class AlarmHelper implements DustConstants {
         long notiTime = NOTI_TIME_REAL;
 
         if (BuildConfig.DEBUG) {
-            notiTime = 10000;
+            notiTime = NOTI_TIME_TEST;
         }
         
         scheduledFuture = service.scheduleAtFixedRate(mServiceLauncherRunnable, 

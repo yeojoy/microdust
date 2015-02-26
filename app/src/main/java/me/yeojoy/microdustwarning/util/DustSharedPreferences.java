@@ -12,21 +12,17 @@ public class DustSharedPreferences {
     private static DustSharedPreferences instance;
     private SharedPreferences mPrefs;
 
-    public static DustSharedPreferences getInstance() {
+    public static DustSharedPreferences getInstance(Context context) {
         if (instance == null)
-            instance = new DustSharedPreferences();
+            instance = new DustSharedPreferences(context);
         return instance;
     }
 
-    public boolean hasPrefs() {
-        return mPrefs != null;
-    }
-
-    public void init(Context context) {
+    public DustSharedPreferences(Context context) {
         if (mPrefs == null)
             mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
-
+    
     public void putString(String key, String value) {
         mPrefs.edit().putString(key, value).apply();
     }

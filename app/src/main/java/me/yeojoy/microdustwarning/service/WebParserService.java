@@ -33,9 +33,6 @@ public class WebParserService extends Service implements DustConstants,
         DustLog.i(TAG, "onCreate()");
         mContext = this;
 
-        if (!DustSharedPreferences.getInstance().hasPrefs())
-            DustSharedPreferences.getInstance().init(mContext);
-
         mHandler = new Handler(getMainLooper());
     }
 

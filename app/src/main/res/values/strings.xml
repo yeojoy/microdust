@@ -109,6 +109,12 @@
     <string name="pref_summary_noti_off">알림이 올 때 진동을 끕니다.</string>
     <string name="pref_summary_noti_on">알림이 올 때 진동을 켭니다.</string>
 
+    <string name="pref_title_do_not_bother">방해금지</string>
+    <string name="pref_summary_do_not_bother">밤 10시부터 오전 6시까지 알림을 끕니다.</string>
+
+    <string name="pref_title_on_going">상시알림 기능</string>
+    <string name="pref_summary_on_going">상태바에 Icon으로 상태를 알려줍니다. 알림을 끄실 때에는 메인화면 내에 option에서 알림삭제를 선택하세요.</string>
+    
     <string name="pref_title_noti_icon">알림 아이콘 타입</string>
     <string name="pref_summary_noti_icon">알림 아이콘에 대한 타입을 정합니다.</string>
 
@@ -121,6 +127,8 @@
     <string name="pref_key_noti_category">noti_category</string>
     <string name="pref_key_noti_on">notice_vibrate</string>
     <string name="pref_key_noti_icon">notice_icon</string>
+    <string name="pref_key_do_not_bother">do_not_bother</string>
+    <string name="pref_key_on_going">on_going</string>
 
     <string name="pref_key_location_category">location_category</string>
     <string name="pref_key_location_on">location_on</string>

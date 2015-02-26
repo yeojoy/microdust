@@ -13,8 +13,11 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
+import java.util.Calendar;
+
 import me.yeojoy.microdustwarning.BuildConfig;
 import me.yeojoy.microdustwarning.DustActivity;
+import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
@@ -27,13 +30,21 @@ public class DustUtils implements DustConstants {
     public static void sendNotification(Context context, STATUS s, DustInfoDto dto) {
         DustLog.i(TAG, "sendNotification()");
 
+        NotificationManager mng = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        
+        if (DustApplication.mIsEnabledDoNotBother && isSleepingTime()) {
+            mng.cancel(NOTIFICATION_ID);
+            return;
+        }
+        
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         Resources res = context.getResources();
 
         mBuilder.setTicker("미세먼지 알림");
         
-        // TODO Setting에 Switch를 넣어서 작동하게 함.
-        mBuilder.setOngoing(true);
+        if (DustApplication.mIsOnGoing)
+            mBuilder.setOngoing(true);
 
         NotificationCompat.BigTextStyle style2 = new NotificationCompat.BigTextStyle();
         style2.setBigContentTitle("미세먼지 알림");
@@ -108,11 +119,10 @@ public class DustUtils implements DustConstants {
 //        mBuilder.addAction(R.drawable.ic_launcher, "함 눌러봐?", mapPendingIntent);
 //        mBuilder.setAutoCancel(false);
 
-        DustSharedPreferences.getInstance().init(context);
 
         // 진동 설정
         if (s != STATUS.GOOD && s != STATUS.NORMAL &&
-                DustSharedPreferences.getInstance()
+                DustSharedPreferences.getInstance(context)
                         .getBoolean(KEY_PREFS_NOTICE_VIBRATE, true)) {
             DustLog.i(TAG, "sendNotification(), Vibrator on");
             mBuilder.setVibrate(new long[]{0, 200, 200, 200});
@@ -120,9 +130,8 @@ public class DustUtils implements DustConstants {
             DustLog.i(TAG, "sendNotification(), Vibrator off");
         }
         Notification noti = mBuilder.build();
-        NotificationManager mng = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mng.notify(100, noti);
+        
+        mng.notify(NOTIFICATION_ID, noti);
     }
 
     /**
@@ -144,5 +153,15 @@ public class DustUtils implements DustConstants {
             }
         if (info != null) return info.versionName;
         return null;
+    }
+    
+    private static boolean isSleepingTime() {
+        Calendar c = Calendar.getInstance();
+        int time = c.get(Calendar.HOUR_OF_DAY);
+        DustLog.d(TAG, "HOUR_OF_DAY : " + time);
+        if (time > 21 || time < 6) {
+            return true;
+        }
+        return false;
     }
 }

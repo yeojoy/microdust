@@ -36,8 +36,6 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
-        // SharedPreferences init
-        DustSharedPreferences.getInstance().init(this);
 
         mContext = this;
 
