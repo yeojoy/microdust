@@ -363,8 +363,6 @@ public class TextDataUtil implements DustConstants {
                 if (d.getLocality().equals(DustApplication.locality)) {
                     STATUS s = getTotalDegree(d.getMaxIndex());
                     DustUtils.sendNotification(context, s, d);
-                    DustLog.d(TAG, "STATUS for Notification : " + s);
-                    DustLog.d(TAG, "dto for Notification : " + d.toString());
                     break;
                 }
             }

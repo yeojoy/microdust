@@ -6,10 +6,10 @@
     
     <ImageView
         android:id="@+id/iv_map_image"
-        android:layout_width="177dp"
-        android:layout_height="177dp"
+        android:layout_width="157dp"
+        android:layout_height="157dp"
         android:layout_centerHorizontal="true"
-        android:scaleType="fitXY" />
+        android:scaleType="matrix" />
 
     <TextView
         android:id="@+id/tv_desc"
