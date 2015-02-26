@@ -9,7 +9,7 @@
         android:layout_width="157dp"
         android:layout_height="157dp"
         android:layout_centerHorizontal="true"
-        android:scaleType="matrix" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/tv_desc"

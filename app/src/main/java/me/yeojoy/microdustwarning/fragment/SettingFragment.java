@@ -1,5 +1,6 @@
 package me.yeojoy.microdustwarning.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -11,6 +12,7 @@ import com.google.android.gms.analytics.Tracker;
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
 import me.yeojoy.microdustwarning.R;
+import me.yeojoy.microdustwarning.network.DustNetworkManager;
 
 /**
  * Created by yeojoy on 2014. 6. 13..
@@ -20,10 +22,14 @@ public class SettingFragment extends PreferenceFragment implements DustConstants
 
     private static final String VIEW_NAME = "setting fragment";
     
+    private Context mContext;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.setting);
+        
+        mContext = getActivity();
     }
 
     @Override
@@ -66,8 +72,10 @@ public class SettingFragment extends PreferenceFragment implements DustConstants
             if (sharedPreferences.getBoolean(key, true)) {
                 DustApplication.mIsOnGoing = true;
             } else {
-                DustApplication.mIsOnGoing = true;
+                DustApplication.mIsOnGoing = false;
             }
+
+            DustNetworkManager.getInstance().getMicrodustInfo(mContext);
         }
     }
 }
