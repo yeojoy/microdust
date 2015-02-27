@@ -12,6 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -100,33 +103,37 @@ public class ImageAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void setImage(final ImageView view, String url) {
+    private void setImage(final ImageView view,final String url) {
         // 사용할 URL
-
-        AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(String... params) {
-                Bitmap image = null;
-                try {
-                    InputStream is = new URL(params[0]).openStream();
-
-                    image = BitmapFactory.decodeStream(is);
-                    if (is != null)
-                        is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return image;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                super.onPostExecute(bitmap);
-                view.setImageBitmap(bitmap);
-            }
-        };
-
-        task.execute(url);
+//        AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {
+//            @Override
+//            protected Bitmap doInBackground(String... params) {
+//                Bitmap image = null;
+//                try {
+//                    InputStream is = new URL(params[0]).openStream();
+//
+//                    image = BitmapFactory.decodeStream(is);
+//                    if (is != null)
+//                        is.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return image;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Bitmap bitmap) {
+//                super.onPostExecute(bitmap);
+//                view.setImageBitmap(bitmap);
+//            }
+//        };
+//
+//        task.execute(url);
+        
+        Glide.with(mContext)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(view);
     }
 
     class ViewHolder {
