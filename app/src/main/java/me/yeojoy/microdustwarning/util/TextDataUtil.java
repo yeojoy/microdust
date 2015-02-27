@@ -57,28 +57,6 @@ public class TextDataUtil implements DustConstants {
      * @param value
      * @return
      */
-    private static String getTotalAirQuality(String value) {
-        DustLog.i(TAG, "getTotalAirQuality()");
-        float microDustValue = Float.parseFloat(value);
-        DustLog.d(TAG, "getTotalAirQuality(), Total Value : " + microDustValue);
-        
-        if (microDustValue > TOTAL_DEGREE_WORST)
-            return AIR_QUALITY_INDEX[4];
-        else if (microDustValue > TOTAL_DEGREE_WORSE)
-            return AIR_QUALITY_INDEX[3];
-        else if (microDustValue > TOTAL_DEGREE_BAD)
-            return AIR_QUALITY_INDEX[2];
-        else if (microDustValue > TOTAL_DEGREE_NORMAL)
-            return AIR_QUALITY_INDEX[1];
-
-        return AIR_QUALITY_INDEX[0];
-    }
-
-    /**
-     * 미세먼지 수치가 괜찮은지
-     * @param value
-     * @return
-     */
     private static STATUS getMicroDustDegree(String value) {
         if (TextUtils.isEmpty(value) || "-".equals(value) || "점검중".equals(value))
             return STATUS.NONE;
@@ -276,19 +254,21 @@ public class TextDataUtil implements DustConstants {
         return spannableString;
     }
 
-    public static String getStatusToString(STATUS status) {
-        switch (status) {
-            case GOOD:
-                return "좋음 :-)";
-            case BAD:
-                return "약간 안 좋음";
-            case WORSE:
-                return "나쁨";
-            case WORST:
-                return "위험!!!";
-            default:
-                return "보통";
-        }
+    public static String getMaxValueToString(String maxValue) {
+        DustLog.i(TAG, "getMaxValueToString()");
+        float max = Float.parseFloat(maxValue);
+        DustLog.i(TAG, "getMaxValueToString(), maxValue : " + max);
+
+        if (max > TOTAL_DEGREE_WORST)
+            return "위험!!!";
+        else if (max > TOTAL_DEGREE_WORSE)
+            return "약간 안 좋음";
+        else if (max > TOTAL_DEGREE_BAD)
+            return "나쁨";
+        else if (max > TOTAL_DEGREE_NORMAL)
+            return "보통";
+
+        return "좋음 :-)";
     }
 
     public static List<DustInfoDto> parseRawXmlString(Context context, String str) {
@@ -389,7 +369,7 @@ public class TextDataUtil implements DustConstants {
             dto.setDegree(NO_VALUE_TOTAL);
             dto.setMaterial(NO_VALUE_TOTAL);
         } else {
-            dto.setDegree(dto.getMaxIndex());
+            dto.setDegree(getMaxValueToString(dto.getMaxIndex()));
             
             if (dto.getMaxIndex().equals(dto.getPm10Index()) ||
                     dto.getMaxIndex().equals(dto.getPm24Index())) {
@@ -402,6 +382,8 @@ public class TextDataUtil implements DustConstants {
                 dto.setMaterial(MATERIALS[3]);
             } else if (dto.getMaxIndex().equals(dto.getSulfurousIndex())) {
                 dto.setMaterial(MATERIALS[4]);
+            } else {
+                dto.setMaterial(NO_VALUE_TOTAL);
             }
 
 
@@ -420,7 +402,7 @@ public class TextDataUtil implements DustConstants {
         dto.setOzone(checkValue(dto.getOzone()));
         dto.setNitrogen(checkValue(dto.getNitrogen()));
         dto.setCarbon(checkValue(dto.getCarbon()));
-        dto.setSulfurous(dto.getSulfurous());
+        dto.setSulfurous(checkValue(dto.getSulfurous()));
 
         return dto;
     }
