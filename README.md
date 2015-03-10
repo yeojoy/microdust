@@ -5,7 +5,7 @@
 색상과 물개의 표정으로 표현한다.
 
 |색상|등급|이미지|
-|-|-|-|
+|---|---|---|
 |파랑(Blue)|좋음|![좋음](./app/src/main/res/drawable-ldpi/icon_good.png)|
 |초록(Green)|보통|![보통](./app/src/main/res/drawable-ldpi/icon_normal.png)|
 |노랑(Yellow)|안 좋음|![안 좋음](./app/src/main/res/drawable-ldpi/icon_bad.png)|
