@@ -10,6 +10,15 @@ public interface DustConstants {
             = "http://cleanair.seoul.go.kr/air_city.htm?" +
                     "method=airPollutantInfoMeasureXml&msrntwCode=A";
 
+    public static final String API_MICRO_DUST = "http://openapi.airkorea.or.kr"
+            + "/openapi/services/rest/ArpltnInforInqireSvc/"
+            + "getCtprvnRltmMesureDnsty"
+            + "?sidoName=%s&pageNo=1&numOfRows=20&ServiceKey=%s";
+
+
+    public static final String API_KEY_FOR_DEV = "LriGgAerLvwnaSfTjTX%2FLp71zl4yNM1JY1zY2eL%2FcBVmyWCdOu%2BAAbC%2F9I0VyQJSr9SO7oFlgkjSzUzAht9Cww%3D%3D";
+    public static final String API_KEY_FOR_REAL = "LriGgAerLvwnaSfTjTX%2FLp71zl4yNM1JY1zY2eL%2FcBVmyWCdOu%2BAAbC%2F9I0VyQJSr9SO7oFlgkjSzUzAht9Cww%3D%3D";
+
     /** 자동으로 NOTI를 알려주는 시간 간격 */
     public static final long NOTI_TIME_TEST = new Long(1000 * 60 * 30);     // 30분
     public static final long NOTI_TIME_REAL = new Long(1000 * 60 * 60);     // 1시간

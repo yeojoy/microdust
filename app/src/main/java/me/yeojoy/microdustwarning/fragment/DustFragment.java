@@ -48,6 +48,7 @@ import me.yeojoy.microdustwarning.R;
 import me.yeojoy.microdustwarning.adapter.ImageAdapter;
 import me.yeojoy.microdustwarning.alarm.AlarmHelper;
 import me.yeojoy.microdustwarning.db.DustInfoDBConstants;
+import me.yeojoy.microdustwarning.entity.DtoList;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.entity.STATUS;
@@ -463,8 +464,13 @@ public class DustFragment extends Fragment implements DustConstants,
             }
         });
     }
-    
-    private DialogInterface.OnClickListener mDialogSelectListener = 
+
+    @Override
+    public void onReceiveData(DtoList data) {
+
+    }
+
+    private DialogInterface.OnClickListener mDialogSelectListener =
             new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
