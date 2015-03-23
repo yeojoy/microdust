@@ -17,7 +17,7 @@ public class AboutActivity extends Activity implements DustConstants, View.OnCli
 
     private static final String TAG = AboutActivity.class.getSimpleName();
     private static final String VIEW_NAME = "about activity";
-    
+
     private TextView mTvAppVersion;
 
     @Override
@@ -67,13 +67,6 @@ public class AboutActivity extends Activity implements DustConstants, View.OnCli
                 break;
 
             case R.id.tv_send_feedback:
-//                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-//                emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);
-//                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { EMAIL_ADDR });
-//                emailIntent.putExtra(Intent.EXTRA_SUBJECT, EMAIL_SUBJECT);
-//                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
-//
-//                startActivity(emailIntent);
 
                 intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", EMAIL_ADDR, null));
                 intent.putExtra(Intent.EXTRA_SUBJECT, EMAIL_SUBJECT);
