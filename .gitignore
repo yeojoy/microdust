@@ -108,5 +108,3 @@ proguard/
 
 .settings/
 
-app/src/main/res/values/ga.xml
-app/src/main/res/xml/global_tracker.xml
