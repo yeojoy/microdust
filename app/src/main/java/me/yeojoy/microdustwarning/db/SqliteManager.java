@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.entity.DtoList;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
 
@@ -46,6 +47,12 @@ public class SqliteManager implements DustInfoDBConstants {
             DBInsertAsyncTask task = new DBInsertAsyncTask();
             task.execute(data);
         }
+    }
+
+    // TODO Database에 data를 넣어야 함.
+    public synchronized void saveData(DtoList data) {
+        DustLog.i(TAG, "saveData()");
+
     }
 
     private void insertData(List<DustInfoDto> data) {
