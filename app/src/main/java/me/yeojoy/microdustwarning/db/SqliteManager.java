@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import me.yeojoy.microdustwarning.BuildConfig;
+import me.yeojoy.microdustwarning.entity.AllStateDustInfoDto;
 import me.yeojoy.microdustwarning.entity.DtoList;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.util.DustLog;
@@ -41,26 +42,25 @@ public class SqliteManager implements DustInfoDBConstants {
         mDBHelper = new DustInfoDBHelper(mContext);
     }
 
-    public synchronized void saveData(List<DustInfoDto> data) {
+    public synchronized void saveData(DtoList data) {
         DustLog.i(TAG, "saveData()");
-        if (!isAleadySaved(data.get(0))) {
+        if (data != null && data.getList() != null && data.getList().size() > 0) {
             DBInsertAsyncTask task = new DBInsertAsyncTask();
             task.execute(data);
         }
     }
 
-    // TODO Database에 data를 넣어야 함.
-    public synchronized void saveData(DtoList data) {
-        DustLog.i(TAG, "saveData()");
-
-    }
-
-    private void insertData(List<DustInfoDto> data) {
+    private void insertData(DtoList data) {
         DustLog.i(TAG, "insertData()");
         
-        if (data == null)
+        if (data == null || data.getList() == null)
             return;
-        
+
+        if (isAleadySaved(data.getList().get(0))) {
+            DustLog.d(TAG, "Data is already saved.");
+            return;
+        }
+
         SQLiteDatabase db = null;
         try {
             // 1. get reference to writable DB
@@ -69,27 +69,34 @@ public class SqliteManager implements DustInfoDBConstants {
             DustLog.i(TAG, "insertData(), beginTransaction");
             ContentValues values = null;
             // 2. create ContentValues to add key "column"/value
-            for (DustInfoDto dto : data) {
+            for (AllStateDustInfoDto dto : data.getList()) {
                 values = new ContentValues();
                 values.put(SAVE_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
-                values.put(MEASURE_TIME, dto.getMesuredDate());
-                values.put(MEASURE_LOCALITY, dto.getLocality());
-                values.put(MICRO_DUST, dto.getPm10());
-                values.put(MICRO_DUST_INDEX, dto.getPm10Index());
-                values.put(MICRO_DUST_PM24, dto.getPm24());
-                values.put(MICRO_DUST_PM24_INDEX, dto.getPm24Index());
-                values.put(NANO_DUST, dto.getPm25());
-                values.put(OZON, dto.getOzone());
-                values.put(OZON_INDEX, dto.getOzoneIndex());
-                values.put(NO2, dto.getNitrogen());
-                values.put(NO2_INDEX, dto.getNitrogenIndex());
-                values.put(CO, dto.getCarbon());
-                values.put(CO_INDEX, dto.getCarbonIndex());
-                values.put(SO2, dto.getSulfurous());
-                values.put(SO2_INDEX, dto.getSulfurousIndex());
-                values.put(DEGREE, dto.getDegree());
-                values.put(AIR_QUAL_INDEX, dto.getMaxIndex());
-                values.put(MATERIAL, dto.getMaterial());
+                values.put(CO_GRADE, dto.getCoGrade());
+                values.put(NO2_GRADE, dto.getNo2Grade());
+                values.put(O3_GRADE, dto.getO3Grade());
+                values.put(PM10_GRADE, dto.getPm10Grade());
+                values.put(SO2_GRADE, dto.getSo2Grade());
+                values.put(KHAI_GRADE, dto.getKhaiGrade());
+                values.put(CO_VALUE, dto.getCoValue());
+                values.put(NO2_VALUE, dto.getNo2Value());
+                values.put(O3_VALUE, dto.getO3Value());
+                values.put(PM10_VALUE, dto.getPm10Value());
+                values.put(SO2_VALUE, dto.getSo2Value());
+                values.put(KHAI_VALUE, dto.getKhaiValue());
+                values.put(NUM_OF_ROWS, dto.getNumOfRows());
+                values.put(ROW_NUM, dto.getRnum());
+                values.put(RESULT_CODE, dto.getResultCode());
+                values.put(RESULT_MESSAGE, dto.getResultMsg());
+                values.put(SERVICE_KEY, dto.getServiceKey());
+                values.put(PAGE_NO, dto.getPageNo());
+                values.put(DATA_TERM, dto.getDataTerm());
+                values.put(DATA_TIME, dto.getDataTime());
+                values.put(SIDO_NAME, dto.getSidoName());
+                values.put(STATION_CODE, dto.getStationCode());
+                values.put(STATION_NAME, dto.getStationName());
+                values.put(TOTAL_COUNT, dto.getTotalCount());
+
                 // 3. insert
                 db.insert(TABLE_NAME, // table
                         null, //nullColumnHack
@@ -110,14 +117,15 @@ public class SqliteManager implements DustInfoDBConstants {
 
     /**
      * 동일한 시간대에 데이터가 저장 됐는지 확인한다.
-     * @param dustInfoDto
+     * @param AllStateDustInfoDto
      * @return 이미 같은 시간이 저장 됐으면 true
      *         없으면 false
      */
-    private boolean isAleadySaved(DustInfoDto dustInfoDto) {
+    private boolean isAleadySaved(AllStateDustInfoDto dto) {
         DustLog.i(TAG, "isAleadySaved()");
 
-        if (dustInfoDto == null) return false;
+        if (dto == null) return false;
+
         Cursor cursor = null;
 
         // TODO select last data
@@ -125,9 +133,8 @@ public class SqliteManager implements DustInfoDBConstants {
         try {
             db = mDBHelper.getReadableDatabase();
 
-            String selection = MEASURE_TIME + " = ?";
-            String[] selectionArgs = { dustInfoDto.getMesuredDate() };
-            cursor = db.query(TABLE_NAME, null, selection, selectionArgs,
+            String[] selectionArgs = { dto.getDataTime() };
+            cursor = db.query(TABLE_NAME, null, DATA_TIME + "= ?", selectionArgs,
                     null, null, null);
             if (cursor != null && cursor.getCount() > 0) return true;
         } catch (SQLiteException e) {
@@ -144,7 +151,7 @@ public class SqliteManager implements DustInfoDBConstants {
     /**
      * AsyncTask를 사용해서 DB에 데이터를 입력한다.
      */
-    private class DBInsertAsyncTask extends AsyncTask<List<DustInfoDto>, Void, Void> {
+    private class DBInsertAsyncTask extends AsyncTask<DtoList, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -152,7 +159,7 @@ public class SqliteManager implements DustInfoDBConstants {
         }
 
         @Override
-        protected Void doInBackground(List<DustInfoDto>... params) {
+        protected Void doInBackground(DtoList... params) {
             DustLog.i(TAG, "DBInsertAsyncTask, doInBackground()");
             insertData(params[0]);
             return null;

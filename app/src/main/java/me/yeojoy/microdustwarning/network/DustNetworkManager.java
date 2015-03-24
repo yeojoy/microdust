@@ -68,12 +68,10 @@ public class DustNetworkManager implements DustConstants {
                 }
 
                 Gson gson = new Gson();
+                String res = response.body().string();
+                DustLog.d(TAG, "RESPONSE\n" + res);
 
-//                List<DustInfoDto> dtoList = TextDataUtil.parseRawXmlString(context,
-//                        response.body().string());
-
-                DtoList dtoList = gson.fromJson(response.body().string(),
-                        DtoList.class);
+                DtoList dtoList = gson.fromJson(res, DtoList.class);
                 // DB에 저장
                 SqliteManager.getInstance(context).saveData(dtoList);
 
@@ -83,7 +81,6 @@ public class DustNetworkManager implements DustConstants {
     }
 
     public interface OnReceiveDataListener {
-        public void onReceiveData(List<DustInfoDto> data);
         public void onReceiveData(DtoList data);
     }
 

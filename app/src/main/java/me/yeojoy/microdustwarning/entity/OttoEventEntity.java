@@ -6,7 +6,7 @@ import java.util.List;
  * Created by yeojoy on 2014. 6. 12..
  */
 public class OttoEventEntity {
-    public List<DustInfoDto> dtoList;
+    public DtoList dtoList;
     public COMMAND command;
     public boolean on_off;
 
@@ -18,7 +18,7 @@ public class OttoEventEntity {
         command = c;
     }
 
-    public void setData(List<DustInfoDto> dtoList) { this.dtoList = dtoList; }
+    public void setData(DtoList dtoList) { this.dtoList = dtoList; }
 
     public void setBoolean(boolean on_off) {
         this.on_off = on_off;

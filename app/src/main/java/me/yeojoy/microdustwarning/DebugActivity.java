@@ -60,7 +60,7 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
                     null, null,
 //                    SELECTION,                               // selection clause
 //                    new String[] {DustApplication.locality},    // selection arguments
-                    "measure_time DESC"                 // Default sort order
+                    DATA_TIME + " DESC"                 // Default sort order
 
             );
         }
@@ -82,34 +82,34 @@ public class DebugActivity extends Activity implements DustConstants, DustInfoDB
 
             do {
 
-                if (!cursor.getString(INDEX_MEASURE_LOCALITY).equals(DustApplication.locality)) {
-                    continue;
-                }
-                
-                DustInfoDto dto = new DustInfoDto();
-                
-                dto.setMesuredDate(cursor.getString(INDEX_MEASURE_TIME));
-                dto.setSavedDate(cursor.getString(INDEX_SAVE_TIME));
-                dto.setLocality(cursor.getString(INDEX_MEASURE_LOCALITY));
-                dto.setPm10(cursor.getString(INDEX_MICRO_DUST));
-                dto.setPm10Index(cursor.getString(INDEX_MICRO_DUST_INDEX));
-                dto.setPm24(cursor.getString(INDEX_MICRO_DUST_PM24));
-                dto.setPm24Index(cursor.getString(INDEX_MICRO_DUST_PM24_INDEX));
-                dto.setPm25(cursor.getString(INDEX_NANO_DUST));
-                dto.setOzone(cursor.getString(INDEX_OZON));
-                dto.setOzoneIndex(cursor.getString(INDEX_OZON_INDEX));
-                dto.setNitrogen(cursor.getString(INDEX_NO2));
-                dto.setNitrogenIndex(cursor.getString(INDEX_NO2_INDEX));
-                dto.setCarbon(cursor.getString(INDEX_CO));
-                dto.setCarbonIndex(cursor.getString(INDEX_CO_INDEX));
-                dto.setSulfurous(cursor.getString(INDEX_SO2));
-                dto.setSulfurousIndex(cursor.getString(INDEX_SO2_INDEX));
-                dto.setDegree(cursor.getString(INDEX_DEGREE));
-                dto.setMaxIndex(cursor.getString(INDEX_AIR_QUAL_INDEX));
-                dto.setMaterial(cursor.getString(INDEX_MATERIAL));
-                DustLog.d(TAG, dto.toString());
-                mTvResult.append(dto.toString());
-                mTvResult.append("\n\n");
+//                if (!cursor.getString(INDEX_MEASURE_LOCALITY).equals(DustApplication.locality)) {
+//                    continue;
+//                }
+//
+//                DustInfoDto dto = new DustInfoDto();
+//
+//                dto.setMesuredDate(cursor.getString(INDEX_MEASURE_TIME));
+//                dto.setSavedDate(cursor.getString(INDEX_SAVE_TIME));
+//                dto.setLocality(cursor.getString(INDEX_MEASURE_LOCALITY));
+//                dto.setPm10(cursor.getString(INDEX_MICRO_DUST));
+//                dto.setPm10Index(cursor.getString(INDEX_MICRO_DUST_INDEX));
+//                dto.setPm24(cursor.getString(INDEX_MICRO_DUST_PM24));
+//                dto.setPm24Index(cursor.getString(INDEX_MICRO_DUST_PM24_INDEX));
+//                dto.setPm25(cursor.getString(INDEX_NANO_DUST));
+//                dto.setOzone(cursor.getString(INDEX_OZON));
+//                dto.setOzoneIndex(cursor.getString(INDEX_OZON_INDEX));
+//                dto.setNitrogen(cursor.getString(INDEX_NO2));
+//                dto.setNitrogenIndex(cursor.getString(INDEX_NO2_INDEX));
+//                dto.setCarbon(cursor.getString(INDEX_CO));
+//                dto.setCarbonIndex(cursor.getString(INDEX_CO_INDEX));
+//                dto.setSulfurous(cursor.getString(INDEX_SO2));
+//                dto.setSulfurousIndex(cursor.getString(INDEX_SO2_INDEX));
+//                dto.setDegree(cursor.getString(INDEX_DEGREE));
+//                dto.setMaxIndex(cursor.getString(INDEX_AIR_QUAL_INDEX));
+//                dto.setMaterial(cursor.getString(INDEX_MATERIAL));
+//                DustLog.d(TAG, dto.toString());
+//                mTvResult.append(dto.toString());
+//                mTvResult.append("\n\n");
             } while (cursor.moveToNext());
             DustLog.d(TAG, "================================================================");
         } else {

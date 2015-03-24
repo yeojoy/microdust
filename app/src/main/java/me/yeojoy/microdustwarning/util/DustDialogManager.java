@@ -164,36 +164,7 @@ public class DustDialogManager implements DustConstants {
         return ssb;
     }
 
-    /**
-     * 서울 외 지역인 경우 Airkorea 모바일 사이트로 이동시킴
-     * @param context
-     * @param location
-     */
-    public static void showWarningOutsideSeoul(final Context context, final Location location) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dlg_default_title);
-        builder.setMessage(R.string.dlg_warn_out_of_seoul);
-        builder.setPositiveButton(R.string.dlg_btn_move, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(String.format(AIR_KOREA, location.getLatitude(),
-                        location.getLongitude())));
-                context.startActivity(intent);
-                dialog.dismiss();
-            }
-        });
 
-        builder.setNegativeButton(R.string.dlg_btn_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-    }
-    
     public static void chooseUserLocalityDialog(final Context context,
               final DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -10,6 +10,7 @@ import java.util.List;
 
 import me.yeojoy.microdustwarning.DustApplication;
 import me.yeojoy.microdustwarning.DustConstants;
+import me.yeojoy.microdustwarning.entity.DtoList;
 import me.yeojoy.microdustwarning.entity.DustInfoDto;
 import me.yeojoy.microdustwarning.entity.OttoEventEntity;
 import me.yeojoy.microdustwarning.network.DustNetworkManager;
@@ -54,7 +55,7 @@ public class WebParserService extends Service implements DustConstants,
     }
 
     /** Otto를 사용해서 DustFragment로 데이터를 보내줌 */
-    private void sendMeasuredData(final List<DustInfoDto> dto) {
+    private void sendMeasuredData(final DtoList dto) {
         DustLog.i(TAG, "sendMeasuredData()");
 
         mHandler.post(new Runnable() {
@@ -77,14 +78,14 @@ public class WebParserService extends Service implements DustConstants,
     }
 
     @Override
-    public void onReceiveData(List<DustInfoDto> data) {
+    public void onReceiveData(DtoList data) {
         DustLog.i(TAG, "onReceiveData()");
         if (data == null) {
             DustLog.i(TAG, "onReceiveData(), data is null.");
             return;
         }
         
-        if (data.size() < 1) {
+        if (data.getList().size() < 1) {
             DustLog.i(TAG, "onReceiveData(), data is null. or data's size is under 1");
             return;
         }

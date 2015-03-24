@@ -2,7 +2,6 @@ package me.yeojoy.microdustwarning.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import me.yeojoy.microdustwarning.util.DustLog;
@@ -15,35 +14,37 @@ public class DustInfoDBHelper extends SQLiteOpenHelper implements DustInfoDBCons
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public DustInfoDBHelper(Context context, String name, CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         DustLog.i(TAG, "onCreate()");
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE ").append(TABLE_NAME).append(" (");
+        sb.append("CREATE TABLE ").append(TABLE_NAME).append(" ( ");
         sb.append(ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ");
         sb.append(SAVE_TIME).append(" TEXT, ");             // 저장시각
-        sb.append(MEASURE_TIME).append(" TEXT, ");          // 측정시각
-        sb.append(MEASURE_LOCALITY).append(" TEXT, ");      // 측정장소 (~~구)
-        sb.append(MICRO_DUST).append(" TEXT, ");            // 미세먼지
-        sb.append(MICRO_DUST_INDEX).append(" TEXT, ");      // 미세먼지 지수
-        sb.append(MICRO_DUST_PM24).append(" TEXT, ");       // 미세먼지
-        sb.append(MICRO_DUST_PM24_INDEX).append(" TEXT, "); // 미세먼지 지수
-        sb.append(NANO_DUST).append(" TEXT, ");             // 초미세먼지
-        sb.append(OZON).append(" TEXT, ");                  // 오존
-        sb.append(OZON_INDEX).append(" TEXT, ");            // 오존 지수
-        sb.append(NO2).append(" TEXT, ");                   // 이산화질소
-        sb.append(NO2_INDEX).append(" TEXT, ");             // 이산화질소 지수
-        sb.append(CO).append(" TEXT, ");                    // 일산화탄소
-        sb.append(CO_INDEX).append(" TEXT, ");              // 일산화탄소 지수
-        sb.append(SO2).append(" TEXT, ");                   // 아황산가스
-        sb.append(SO2_INDEX).append(" TEXT, ");             // 아황산가스 지수
-        sb.append(DEGREE).append(" TEXT, ");                // 등급
-        sb.append(AIR_QUAL_INDEX).append(" TEXT, ");            // 지수
-        sb.append(MATERIAL).append(" TEXT").append(" );"); // 등급결정물질
+        sb.append(SIDO_NAME).append(" TEXT, ");             // 시도 이름
+        sb.append(CO_GRADE).append(" TEXT, ");              // 일산화탄소 등급
+        sb.append(NO2_GRADE).append(" TEXT, ");             // 이산화질소 등급
+        sb.append(O3_GRADE).append(" TEXT, ");              // 오존 등급
+        sb.append(PM10_GRADE).append(" TEXT, ");            // 미세먼지 등급
+        sb.append(SO2_GRADE).append(" TEXT, ");             // 이산화황 등급
+        sb.append(KHAI_GRADE).append(" TEXT, ");            // 통합 지수 등급
+        sb.append(CO_VALUE).append(" TEXT, ");              // 일산화탄소 수치
+        sb.append(NO2_VALUE).append(" TEXT, ");             // 이산화질소 수치
+        sb.append(O3_VALUE).append(" TEXT, ");              // 오존 수치
+        sb.append(PM10_VALUE).append(" TEXT, ");            // 미세먼지 수치
+        sb.append(SO2_VALUE).append(" TEXT, ");             // 이산화황 수치
+        sb.append(KHAI_VALUE).append(" TEXT, ");            // 통합 지수 수치
+        sb.append(NUM_OF_ROWS).append(" TEXT, ");           // row count
+        sb.append(ROW_NUM).append(" TEXT, ");               // Row number
+        sb.append(RESULT_CODE).append(" TEXT, ");           // Result code
+        sb.append(RESULT_MESSAGE).append(" TEXT, ");        // Result message
+        sb.append(SERVICE_KEY).append(" TEXT, ");           // Service Key
+        sb.append(PAGE_NO).append(" TEXT, ");               // Page Number
+        sb.append(DATA_TERM).append(" TEXT, ");             // Data term
+        sb.append(DATA_TIME).append(" TEXT, ");             // 측정 시각
+        sb.append(STATION_CODE).append(" TEXT, ");          //
+        sb.append(STATION_NAME).append(" TEXT, ");          // 상세 지명
+        sb.append(TOTAL_COUNT).append(" TEXT").append(" );");
 
         DustLog.e(TAG, "SQL CREATE -> " + sb.toString());
         db.execSQL(sb.toString());

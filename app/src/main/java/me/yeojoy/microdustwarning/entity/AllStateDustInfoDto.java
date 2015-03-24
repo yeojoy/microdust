@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * Created by yeojoy on 15. 3. 19..
  */
 public class AllStateDustInfoDto implements Parcelable {
+    private String _returnType;
     private String coGrade;
     private String no2Grade;
     private String o3Grade;
@@ -32,8 +33,18 @@ public class AllStateDustInfoDto implements Parcelable {
     private String stationName;
     private String totalCount;
 
+    public AllStateDustInfoDto() {}
+
     public AllStateDustInfoDto(Parcel in) {
         readToParcel(in);
+    }
+
+    public void set_returnType(String _returnType) {
+        this._returnType = _returnType;
+    }
+
+    public String get_returnType() {
+            return _returnType;
     }
 
     public String getCoGrade() {
@@ -246,6 +257,7 @@ public class AllStateDustInfoDto implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_returnType);
         dest.writeString(coGrade);
         dest.writeString(no2Grade);
         dest.writeString(o3Grade);
@@ -273,6 +285,7 @@ public class AllStateDustInfoDto implements Parcelable {
     }
 
     public void readToParcel(Parcel in) {
+        _returnType = in.readString();
         coGrade = in.readString();
         no2Grade = in.readString();
         o3Grade = in.readString();
@@ -302,7 +315,8 @@ public class AllStateDustInfoDto implements Parcelable {
     @Override
     public String toString() {
         return "AllStateDustInfoDto{" +
-                "coGrade='" + coGrade + '\'' +
+                "_returnType='" + _returnType + '\'' +
+                ", coGrade='" + coGrade + '\'' +
                 ", no2Grade='" + no2Grade + '\'' +
                 ", o3Grade='" + o3Grade + '\'' +
                 ", pm10Grade='" + pm10Grade + '\'' +

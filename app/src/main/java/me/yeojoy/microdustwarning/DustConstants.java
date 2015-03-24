@@ -13,7 +13,7 @@ public interface DustConstants {
     public static final String API_MICRO_DUST = "http://openapi.airkorea.or.kr"
             + "/openapi/services/rest/ArpltnInforInqireSvc/"
             + "getCtprvnRltmMesureDnsty"
-            + "?sidoName=%s&pageNo=1&numOfRows=20&ServiceKey=%s";
+            + "?sidoName=%s&pageNo=1&numOfRows=20&ServiceKey=%s&_returnType=json";
 
 
     public static final String API_KEY_FOR_DEV = "LriGgAerLvwnaSfTjTX%2FLp71zl4yNM1JY1zY2eL%2FcBVmyWCdOu%2BAAbC%2F9I0VyQJSr9SO7oFlgkjSzUzAht9Cww%3D%3D";

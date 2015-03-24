@@ -94,11 +94,6 @@
 
     <string name="dlg_default_positive_button">확인</string>
 
-    <string name="dlg_warn_out_of_seoul">
-        서울외 지역은 외부화면에서 확인할 수 있습니다.
-        \n화면을 이동하시겠습니까?
-    </string>
-
     <string name="dlg_btn_move">이동</string>
     <string name="dlg_btn_cancel">취소</string>
     <!-- Preferences -->
