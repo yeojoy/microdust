@@ -1,44 +1,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.StartFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ScrollView
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_start_front"
+        android:layout_width="214dp"
         android:layout_height="match_parent"
-        android:layout_above="@+id/cb_auto_start">
-        <TextView
-            android:id="@+id/tv_main_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="18sp"
-            android:lineSpacingExtra="5dp"
-            android:gravity="center_horizontal"
-            android:text="@string/hello_blank_fragment" />
-    </ScrollView>
+        android:src="@drawable/start_front"
+        android:scaleType="fitXY"/>
 
-    <CheckBox
-        android:id="@+id/cb_auto_start"
+    <ImageView
+        android:id="@+id/iv_start_back"
+        android:layout_width="166dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/iv_start_front"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="-20dp"
+        android:src="@drawable/start_back"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:id="@+id/iv_start_shadow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/iv_start_front"
+        android:layout_marginLeft="-20dp"
+        android:src="@drawable/start_back"/>
+    <ImageView
+        android:id="@+id/iv_start_seal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/start_checkbox_desc"
-        android:paddingLeft="5dp"
-        android:checked="false"/>
-
-    <Button
-        android:id="@id/btn_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/btn_start" />
+        android:layout_toRightOf="@id/iv_start_front"
+        android:layout_marginTop="173dp"
+        android:layout_marginLeft="-63dp"
+        android:src="@drawable/start_character"/>
 </RelativeLayout>
