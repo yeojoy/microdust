@@ -2,6 +2,10 @@ package me.yeojoy.microdustwarning.util;
 
 import android.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.UnknownHostException;
+
 import me.yeojoy.microdustwarning.BuildConfig;
 
 /**
@@ -48,6 +52,44 @@ public class DustLog {
         if (BuildConfig.DEBUG) Log.e(TAG, getLoggerLocation() + message.toString());
     }
 
+    // using Throwable
+    // Debug
+    public static void d(String tag, Throwable tr) {
+        if (BuildConfig.DEBUG) Log.d(tag, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    public static void d(Throwable tr) {
+        if (BuildConfig.DEBUG) Log.d(TAG, getLoggerLocation()
+                + getStackTraceString(tr));
+    }
+
+    // Warning
+    public static void w(String tag, Throwable tr) {
+        if (BuildConfig.DEBUG) Log.w(tag, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    public static void w(Throwable tr) {
+        if (BuildConfig.DEBUG) Log.w(TAG, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    // Info
+    public static void i(String tag, Throwable tr) {
+        if (BuildConfig.DEBUG) Log.i(tag, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    public static void i(Throwable tr) {
+        if (BuildConfig.DEBUG) Log.i(TAG, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    // Error
+    public static void e(String tag, Throwable tr) {
+        if (BuildConfig.DEBUG) Log.e(tag, getLoggerLocation() + getStackTraceString(tr));
+    }
+
+    public static void e(Throwable tr) {
+        if (BuildConfig.DEBUG) Log.e(TAG, getLoggerLocation() + getStackTraceString(tr));
+    }
+
     /**
      * Class 이름, method이름, line number를 가져옴.
      * @return
@@ -64,14 +106,27 @@ public class DustLog {
         sb.append("] >>> ");
 
         return sb.toString();
-//
-//        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-//        StringBuffer tempBuf = new StringBuffer();
-//
-//        String[] temp = ste[4].getClassName().split(“\\.”);
-//        tempBuf.append(“[“ + temp[temp.length - 1] + “]”);
-//        tempBuf.append(“[“ + ste[depth].getLineNumber() + “] “);
-//
-//        return tempBuf.toString();
+    }
+
+    private static String getStackTraceString(Throwable tr) {
+        if (tr == null) {
+            return "";
+        }
+
+        // This is to reduce the amount of log spew that apps do in the non-error
+        // condition of the network being unavailable.
+        Throwable t = tr;
+        while (t != null) {
+            if (t instanceof UnknownHostException) {
+                return "";
+            }
+            t = t.getCause();
+        }
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        tr.printStackTrace(pw);
+        pw.flush();
+        return sw.toString();
     }
 }
